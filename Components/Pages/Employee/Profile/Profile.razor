@@ -7,14 +7,14 @@
     <MudGrid Spacing="4">
         <!-- Sidebar: Avatar and Vertical Tabs -->
         <MudItem xs="12" md="3">
-            <MudPaper Elevation="2" Class="pa-6 mb-4 rounded-xl mud-width-full d-flex flex-column align-center text-center">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 mb-4 rounded-xl mud-width-full d-flex flex-column align-center text-center">
                 <MudAvatar Size="Size.Large" Class="avatar-gradient-primary mb-4 elevation-4" Style="width: 120px; height: 120px; font-size: 3rem;">E</MudAvatar>
                 <MudText Typo="Typo.h5" Align="Align.Center" Class="font-weight-bold mb-1" Style="letter-spacing: -0.5px;">James Fanuel N. Damaso</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary" Class="mb-1 text-uppercase font-weight-bold" Style="letter-spacing: 1px; font-size: 0.75rem;">Date of Birth</MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Class="font-weight-medium">May 3, 2003</MudText>
             </MudPaper>
 
-            <MudPaper Elevation="2" Class="rounded-xl py-4">
+            <MudPaper Elevation="0" Outlined="true" Class="rounded-xl py-4">
                 <div class="d-flex flex-column gap-1">
                     @for (int i = 0; i < Tabs.Length; i++)
                     {
@@ -32,7 +32,7 @@
 
         <!-- Main Content Area -->
         <MudItem xs="12" md="9">
-            <MudPaper Elevation="2" Class="pa-8 rounded-xl mud-width-full h-100">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-8 rounded-xl mud-width-full h-100">
                 @{
                     var isValidTab = activeIndex >= 0 && activeIndex < Tabs.Length;
                     var currentTab = isValidTab ? Tabs[activeIndex] : null;
