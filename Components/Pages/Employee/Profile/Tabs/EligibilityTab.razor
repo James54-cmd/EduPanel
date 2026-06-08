@@ -1,0 +1,91 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <!-- Modern Eligibility Table (MudSimpleTable) -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="d-flex align-center px-6 py-4 mud-border-bottom">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">Eligibility & Licenses</MudText>
+            <MudSpacer />
+            <!-- Integrated Search Bar -->
+            <MudTextField @bind-Value="searchString" Placeholder="Search eligibility..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mr-4" Style="max-width: 300px;" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+            <!-- Primary Action Button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="text-transform-none rounded-lg px-4 py-2">Add Eligibility</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Examination Title</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Rating</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Date of Examination / Conferment</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Expiry Date</MudText></th>
+                    <th style="width: 120px; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Actions</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (EligibilityRecords.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No data to display</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var record in EligibilityRecords)
+                    {
+                        <tr>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@record.TransactionNo</MudText></td>
+                            <td class="font-weight-medium">@record.ExaminationTitle</td>
+                            <td>
+                                @if (string.IsNullOrEmpty(record.Rating))
+                                {
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-style-italic">N/A</MudText>
+                                }
+                                else
+                                {
+                                    <MudChip Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="font-weight-bold">@record.Rating</MudChip>
+                                }
+                            </td>
+                            <td>@record.DateOfExamination</td>
+                            <td>@record.ExpiryDate</td>
+                            <td>
+                                <div class="d-flex justify-center gap-1">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" />
+                                    </MudTooltip>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+</div>
+
+@code {
+    private string searchString = "";
+
+    // Added a sample record to show the layout
+    private List<EligibilityRecord> EligibilityRecords = new()
+    {
+        new EligibilityRecord { TransactionNo = "TRX-2023-045", ExaminationTitle = "Civil Service Professional", Rating = "88.50%", DateOfExamination = "Aug 20, 2023", ExpiryDate = "N/A" }
+    };
+
+    public class EligibilityRecord
+    {
+        public string TransactionNo { get; set; } = "";
+        public string ExaminationTitle { get; set; } = "";
+        public string Rating { get; set; } = "";
+        public string DateOfExamination { get; set; } = "";
+        public string ExpiryDate { get; set; } = "";
+    }
+}
