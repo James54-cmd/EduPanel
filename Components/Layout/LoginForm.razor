@@ -1,7 +1,8 @@
 @using FluentValidation
 @inject NavigationManager Nav
+@inject ISnackbar Snackbar
 
-<MudForm @ref="form" Model="@model" Validation="@(modelValidator.ValidateValue)" Class="w-100">
+<MudForm @ref="form" Model="@model" Validation="@(modelValidator.ValidateValue)" ValidationDelay="0" Class="w-100">
     <FieldGroup>
         <div class="d-flex flex-column align-center gap-1 text-center mb-2">
             <MudText Typo="Typo.h5" Class="font-weight-bold">Login to your account</MudText>
@@ -14,6 +15,8 @@
             <FieldLabel HtmlFor="email">Email</FieldLabel>
             <MudTextField @bind-Value="model.Email"
                           For="@(() => model.Email)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true"
                           Placeholder="m@example.com"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
@@ -29,6 +32,8 @@
             </div>
             <MudTextField @bind-Value="model.Password"
                           For="@(() => model.Password)"
+                          Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true"
                           InputType="InputType.Password"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
@@ -44,12 +49,21 @@
 
         <Field>
             <MudButton OnClick="SubmitLogin"
+                       Disabled="@_loading"
                        Color="Color.Primary"
                        Variant="Variant.Filled"
                        FullWidth="true"
                        Class="py-2.5 font-weight-bold"
                        Style="text-transform: none;">
-                Login
+                @if (_loading)
+                {
+                    <MudProgressCircular Class="ms-n1 mr-2" Size="Size.Small" Indeterminate="true"/>
+                    <span>Logging in...</span>
+                }
+                else
+                {
+                    <span>Login</span>
+                }
             </MudButton>
         </Field>
 
@@ -82,21 +96,42 @@
     private LoginModel model = new();
     private LoginModelValidator modelValidator = new();
     private string errorMessage = "";
+    private bool _loading = false;
 
     private async Task SubmitLogin()
     {
+        Console.WriteLine($"[Login] Starting login for: {model.Email}");
         await form.ValidateAsync();
+        errorMessage = "";
 
+        Console.WriteLine($"[Login] Form IsValid after validation: {form.IsValid}");
         if (form.IsValid)
         {
+            _loading = true;
+            StateHasChanged();
+
+            Console.WriteLine("[Login] Simulating network delay...");
+            // Simulate network delay for UX
+            await Task.Delay(1500);
+
             if (model.Email == "admin@example.com" && model.Password == "admin123")
             {
+                Console.WriteLine("[Login] Credentials matched. Navigating to dashboard...");
+                Snackbar.Add("Login successful!", MudBlazor.Severity.Success);
                 Nav.NavigateTo("/dashboard");
             }
             else
             {
+                Console.WriteLine("[Login] Credentials failed. Showing error...");
                 errorMessage = "Invalid email or password.";
+                Snackbar.Add("Login failed. Please check your credentials.", MudBlazor.Severity.Error);
             }
+
+            _loading = false;
+        }
+        else
+        {
+            Console.WriteLine("[Login] Form is invalid. Stopping submission.");
         }
     }
 
@@ -111,6 +146,7 @@
         public LoginModelValidator()
         {
             RuleFor(x => x.Email)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("Email is required.")
                 .EmailAddress().WithMessage("A valid email address is required.");
 
