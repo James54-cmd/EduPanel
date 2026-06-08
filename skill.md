@@ -87,7 +87,7 @@ To maintain clean Razor files and organize components effectively:
 * **Namespace Management**: Placing a component in a folder with the exact same name causes a C# namespace conflict (Error CS0542). To prevent this, always add the `@namespace` directive to the top of the `.razor` file specifying the parent namespace (e.g., `@namespace EduPanel.Components.Pages.Admin`).
 * **Avoid Inline `<style>` Blocks**: Do not use `<style>` blocks inside `.razor` components.
 * **Use Scoped CSS**: Place component-specific styles in a dedicated isolated CSS file right next to the component (e.g., `Dashboard/Dashboard.razor.css`).
-* **Global Styles**: Utility classes and truly global styles should be kept in `wwwroot/app.css` or `wwwroot/EduPanel.styles.css`.
+* **Global Styles & DRY Principle**: Utility classes (e.g., `.text-danger`, `.bg-transparent`) and truly global styles must be kept in `wwwroot/app.css` or `wwwroot/EduPanel.styles.css`. Avoid DRY (Don't Repeat Yourself) by never duplicating the same utility classes across multiple `.razor` or isolated `.css` files.
 * **Complex Page Structuring**: When dealing with massive forms or complex pages, avoid vertically scrolling monoliths. Break the page down into logical sections and use `MudTabs` (either vertical or horizontal) to simplify the user interface. Keep each tab's content in a separate sub-component within a `Tabs` directory (e.g., `Profile/Tabs/PersonalProfileTab.razor`).
 
 ---
