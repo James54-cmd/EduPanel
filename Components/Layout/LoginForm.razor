@@ -1,0 +1,90 @@
+@using FluentValidation
+@inject NavigationManager Nav
+
+<MudPaper Class="pa-6" Elevation="6">
+    <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-4">
+        EduPanel Login
+    </MudText>
+
+    <MudForm @ref="form" Model="@model" Validation="@(modelValidator.ValidateValue)">
+        <MudTextField @bind-Value="model.Email"
+                      For="@(() => model.Email)"
+                      Label="Email"
+                      Class="mt-4"
+                      FullWidth="true" />
+
+        <MudTextField @bind-Value="model.Password"
+                      For="@(() => model.Password)"
+                      Label="Password"
+                      InputType="InputType.Password"
+                      Class="mt-2"
+                      FullWidth="true" />
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudText Color="Color.Error" Typo="Typo.body2" Class="mt-2">
+                @errorMessage
+            </MudText>
+        }
+
+        <MudButton OnClick="SubmitLogin"
+                   Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   FullWidth="true"
+                   Class="mt-6">
+            Login
+        </MudButton>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private MudForm form = null!;
+    private LoginModel model = new();
+    private LoginModelValidator modelValidator = new();
+    private string errorMessage = "";
+
+    private async Task SubmitLogin()
+    {
+        await form.ValidateAsync();
+
+        if (form.IsValid)
+        {
+            if (model.Email == "admin@example.com" && model.Password == "admin123")
+            {
+                Nav.NavigateTo("/dashboard");
+            }
+            else
+            {
+                errorMessage = "Invalid email or password.";
+            }
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+
+    public class LoginModelValidator : AbstractValidator<LoginModel>
+    {
+        public LoginModelValidator()
+        {
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required.")
+                .EmailAddress().WithMessage("A valid email address is required.");
+
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password is required.")
+                .MinimumLength(6).WithMessage("Password must be at least 6 characters.");
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<LoginModel>.CreateWithOptions((LoginModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}
