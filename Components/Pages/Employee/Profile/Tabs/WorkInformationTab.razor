@@ -91,22 +91,34 @@
             <MudItem xs="12" sm="6" md="3"><MudTextField T="string" Label="Bank Account No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
 
             <!-- Government IDs with Checkboxes -->
-            <MudItem xs="12" md="12">
+            <MudItem xs="12">
                 <MudGrid Spacing="2">
-                    <MudItem xs="12" sm="6" md="4" Class="d-flex align-center gap-2">
-                        <MudTextField T="string" Value="@("0647691186")" Label="SSS No." Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
-                        <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
-                        <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                    <MudItem xs="12">
+                        <div class="d-flex align-center gap-6">
+                            <div style="min-width: 300px; max-width: 300px;">
+                                <MudTextField T="string" Value="@("0647691186")" Label="SSS No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            </div>
+                            <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
+                            <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                        </div>
                     </MudItem>
-                    <MudItem xs="12" sm="6" md="4" Class="d-flex align-center gap-2">
-                        <MudTextField T="string" Value="@("122515790797")" Label="PhilHealth No." Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
-                        <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
-                        <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                    <MudItem xs="12">
+                        <div class="d-flex align-center gap-6">
+                            <div style="min-width: 300px; max-width: 300px;">
+                                <MudTextField T="string" Value="@("122515790797")" Label="PhilHealth No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            </div>
+                            <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
+                            <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                        </div>
                     </MudItem>
-                    <MudItem xs="12" sm="6" md="4" Class="d-flex align-center gap-2">
-                        <MudTextField T="string" Value="@("121368812741")" Label="Pagibig No." Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
-                        <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
-                        <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                    <MudItem xs="12">
+                        <div class="d-flex align-center gap-6">
+                            <div style="min-width: 300px; max-width: 300px;">
+                                <MudTextField T="string" Value="@("121368812741")" Label="Pagibig No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            </div>
+                            <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
+                            <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                        </div>
                     </MudItem>
                 </MudGrid>
             </MudItem>
@@ -114,9 +126,11 @@
             <MudItem xs="12" sm="6"><MudTextField T="decimal" Value="0.00m" Label="Pagibig Employee Share" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
             <MudItem xs="12" sm="6"><MudTextField T="decimal" Value="0.00m" Label="Pagibig Employer Share" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
 
-            <MudItem xs="12" md="12">
-                <div class="d-flex align-center gap-4">
-                    <MudTextField T="string" Value="@("00")" Label="TIN" Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width: 200px;" />
+            <MudItem xs="12">
+                <div class="d-flex align-center gap-6">
+                    <div style="min-width: 300px; max-width: 300px;">
+                        <MudTextField T="string" Value="@("00")" Label="TIN" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </div>
                     <MudCheckBox T="bool" Label="(M W E)" Size="Size.Small" />
                     <MudCheckBox T="bool" Label="Flat Tax Rate" Size="Size.Small" />
                 </div>
