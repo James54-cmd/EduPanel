@@ -1,0 +1,108 @@
+@page "/employee/personal-data-update"
+@namespace EduPanel.Components.Pages.Employee.PersonalDataUpdate
+@using EduPanel.Components.Pages.Employee.PersonalDataUpdate.Tabs
+@inject NavigationManager NavManager
+
+<div class="pa-4">
+    <MudGrid Spacing="4">
+        <!-- Sidebar: Avatar and Vertical Tabs -->
+        <MudItem xs="12" md="3">
+            <MudPaper Elevation="2" Class="pa-6 mb-4 rounded-xl mud-width-full d-flex flex-column align-center text-center">
+                <MudAvatar Size="Size.Large" Class="avatar-gradient-primary mb-4 elevation-4" Style="width: 120px; height: 120px; font-size: 3rem;">E</MudAvatar>
+                <MudText Typo="Typo.h5" Align="Align.Center" Class="font-weight-bold mb-1" Style="letter-spacing: -0.5px;">James Fanuel N. Damaso</MudText>
+                <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary" Class="mb-1 text-uppercase font-weight-bold" Style="letter-spacing: 1px; font-size: 0.75rem;">Date of Birth</MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Class="font-weight-medium">May 3, 2003</MudText>
+            </MudPaper>
+
+            <MudPaper Elevation="2" Class="rounded-xl py-4">
+                <div class="d-flex flex-column gap-1">
+                    @for (int i = 0; i < Tabs.Length; i++)
+                    {
+                        var idx = i;
+                        var tab = Tabs[i];
+                        var isActive = activeIndex == idx;
+                        <div @onclick="() => SetActiveTab(idx)"
+                             class="@($"sidebar-ribbon cursor-pointer transition-all {(isActive ? "active text-white font-weight-bold" : "mud-text-secondary font-weight-medium")}")">
+                            <MudText Typo="Typo.body2" Class="inherit-font-weight" Style="letter-spacing: 0.2px;">@tab.Name</MudText>
+                        </div>
+                    }
+                </div>
+            </MudPaper>
+        </MudItem>
+
+        <!-- Main Content Area -->
+        <MudItem xs="12" md="9">
+            <MudPaper Elevation="2" Class="pa-8 rounded-xl mud-width-full h-100">
+                @{
+                    var isValidTab = activeIndex >= 0 && activeIndex < Tabs.Length;
+                    var currentTab = isValidTab ? Tabs[activeIndex] : null;
+
+                    var tabName = isValidTab ? currentTab!.Name : "Unknown";
+                    var tabIcon = isValidTab ? currentTab!.Icon : Icons.Material.Filled.Folder;
+                    var iconColor = isValidTab ? Color.Primary : Color.Secondary;
+                    var textColor = isValidTab ? Color.Default : Color.Secondary;
+                    var componentType = isValidTab ? (currentTab!.ComponentType ?? typeof(PlaceholderUpdateTab)) : typeof(PlaceholderUpdateTab);
+                }
+
+                <div class="d-flex align-center mb-6">
+                    <MudIcon Icon="@tabIcon" Size="Size.Large" Color="@iconColor" Class="mr-3" />
+                    <MudText Typo="Typo.h4" Class="font-weight-bold" Color="@textColor" Style="letter-spacing: -0.5px;">@tabName</MudText>
+                </div>
+
+                <DynamicComponent Type="@componentType" />
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "tab")]
+    public string? TabQuery { get; set; }
+
+    private int activeIndex = 0;
+
+    private record TabDefinition(string Name, string Icon, Type? ComponentType = null);
+
+    private readonly TabDefinition[] Tabs = new TabDefinition[]
+    {
+        new("Personal Profile", Icons.Material.Filled.Person, typeof(PersonalProfileUpdateTab)),
+        new("Work Information", Icons.Material.Filled.Work),
+        new("Education", Icons.Material.Filled.School),
+        new("Eligibility", Icons.Material.Filled.Verified),
+        new("Employment Record", Icons.Material.Filled.WorkHistory),
+        new("Training Programs", Icons.Material.Filled.ModelTraining),
+        new("Family Background", Icons.Material.Filled.FamilyRestroom),
+        new("Voluntary Works", Icons.Material.Filled.VolunteerActivism),
+        new("Language", Icons.Material.Filled.Language),
+        new("Other Information", Icons.Material.Filled.Info),
+        new("Character Reference", Icons.Material.Filled.People),
+        new("Service Record", Icons.Material.Filled.ManageAccounts),
+        new("Accountability", Icons.Material.Filled.Inventory)
+    };
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(TabQuery))
+        {
+            var matchIndex = Array.FindIndex(Tabs, x => GetSlug(x.Name) == TabQuery);
+            activeIndex = matchIndex >= 0 ? matchIndex : 0;
+        }
+        else
+        {
+            activeIndex = 0;
+        }
+    }
+
+    private void SetActiveTab(int index)
+    {
+        if (index >= 0 && index < Tabs.Length)
+        {
+            activeIndex = index;
+            var uri = NavManager.GetUriWithQueryParameter("tab", GetSlug(Tabs[index].Name));
+            NavManager.NavigateTo(uri, forceLoad: false, replace: true);
+        }
+    }
+
+    private string GetSlug(string name) => name.ToLowerInvariant().Replace(" ", "-");
+}
+

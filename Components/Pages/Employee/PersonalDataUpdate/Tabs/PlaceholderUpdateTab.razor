@@ -1,0 +1,14 @@
+@namespace EduPanel.Components.Pages.Employee.PersonalDataUpdate.Tabs
+@using EduPanel.Components.Pages.Employee.PersonalDataUpdate.Components
+
+<UpdateHistoryTable Category="Data Update" Requests="@DummyRequests" />
+
+@code {
+    private List<UpdateHistoryTable.UpdateRequest> DummyRequests = new()
+    {
+        new UpdateHistoryTable.UpdateRequest { TransactionNo = "TRX-REQ-101", Action = "Add New Record", DateRequested = DateTime.Now.AddDays(-3) },
+        new UpdateHistoryTable.UpdateRequest { TransactionNo = "TRX-REQ-102", Action = "Update Existing Information", DateRequested = DateTime.Now.AddDays(-7), ResolvedDate = DateTime.Now.AddDays(-5) },
+        new UpdateHistoryTable.UpdateRequest { TransactionNo = "TRX-REQ-103", Action = "Delete Outdated Entry", DateRequested = DateTime.Now.AddDays(-14), ResolvedDate = DateTime.Now.AddDays(-12) },
+        new UpdateHistoryTable.UpdateRequest { TransactionNo = "TRX-REQ-104", Action = "Attach Supporting Document", DateRequested = DateTime.Now.AddDays(-1) }
+    };
+}

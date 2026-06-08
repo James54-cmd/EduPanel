@@ -1,0 +1,112 @@
+@namespace EduPanel.Components.Pages.Employee.PersonalDataUpdate.Components
+
+<div class="d-flex flex-column gap-4 h-100">
+    
+    <!-- Top Action Box -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-3 rounded-lg bg-transparent border-solid mud-border-lines-default">
+        <div class="d-flex justify-space-between align-center">
+            <MudSelect T="string" @bind-Value="StatusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 160px; background-color: #ffffff;">
+                <MudSelectItem Value="@("All")">All</MudSelectItem>
+                <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
+                <MudSelectItem Value="@("Cancelled")">Cancelled</MudSelectItem>
+            </MudSelect>
+            
+            <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2" Class="font-weight-medium px-2">Delete</MudLink>
+        </div>
+    </MudPaper>
+
+    <!-- Table Container -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg overflow-hidden bg-transparent d-flex flex-column border-solid mud-border-lines-default">
+        <!-- Search Bar -->
+        <div class="pa-3 mud-border-bottom border-solid mud-border-lines-default">
+            <MudTextField @bind-Value="SearchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true" Style="background-color: #ffffff;"></MudTextField>
+        </div>
+
+        <!-- Simple Table -->
+        <MudSimpleTable Hover="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Edit</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Action</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Date Requested</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Approved / Disapproved Date</MudText></th>
+                    <th style="text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Select</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Requests.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No data to display</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var request in Requests)
+                    {
+                        <tr>
+                            <td style="width: 60px; text-align: center;">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                            </td>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@request.TransactionNo</MudText></td>
+                            <td class="font-weight-bold text-primary">@request.Action</td>
+                            <td><MudText Typo="Typo.body2">@request.DateRequested.ToShortDateString()</MudText></td>
+                            <td>
+                                @if (request.ResolvedDate.HasValue)
+                                {
+                                    <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Text" Class="font-weight-bold">@request.ResolvedDate.Value.ToShortDateString()</MudChip>
+                                }
+                                else
+                                {
+                                    <MudChip T="string" Size="Size.Small" Color="Color.Warning" Variant="Variant.Text" Class="font-weight-bold">Pending</MudChip>
+                                }
+                            </td>
+                            <td style="width: 60px; text-align: center;">
+                                <MudCheckBox T="bool" Color="Color.Primary" Size="Size.Small" Dense="true" />
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+
+    </MudPaper>
+
+</div>
+
+<style>
+    .bg-transparent {
+        background-color: transparent !important;
+    }
+    .border-solid {
+        border-width: 1px;
+        border-style: solid;
+    }
+    .text-primary {
+        color: var(--mud-palette-primary) !important;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string Category { get; set; } = "";
+
+    private string StatusFilter { get; set; } = "All";
+    private string SearchString { get; set; } = "";
+
+    public class UpdateRequest
+    {
+        public string TransactionNo { get; set; } = "";
+        public string Action { get; set; } = "";
+        public DateTime DateRequested { get; set; }
+        public DateTime? ResolvedDate { get; set; }
+    }
+
+    [Parameter]
+    public List<UpdateRequest> Requests { get; set; } = new();
+}
