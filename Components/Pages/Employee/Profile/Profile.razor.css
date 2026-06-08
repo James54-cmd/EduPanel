@@ -1,0 +1,56 @@
+/* Sidebar Ribbon Overlap Styles */
+.sidebar-ribbon {
+    position: relative;
+    padding: 12px 24px;
+    margin: 4px 16px 4px 0;
+    border-radius: 0 24px 24px 0;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar-ribbon:not(.active):hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.sidebar-ribbon.active {
+    background-color: var(--mud-palette-primary) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-left: -16px;
+    /* Pops out of the left edge */
+    padding-left: 40px;
+    /* Compensates to keep text aligned */
+    border-radius: 8px 24px 24px 0;
+    /* Slightly round the popped-out corners */
+    z-index: 10;
+}
+
+/* 3D Fold Effect */
+.sidebar-ribbon.active::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    border-top: 10px solid var(--mud-palette-primary);
+    border-left: 16px solid transparent;
+    filter: brightness(0.6);
+    /* Darker shade for the shadow/fold */
+    z-index: -1;
+}
+
+/* Utilities */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+.text-white {
+    color: #ffffff !important;
+}
+
+.inherit-font-weight {
+    font-weight: inherit !important;
+}

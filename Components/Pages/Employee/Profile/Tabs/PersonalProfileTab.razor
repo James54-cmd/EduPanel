@@ -257,7 +257,9 @@
             <MudGrid Spacing="4">
                 <MudItem xs="12" md="6">
                     <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent h-100">
-                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Permanent Address <span class="text-danger">*</span></MudText>
+                        <div class="d-flex align-center mb-4" style="min-height: 36px;">
+                            <MudText Typo="Typo.subtitle2" Class="font-weight-bold" Color="Color.Primary">Permanent Address <span class="text-danger">*</span></MudText>
+                        </div>
                         <MudGrid Spacing="2">
                             <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Label="House/Block/Lot No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
                             <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Label="Street" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
@@ -272,9 +274,9 @@
 
                 <MudItem xs="12" md="6">
                     <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent h-100">
-                        <div class="d-flex align-center justify-space-between mb-4">
+                        <div class="d-flex align-center justify-space-between mb-4" style="min-height: 36px;">
                             <MudText Typo="Typo.subtitle2" Class="font-weight-bold" Color="Color.Primary">Residential Address</MudText>
-                            <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Class="text-transform-none">Same as Permanent</MudButton>
+                            <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Class="text-transform-none py-0">Same as Permanent</MudButton>
                         </div>
                         <MudGrid Spacing="2">
                             <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Label="House/Block/Lot No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>

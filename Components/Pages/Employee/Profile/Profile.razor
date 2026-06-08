@@ -13,15 +13,15 @@
                 <MudText Typo="Typo.body1" Class="font-weight-medium">May 3, 2003</MudText>
             </MudPaper>
 
-            <MudPaper Elevation="2" Class="rounded-xl overflow-hidden">
-                <div class="d-flex flex-column pa-2 gap-1">
+            <MudPaper Elevation="2" Class="rounded-xl py-4">
+                <div class="d-flex flex-column gap-1">
                     @foreach (var tab in TabNames)
                     {
                         var idx = tab.Key;
                         var name = tab.Value;
                         var isActive = activeIndex == idx;
                         <div @onclick="() => activeIndex = idx"
-                             class="@($"px-4 py-3 rounded-lg cursor-pointer transition-all d-flex align-center {(isActive ? "bg-primary text-white mud-elevation-2 font-weight-bold" : "hover-bg-light mud-text-secondary font-weight-medium")}")">
+                             class="@($"sidebar-ribbon cursor-pointer transition-all {(isActive ? "active text-white font-weight-bold" : "mud-text-secondary font-weight-medium")}")">
                             <MudText Typo="Typo.body2" Class="inherit-font-weight" Style="letter-spacing: 0.2px;">@name</MudText>
                         </div>
                     }
@@ -76,11 +76,4 @@
     private string GetTabName(int index) => TabNames.TryGetValue(index, out var name) ? name : "Unknown";
 }
 
-<style>
-    .cursor-pointer { cursor: pointer; }
-    .transition-all { transition: all 0.2s ease-in-out; }
-    .hover-bg-light:hover { background-color: var(--mud-palette-action-default-hover); }
-    .bg-primary { background-color: var(--mud-palette-primary) !important; }
-    .text-white { color: #ffffff !important; }
-    .inherit-font-weight { font-weight: inherit !important; }
-</style>
+
