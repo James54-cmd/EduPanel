@@ -5,7 +5,7 @@
     <!-- Top Action Box -->
     <MudPaper Elevation="0" Outlined="true" Class="pa-3 rounded-lg bg-transparent border-solid mud-border-lines-default">
         <div class="d-flex justify-space-between align-center">
-            <MudSelect T="string" @bind-Value="StatusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 160px; background-color: #ffffff;">
+            <MudSelect T="string" @bind-Value="StatusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width: 160px;">
                 <MudSelectItem Value="@("All")">All</MudSelectItem>
                 <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
                 <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
@@ -13,7 +13,7 @@
                 <MudSelectItem Value="@("Cancelled")">Cancelled</MudSelectItem>
             </MudSelect>
             
-            <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2" Class="font-weight-medium px-2">Delete</MudLink>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error">Delete</MudButton>
         </div>
     </MudPaper>
 
