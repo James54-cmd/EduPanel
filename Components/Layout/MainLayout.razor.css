@@ -11,7 +11,8 @@
 .mobile-nav-overlay {
     position: fixed;
     inset: 0;
-    top: 48px; /* below the dense app bar */
+    top: 48px;
+    /* below the dense app bar */
     background: rgba(0, 0, 0, 0.4);
     z-index: 1099;
     animation: fadeIn 0.15s ease;
@@ -19,7 +20,8 @@
 
 .mobile-nav-panel {
     position: fixed;
-    top: 48px; /* sits right below the app bar */
+    top: 48px;
+    /* sits right below the app bar */
     left: 0;
     right: 0;
     background: #fff;
@@ -32,8 +34,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideDown {
@@ -41,6 +48,7 @@
         opacity: 0;
         transform: translateY(-8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
