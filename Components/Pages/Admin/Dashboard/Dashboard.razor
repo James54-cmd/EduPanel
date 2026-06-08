@@ -1,7 +1,8 @@
 @page "/dashboard"
 @namespace EduPanel.Components.Pages.Admin
 
-<div class="d-flex align-center justify-space-between mb-6">
+<div class="dashboard-page">
+    <div class="d-flex align-center justify-space-between mb-6">
     <div class="d-flex align-center">
         <div class="d-flex align-center justify-center rounded bg-primary text-white mr-3" style="width: 32px; height: 32px;">
             <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Small" />
@@ -17,10 +18,10 @@
     <!-- Top Cards -->
     <MudItem xs="12" md="4">
         <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-pink relative overflow-hidden h-100">
-            <MudText Typo="Typo.body1" Class="mb-2">Weekly Sales</MudText>
-            <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">$ 15,0000</MudText>
-            <MudText Typo="Typo.body2">Increased by 60%</MudText>
-            <MudIcon Icon="@Icons.Material.Filled.ShowChart" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
+            <MudText Typo="Typo.body1" Class="mb-2">Total Students Enrolled</MudText>
+            <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">1,250</MudText>
+            <MudText Typo="Typo.body2">Increased by 12% this semester</MudText>
+            <MudIcon Icon="@Icons.Material.Filled.School" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
             <!-- decorative circles -->
             <div class="card-circle circle-1"></div>
             <div class="card-circle circle-2"></div>
@@ -29,10 +30,10 @@
 
     <MudItem xs="12" md="4">
         <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-blue relative overflow-hidden h-100">
-            <MudText Typo="Typo.body1" Class="mb-2">Weekly Orders</MudText>
-            <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">45,6334</MudText>
-            <MudText Typo="Typo.body2">Decreased by 10%</MudText>
-            <MudIcon Icon="@Icons.Material.Filled.Bookmark" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
+            <MudText Typo="Typo.body1" Class="mb-2">Active Courses</MudText>
+            <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">45</MudText>
+            <MudText Typo="Typo.body2">Added 3 new courses</MudText>
+            <MudIcon Icon="@Icons.Material.Filled.MenuBook" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
             <div class="card-circle circle-1"></div>
             <div class="card-circle circle-2"></div>
         </MudPaper>
@@ -40,10 +41,10 @@
 
     <MudItem xs="12" md="4">
         <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-green relative overflow-hidden h-100">
-            <MudText Typo="Typo.body1" Class="mb-2">Visitors Online</MudText>
-            <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">95,5741</MudText>
-            <MudText Typo="Typo.body2">Increased by 5%</MudText>
-            <MudIcon Icon="@Icons.Material.Filled.Diamond" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
+            <MudText Typo="Typo.body1" Class="mb-2">Average Attendance</MudText>
+            <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">92%</MudText>
+            <MudText Typo="Typo.body2">Increased by 2%</MudText>
+            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
             <div class="card-circle circle-1"></div>
             <div class="card-circle circle-2"></div>
         </MudPaper>
@@ -52,14 +53,14 @@
     <!-- Charts -->
     <MudItem xs="12" md="7">
         <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100">
-            <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Visit And Sales Statistics</MudText>
+            <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Average Grades by Department</MudText>
             <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="300px" />
         </MudPaper>
     </MudItem>
 
     <MudItem xs="12" md="5">
         <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100 relative">
-            <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Traffic Sources</MudText>
+            <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Student Distribution</MudText>
             <MudChart T="double" ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
             
             <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Settings" Size="Size.Medium" Style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;" />
@@ -69,40 +70,88 @@
                 <div class="d-flex justify-space-between align-center">
                     <div class="d-flex align-center gap-2">
                         <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #594ae2;"></div>
-                        <MudText Typo="Typo.body2" Color="Color.Secondary">Search Engines</MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Freshmen</MudText>
                     </div>
                     <MudText Typo="Typo.body2" Color="Color.Secondary">30%</MudText>
                 </div>
                 <div class="d-flex justify-space-between align-center">
                     <div class="d-flex align-center gap-2">
                         <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #00c853;"></div>
-                        <MudText Typo="Typo.body2" Color="Color.Secondary">Direct Click</MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Sophomores</MudText>
                     </div>
                     <MudText Typo="Typo.body2" Color="Color.Secondary">30%</MudText>
                 </div>
                 <div class="d-flex justify-space-between align-center">
                     <div class="d-flex align-center gap-2">
                         <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #ff5252;"></div>
-                        <MudText Typo="Typo.body2" Color="Color.Secondary">Bookmarks Click</MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Seniors & Juniors</MudText>
                     </div>
                     <MudText Typo="Typo.body2" Color="Color.Secondary">40%</MudText>
                 </div>
             </div>
         </MudPaper>
     </MudItem>
+    <MudItem xs="12" Class="mt-4">
+        <MudPaper Elevation="0" Class="pa-6 rounded-lg">
+            <div class="d-flex align-center justify-space-between mb-4">
+                <MudText Typo="Typo.h6" Class="font-weight-bold">Recent Enrollments</MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Primary">View All</MudButton>
+            </div>
+            <MudTable Items="@RecentStudents" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+                <HeaderContent>
+                    <MudTh>Student Name</MudTh>
+                    <MudTh>Course</MudTh>
+                    <MudTh>Date Enrolled</MudTh>
+                    <MudTh>Status</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Student Name">
+                        <div class="d-flex align-center">
+                            <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-3">@context.Name.Substring(0,1)</MudAvatar>
+                            <MudText Typo="Typo.body2" Class="font-weight-bold">@context.Name</MudText>
+                        </div>
+                    </MudTd>
+                    <MudTd DataLabel="Course">@context.Course</MudTd>
+                    <MudTd DataLabel="Date Enrolled">@context.Date.ToShortDateString()</MudTd>
+                    <MudTd DataLabel="Status">
+                        <MudChip T="string" Size="Size.Small" Color="@(context.Status == "Active" ? Color.Success : Color.Warning)">
+                            @context.Status
+                        </MudChip>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
 </MudGrid>
+</div>
 
 
 
 @code {
     public List<ChartSeries<double>> Series = new List<ChartSeries<double>>()
     {
-        new ChartSeries<double>() { Name = "CHN", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80 } },
-        new ChartSeries<double>() { Name = "USA", Data = new double[] { 19, 24, 29, 13, 28, 15, 13, 16 } },
-        new ChartSeries<double>() { Name = "UK",  Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16 } },
+        new ChartSeries<double>() { Name = "Science", Data = new double[] { 85, 82, 88, 87, 89, 90, 88, 92 } },
+        new ChartSeries<double>() { Name = "Math",    Data = new double[] { 78, 80, 82, 81, 85, 84, 83, 88 } },
+        new ChartSeries<double>() { Name = "Arts",    Data = new double[] { 90, 91, 93, 92, 94, 95, 96, 95 } },
     };
     public string[] XAxisLabels = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG" };
 
     public double[] DonutData = { 30, 30, 40 };
-    public string[] DonutLabels = { "Search Engines", "Direct Click", "Bookmarks Click" };
+    public string[] DonutLabels = { "Freshmen", "Sophomores", "Seniors & Juniors" };
+
+    public class Enrollment
+    {
+        public string Name { get; set; } = "";
+        public string Course { get; set; } = "";
+        public DateTime Date { get; set; }
+        public string Status { get; set; } = "";
+    }
+
+    public List<Enrollment> RecentStudents = new List<Enrollment>
+    {
+        new Enrollment { Name = "Emma Watson", Course = "Advanced Science", Date = DateTime.Now.AddDays(-1), Status = "Active" },
+        new Enrollment { Name = "Liam Johnson", Course = "Mathematics 101", Date = DateTime.Now.AddDays(-2), Status = "Pending" },
+        new Enrollment { Name = "Olivia Davis", Course = "World History", Date = DateTime.Now.AddDays(-3), Status = "Active" },
+        new Enrollment { Name = "Noah Smith", Course = "Computer Science", Date = DateTime.Now.AddDays(-3), Status = "Active" }
+    };
 }
