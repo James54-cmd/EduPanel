@@ -31,8 +31,8 @@
                     <MudItem xs="12" md="6" Class="d-flex align-center">
                         <MudText Typo="Typo.body2" Style="width: 250px;">a. within the third degree</MudText>
                         <MudRadioGroup T="bool?" @bind-Value="relatedThirdDegree" Class="d-flex gap-4">
-                            <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                            <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                            <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                            <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                         </MudRadioGroup>
                     </MudItem>
                     <MudItem xs="12" md="6">
@@ -45,8 +45,8 @@
                     <MudItem xs="12" md="6" Class="d-flex align-center">
                         <MudText Typo="Typo.body2" Style="width: 250px;">b. within the fourth degree (For LGU)?</MudText>
                         <MudRadioGroup T="bool?" @bind-Value="relatedFourthDegree" Class="d-flex gap-4">
-                            <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                            <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                            <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                            <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                         </MudRadioGroup>
                     </MudItem>
                     <MudItem xs="12" md="6">
@@ -65,8 +65,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">a. Have you ever been found guilty of any administrative offense?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="adminOffense" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -82,8 +82,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-start mt-2">
                     <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">b. Have you been criminally charged before any court?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="criminalCharge" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -105,8 +105,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="convicted" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -124,8 +124,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="separatedService" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6" Class="d-flex align-center">
@@ -147,8 +147,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="electionCandidate" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -164,8 +164,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">b. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="resignedCampaign" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -188,8 +188,8 @@
             <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudText Typo="Typo.body2" Style="width: 250px;">a. Are you a member of any indigenous group?</MudText>
                 <MudRadioGroup T="bool?" @bind-Value="indigenous" Class="d-flex gap-4">
-                    <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                 </MudRadioGroup>
             </MudItem>
             <MudItem xs="12" md="6">
@@ -203,8 +203,8 @@
             <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudText Typo="Typo.body2" Style="width: 250px;">b. Are you a person with disability?</MudText>
                 <MudRadioGroup T="bool?" @bind-Value="pwd" Class="d-flex gap-4">
-                    <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                 </MudRadioGroup>
             </MudItem>
             <MudItem xs="12" md="6">
@@ -218,8 +218,8 @@
             <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudText Typo="Typo.body2" Style="width: 250px;">c. Are you a solo parent?</MudText>
                 <MudRadioGroup T="bool?" @bind-Value="soloParent" Class="d-flex gap-4">
-                    <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                 </MudRadioGroup>
             </MudItem>
             <MudItem xs="12" md="6">
@@ -246,8 +246,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;">a. within the third degree of consanguinity (e.g. mother/father, son/daughter, brother/sister...)</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="bspConsanguinity" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -263,8 +263,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;">b. within the third degree of affinity (e.g. mother-in-law, son-in-law...)</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="bspAffinity" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -280,8 +280,8 @@
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudText Typo="Typo.body2" Style="width: 350px;">c. Other relative/s not specified in items a and b?</MudText>
                     <MudRadioGroup T="bool?" @bind-Value="bspOtherRelative" Class="d-flex gap-4">
-                        <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                     </MudRadioGroup>
                 </MudItem>
                 <MudItem xs="12" md="6">
@@ -300,8 +300,8 @@
             <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Do you have relative/s who was/were former employee/s of the Bangko Sentral ng Pilipinas?</MudText>
                 <MudRadioGroup T="bool?" @bind-Value="bspFormerEmployee" Class="d-flex gap-4">
-                    <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                 </MudRadioGroup>
             </MudItem>
             <MudItem xs="12" md="6">
@@ -315,8 +315,8 @@
             <MudItem xs="12" md="6" Class="d-flex align-center">
                 <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Have you ever been a respondent for a preliminary investigation before the Prosecutor's / Fiscal's Office or any law enforcement agency such as police, PDEA, NBI, etc.?</MudText>
                 <MudRadioGroup T="bool?" @bind-Value="bspInvestigation" Class="d-flex gap-4">
-                    <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                 </MudRadioGroup>
             </MudItem>
             <MudItem xs="12" md="6">
@@ -379,8 +379,8 @@
             </MudItem>
             <MudItem xs="12" md="4" Class="d-flex align-center">
                 <MudRadioGroup T="bool?" @bind-Value="securityGuardAssign" Class="d-flex gap-4">
-                    <MudRadio Value="true" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio Value="false" Color="Color.Primary" Size="Size.Small">No</MudRadio>
+                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
+                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
                 </MudRadioGroup>
             </MudItem>
         </MudGrid>
