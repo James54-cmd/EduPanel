@@ -16,14 +16,14 @@
 
             <MudPaper Elevation="2" Class="rounded-xl py-4">
                 <div class="d-flex flex-column gap-1">
-                    @foreach (var tab in TabNames)
+                    @for (int i = 0; i < Tabs.Length; i++)
                     {
-                        var idx = tab.Key;
-                        var name = tab.Value;
+                        var idx = i;
+                        var tab = Tabs[i];
                         var isActive = activeIndex == idx;
                         <div @onclick="() => SetActiveTab(idx)"
                              class="@($"sidebar-ribbon cursor-pointer transition-all {(isActive ? "active text-white font-weight-bold" : "mud-text-secondary font-weight-medium")}")">
-                            <MudText Typo="Typo.body2" Class="inherit-font-weight" Style="letter-spacing: 0.2px;">@name</MudText>
+                            <MudText Typo="Typo.body2" Class="inherit-font-weight" Style="letter-spacing: 0.2px;">@tab.Name</MudText>
                         </div>
                     }
                 </div>
@@ -33,118 +33,23 @@
         <!-- Main Content Area -->
         <MudItem xs="12" md="9">
             <MudPaper Elevation="2" Class="pa-8 rounded-xl mud-width-full h-100">
-                @if (activeIndex == 0)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Personal Profile</MudText>
-                    </div>
-                    <PersonalProfileTab />
+                @{
+                    var isValidTab = activeIndex >= 0 && activeIndex < Tabs.Length;
+                    var currentTab = isValidTab ? Tabs[activeIndex] : null;
+                    
+                    var tabName = isValidTab ? currentTab!.Name : "Unknown";
+                    var tabIcon = isValidTab ? currentTab!.Icon : Icons.Material.Filled.Folder;
+                    var iconColor = isValidTab ? Color.Primary : Color.Secondary;
+                    var textColor = isValidTab ? Color.Default : Color.Secondary;
+                    var componentType = isValidTab ? currentTab!.ComponentType : typeof(ProfilePlaceholderTab);
                 }
-                else if (activeIndex == 1)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Work" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Work Information</MudText>
-                    </div>
-                    <WorkInformationTab />
-                }
-                else if (activeIndex == 2)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Education</MudText>
-                    </div>
-                    <EducationTab />
-                }
-                else if (activeIndex == 3)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Verified" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Eligibility</MudText>
-                    </div>
-                    <EligibilityTab />
-                }
-                else if (activeIndex == 4)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.WorkHistory" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Employment Record</MudText>
-                    </div>
-                    <EmploymentRecordTab />
-                }
-                else if (activeIndex == 5)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.ModelTraining" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Training Programs</MudText>
-                    </div>
-                    <TrainingProgramsTab />
-                }
-                else if (activeIndex == 6)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.FamilyRestroom" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Family Background</MudText>
-                    </div>
-                    <FamilyBackgroundTab />
-                }
-                else if (activeIndex == 7)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.VolunteerActivism" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Voluntary Works</MudText>
-                    </div>
-                    <VoluntaryWorksTab />
-                }
-                else if (activeIndex == 8)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Language</MudText>
-                    </div>
-                    <LanguageTab />
-                }
-                else if (activeIndex == 9)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Other Information</MudText>
-                    </div>
-                    <OtherInformationTab />
-                }
-                else if (activeIndex == 10)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.People" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Character Reference</MudText>
-                    </div>
-                    <CharacterReferenceTab />
-                }
-                else if (activeIndex == 11)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.ManageAccounts" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Service Record</MudText>
-                    </div>
-                    <ServiceRecordTab />
-                }
-                else if (activeIndex == 12)
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Inventory" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Accountability</MudText>
-                    </div>
-                    <AccountabilityTab />
-                }
-                else
-                {
-                    <div class="d-flex align-center mb-6">
-                        <MudIcon Icon="@Icons.Material.Filled.Folder" Size="Size.Large" Color="Color.Secondary" Class="mr-3" />
-                        <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Secondary" Style="letter-spacing: -0.5px;">@GetTabName(activeIndex)</MudText>
-                    </div>
-                    <ProfilePlaceholderTab />
-                }
+                
+                <div class="d-flex align-center mb-6">
+                    <MudIcon Icon="@tabIcon" Size="Size.Large" Color="@iconColor" Class="mr-3" />
+                    <MudText Typo="Typo.h4" Class="font-weight-bold" Color="@textColor" Style="letter-spacing: -0.5px;">@tabName</MudText>
+                </div>
+                
+                <DynamicComponent Type="@componentType" />
             </MudPaper>
         </MudItem>
     </MudGrid>
@@ -156,15 +61,31 @@
 
     private int activeIndex = 0;
 
+    private record TabDefinition(string Name, string Icon, Type ComponentType);
+
+    private readonly TabDefinition[] Tabs = new TabDefinition[]
+    {
+        new("Personal Profile", Icons.Material.Filled.Person, typeof(PersonalProfileTab)),
+        new("Work Information", Icons.Material.Filled.Work, typeof(WorkInformationTab)),
+        new("Education", Icons.Material.Filled.School, typeof(EducationTab)),
+        new("Eligibility", Icons.Material.Filled.Verified, typeof(EligibilityTab)),
+        new("Employment Record", Icons.Material.Filled.WorkHistory, typeof(EmploymentRecordTab)),
+        new("Training Programs", Icons.Material.Filled.ModelTraining, typeof(TrainingProgramsTab)),
+        new("Family Background", Icons.Material.Filled.FamilyRestroom, typeof(FamilyBackgroundTab)),
+        new("Voluntary Works", Icons.Material.Filled.VolunteerActivism, typeof(VoluntaryWorksTab)),
+        new("Language", Icons.Material.Filled.Language, typeof(LanguageTab)),
+        new("Other Information", Icons.Material.Filled.Info, typeof(OtherInformationTab)),
+        new("Character Reference", Icons.Material.Filled.People, typeof(CharacterReferenceTab)),
+        new("Service Record", Icons.Material.Filled.ManageAccounts, typeof(ServiceRecordTab)),
+        new("Accountability", Icons.Material.Filled.Inventory, typeof(AccountabilityTab))
+    };
+
     protected override void OnParametersSet()
     {
         if (!string.IsNullOrEmpty(TabQuery))
         {
-            var match = TabNames.FirstOrDefault(x => GetSlug(x.Value) == TabQuery);
-            if (match.Value != null)
-            {
-                activeIndex = match.Key;
-            }
+            var matchIndex = Array.FindIndex(Tabs, x => GetSlug(x.Name) == TabQuery);
+            activeIndex = matchIndex >= 0 ? matchIndex : 0;
         }
         else
         {
@@ -174,34 +95,13 @@
 
     private void SetActiveTab(int index)
     {
-        activeIndex = index;
-        if (TabNames.TryGetValue(index, out var name))
+        if (index >= 0 && index < Tabs.Length)
         {
-            var uri = NavManager.GetUriWithQueryParameter("tab", GetSlug(name));
+            activeIndex = index;
+            var uri = NavManager.GetUriWithQueryParameter("tab", GetSlug(Tabs[index].Name));
             NavManager.NavigateTo(uri, forceLoad: false, replace: true);
         }
     }
 
     private string GetSlug(string name) => name.ToLowerInvariant().Replace(" ", "-");
-
-    private readonly Dictionary<int, string> TabNames = new()
-    {
-        { 0, "Personal Profile" },
-        { 1, "Work Information" },
-        { 2, "Education" },
-        { 3, "Eligibility" },
-        { 4, "Employment Record" },
-        { 5, "Training Programs" },
-        { 6, "Family Background" },
-        { 7, "Voluntary Works" },
-        { 8, "Language" },
-        { 9, "Other Information" },
-        { 10, "Character Reference" },
-        { 11, "Service Record" },
-        { 12, "Accountability" }
-    };
-
-    private string GetTabName(int index) => TabNames.TryGetValue(index, out var name) ? name : "Unknown";
 }
-
-
