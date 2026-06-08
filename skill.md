@@ -76,3 +76,15 @@ EduPanel implements a clean, premium Shadcn-like Slate aesthetic:
   - **Success**: `#10b981` (Emerald-500)
   - **Warning**: `#f59e0b` (Amber-500)
   - **Error**: `#ef4444` (Red-500)
+
+---
+
+## 💅 CSS Isolation & Component Structure
+
+To maintain clean Razor files and organize components effectively:
+
+* **Component Folders**: Each page or complex component should live in its own dedicated folder (e.g., `Dashboard/Dashboard.razor`).
+* **Namespace Management**: Placing a component in a folder with the exact same name causes a C# namespace conflict (Error CS0542). To prevent this, always add the `@namespace` directive to the top of the `.razor` file specifying the parent namespace (e.g., `@namespace EduPanel.Components.Pages.Admin`).
+* **Avoid Inline `<style>` Blocks**: Do not use `<style>` blocks inside `.razor` components.
+* **Use Scoped CSS**: Place component-specific styles in a dedicated isolated CSS file right next to the component (e.g., `Dashboard/Dashboard.razor.css`).
+* **Global Styles**: Utility classes and truly global styles should be kept in `wwwroot/app.css` or `wwwroot/EduPanel.styles.css`.

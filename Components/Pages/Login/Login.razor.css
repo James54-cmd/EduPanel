@@ -1,0 +1,14 @@
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+@media (min-width: 960px) {
+    .login-grid-layout {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    .right-pane-bg {
+        display: block !important;
+    }
+}
