@@ -16,7 +16,8 @@
 <DataTable TItem="EmployeeModel"
            Items="@Employees"
            Columns="@Columns"
-           PageSize="20"
+           Dense="true"
+           PageSize="10"
            BodyHeight="calc(100vh - 20rem)"
            EmptyText="No employees found"
            OnRowClick="@HandleRowClick">
@@ -55,18 +56,34 @@
         public string Name { get; set; } = "";
         public string Role { get; set; } = "";
         public string Department { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public DateTime HireDate { get; set; }
         public bool IsActive { get; set; }
     }
 
     private List<EmployeeModel> Employees = new()
     {
-        new EmployeeModel { Id = 1001, Name = "Alice Smith",   Role = "Senior Teacher", Department = "Science",        IsActive = true  },
-        new EmployeeModel { Id = 1002, Name = "Bob Jones",     Role = "Teacher",        Department = "Math",           IsActive = true  },
-        new EmployeeModel { Id = 1003, Name = "Charlie Brown", Role = "Admin",          Department = "Administration", IsActive = false },
-        new EmployeeModel { Id = 1004, Name = "Diana Prince",  Role = "Counselor",      Department = "Support",        IsActive = true  },
-        new EmployeeModel { Id = 1005, Name = "Evan Wright",   Role = "Teacher",        Department = "History",        IsActive = true  },
-        new EmployeeModel { Id = 1006, Name = "Fiona Green",   Role = "Teacher",        Department = "English",        IsActive = true  },
-        new EmployeeModel { Id = 1007, Name = "George Hall",   Role = "Teacher",        Department = "PE",             IsActive = false },
+        new EmployeeModel { Id = 1001, Name = "Alice Smith", Role = "Senior Teacher", Department = "Science", IsActive = true, Email = "alice@edu.com", Phone = "555-0101", HireDate = new DateTime(2020, 1, 15) },
+        new EmployeeModel { Id = 1002, Name = "Bob Jones", Role = "Teacher", Department = "Math", IsActive = true, Email = "bob@edu.com", Phone = "555-0102", HireDate = new DateTime(2021, 3, 22) },
+        new EmployeeModel { Id = 1003, Name = "Charlie Brown", Role = "Admin", Department = "Administration", IsActive = false, Email = "charlie@edu.com", Phone = "555-0103", HireDate = new DateTime(2019, 8, 10) },
+        new EmployeeModel { Id = 1004, Name = "Diana Prince", Role = "Counselor", Department = "Support", IsActive = true, Email = "diana@edu.com", Phone = "555-0104", HireDate = new DateTime(2022, 5, 11) },
+        new EmployeeModel { Id = 1005, Name = "Evan Wright", Role = "Teacher", Department = "History", IsActive = true, Email = "evan@edu.com", Phone = "555-0105", HireDate = new DateTime(2020, 9, 1) },
+        new EmployeeModel { Id = 1006, Name = "Fiona Green", Role = "Teacher", Department = "English", IsActive = true, Email = "fiona@edu.com", Phone = "555-0106", HireDate = new DateTime(2021, 1, 12) },
+        new EmployeeModel { Id = 1007, Name = "George Hall", Role = "Teacher", Department = "PE", IsActive = false, Email = "george@edu.com", Phone = "555-0107", HireDate = new DateTime(2018, 4, 18) },
+        new EmployeeModel { Id = 1008, Name = "Hannah Lee", Role = "Librarian", Department = "Library", IsActive = true, Email = "hannah@edu.com", Phone = "555-0108", HireDate = new DateTime(2019, 11, 20) },
+        new EmployeeModel { Id = 1009, Name = "Ian Scott", Role = "Teacher", Department = "Math", IsActive = true, Email = "ian@edu.com", Phone = "555-0109", HireDate = new DateTime(2023, 8, 15) },
+        new EmployeeModel { Id = 1010, Name = "Jane Doe", Role = "Principal", Department = "Administration", IsActive = true, Email = "jane@edu.com", Phone = "555-0110", HireDate = new DateTime(2015, 7, 1) },
+        new EmployeeModel { Id = 1011, Name = "Kevin Hart", Role = "Teacher", Department = "Science", IsActive = true, Email = "kevin@edu.com", Phone = "555-0111", HireDate = new DateTime(2021, 9, 1) },
+        new EmployeeModel { Id = 1012, Name = "Laura Croft", Role = "IT Support", Department = "IT", IsActive = true, Email = "laura@edu.com", Phone = "555-0112", HireDate = new DateTime(2022, 2, 28) },
+        new EmployeeModel { Id = 1013, Name = "Mike Ross", Role = "Legal Counsel", Department = "Administration", IsActive = false, Email = "mike@edu.com", Phone = "555-0113", HireDate = new DateTime(2020, 10, 10) },
+        new EmployeeModel { Id = 1014, Name = "Nina Williams", Role = "Teacher", Department = "Art", IsActive = true, Email = "nina@edu.com", Phone = "555-0114", HireDate = new DateTime(2017, 6, 14) },
+        new EmployeeModel { Id = 1015, Name = "Oscar Isaac", Role = "Teacher", Department = "Drama", IsActive = true, Email = "oscar@edu.com", Phone = "555-0115", HireDate = new DateTime(2018, 9, 1) },
+        new EmployeeModel { Id = 1016, Name = "Paula Patton", Role = "Counselor", Department = "Support", IsActive = true, Email = "paula@edu.com", Phone = "555-0116", HireDate = new DateTime(2021, 5, 20) },
+        new EmployeeModel { Id = 1017, Name = "Quinn Fabray", Role = "Teacher", Department = "Music", IsActive = true, Email = "quinn@edu.com", Phone = "555-0117", HireDate = new DateTime(2022, 8, 15) },
+        new EmployeeModel { Id = 1018, Name = "Rachel Zane", Role = "HR Manager", Department = "HR", IsActive = true, Email = "rachel@edu.com", Phone = "555-0118", HireDate = new DateTime(2019, 3, 10) },
+        new EmployeeModel { Id = 1019, Name = "Steve Rogers", Role = "Security", Department = "Operations", IsActive = true, Email = "steve@edu.com", Phone = "555-0119", HireDate = new DateTime(2016, 11, 1) },
+        new EmployeeModel { Id = 1020, Name = "Tony Stark", Role = "IT Director", Department = "IT", IsActive = false, Email = "tony@edu.com", Phone = "555-0120", HireDate = new DateTime(2014, 5, 5) },
     };
 
     private List<DataTable<EmployeeModel>.ColumnDef<EmployeeModel>> Columns => new()
@@ -97,6 +114,27 @@
             Header     = "Department",
             GridWidth  = "minmax(120px, 1.5fr)",
             CellTemplate = emp => @<span>@emp.Department</span>
+        },
+        new()
+        {
+            Header     = "Email",
+            GridWidth  = "minmax(140px, 1.5fr)",
+            HideOnMobile = true,
+            CellTemplate = emp => @<span style="color:#6b7280; font-size: 0.8rem;">@emp.Email</span>
+        },
+        new()
+        {
+            Header     = "Phone",
+            GridWidth  = "minmax(110px, 1fr)",
+            HideOnMobile = true,
+            CellTemplate = emp => @<span style="color:#6b7280; font-size: 0.8rem;">@emp.Phone</span>
+        },
+        new()
+        {
+            Header     = "Hire Date",
+            GridWidth  = "minmax(100px, 1fr)",
+            HideOnMobile = true,
+            CellTemplate = emp => @<span style="color:#6b7280; font-size: 0.8rem;">@emp.HireDate.ToString("MMM dd, yyyy")</span>
         },
         new()
         {

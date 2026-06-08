@@ -1,7 +1,7 @@
 @namespace EduPanel.Components.UI
 @typeparam TItem
 
-<div class="dt-wrapper">
+<div class="dt-wrapper @(Dense ? "dt-dense" : "")">
     @* ── HEADER (tablet 768+ only) ── *@
     <div class="dt-header" style="grid-template-columns: @GridTemplate;">
         @foreach (var col in Columns)
@@ -89,7 +89,7 @@
     </div>
 
     @* ── PAGINATION ── *@
-    @if (!IsLoading && TotalItems > PageSize)
+    @if (!IsLoading && TotalItems > 0)
     {
         <div class="dt-pagination">
             <span class="dt-page-info">
@@ -141,6 +141,9 @@
 
     [Parameter]
     public bool IsLoading { get; set; }
+
+    [Parameter]
+    public bool Dense { get; set; }
 
     [Parameter]
     public int PageSize { get; set; } = 10;
