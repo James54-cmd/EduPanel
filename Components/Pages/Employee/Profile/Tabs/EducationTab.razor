@@ -45,7 +45,7 @@
                     {
                         <tr>
                             <td><MudText Typo="Typo.body2" Color="Color.Secondary">@record.TransactionNo</MudText></td>
-                            <td><MudChip Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="font-weight-bold">@record.Level</MudChip></td>
+                            <td><MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="font-weight-bold">@record.Level</MudChip></td>
                             <td class="font-weight-medium">@record.School</td>
                             <td>
                                 @if (string.IsNullOrEmpty(record.Course))
