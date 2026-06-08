@@ -1,7 +1,48 @@
 .mud-main-content-custom {
-    background-color: #f4f5fb; /* Light background similar to the reference image */
+    background-color: #f4f5fb;
     min-height: 100vh;
 }
+
 .border-b {
     border-bottom: 1px solid #e4e4e7 !important;
+}
+
+/* ── Mobile / Tablet: GitHub-style top dropdown ── */
+.mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    top: 48px; /* below the dense app bar */
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1099;
+    animation: fadeIn 0.15s ease;
+}
+
+.mobile-nav-panel {
+    position: fixed;
+    top: 48px; /* sits right below the app bar */
+    left: 0;
+    right: 0;
+    background: #fff;
+    z-index: 1100;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid #e4e4e7;
+    animation: slideDown 0.2s ease;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -1,4 +1,7 @@
 @inherits LayoutComponentBase
+@implements IDisposable
+@inject IBrowserViewportService BrowserViewportService
+@inject NavigationManager NavigationManager
 
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Primary" Dense="true">
@@ -8,22 +11,45 @@
         <MudAvatar Color="Color.Secondary" Size="Size.Small" Class="ml-4 text-white">AD</MudAvatar>
     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
-        <div class="d-flex align-center pa-4" style="height: 48px;">
-            <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Medium" Class="mr-2"/>
-            @if (_drawerOpen)
-            {
-                <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold text-truncate">EduPanel</MudText>
-            }
-        </div>
-        <NavMenu />
-    </MudDrawer>
+    @if (_isMobileOrTablet)
+    {
+        @if (_drawerOpen)
+        {
+            <div class="mobile-nav-overlay" @onclick="CloseDrawer"></div>
+            <div class="mobile-nav-panel">
+                <div class="d-flex align-center pa-3 border-b">
+                    <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Small" Class="mr-2"/>
+                    <MudText Typo="Typo.subtitle1" Color="Color.Primary" Class="font-weight-bold">EduPanel</MudText>
+                </div>
+                <NavMenu />
+            </div>
+        }
 
-    <MudMainContent Class="mud-main-content-custom">
-        <div class="pa-6">
-            @Body
-        </div>
-    </MudMainContent>
+        <MudMainContent Class="mud-main-content-custom">
+            <div class="pa-4">
+                @Body
+            </div>
+        </MudMainContent>
+    }
+    else
+    {
+        <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
+            <div class="d-flex align-center pa-4" style="height: 48px;">
+                <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Medium" Class="mr-2"/>
+                @if (_drawerOpen)
+                {
+                    <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold text-truncate">EduPanel</MudText>
+                }
+            </div>
+            <NavMenu />
+        </MudDrawer>
+
+        <MudMainContent Class="mud-main-content-custom">
+            <div class="pa-6">
+                @Body
+            </div>
+        </MudMainContent>
+    }
 </MudLayout>
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -32,10 +58,49 @@
     <span class="dismiss">🗙</span>
 </div>
 
-
-
 @code {
     bool _drawerOpen = true;
+    bool _isMobileOrTablet = false;
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var breakpoint = await BrowserViewportService.GetCurrentBreakpointAsync();
+            _isMobileOrTablet = breakpoint <= Breakpoint.Sm;
+
+            if (_isMobileOrTablet)
+            {
+                _drawerOpen = false;
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        if (_isMobileOrTablet && _drawerOpen)
+        {
+            _drawerOpen = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    void CloseDrawer()
+    {
+        _drawerOpen = false;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
 
     void DrawerToggle()
     {
