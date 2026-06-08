@@ -61,7 +61,11 @@
     <MudItem xs="12" md="5">
         <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100 relative">
             <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Student Distribution</MudText>
-            <MudChart T="double" ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px" />
+            <MudChart T="double" ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px">
+                <CustomGraphics>
+                    <text class="mud-donut-text mud-typography-h3" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">@DonutData.Sum()</text>
+                </CustomGraphics>
+            </MudChart>
             
             <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Settings" Size="Size.Medium" Style="position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;" />
 
