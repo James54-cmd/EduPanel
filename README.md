@@ -8,8 +8,10 @@ This project focuses purely on **UI/UX design and component mastery** using MudB
 
 ## 🚀 Tech Stack
 
-* .NET 10 (Blazor Web App / Server Interactive)
+* .NET 9 (Blazor Web App / Server Interactive)
 * MudBlazor (UI Components)
+* Heron.MudCalendar (Calendar Component)
+* bUnit (Unit Testing for Blazor)
 * C#
 * Razor Components
 
@@ -32,6 +34,10 @@ This project is designed to:
 * Login Page (hardcoded authentication)
 * Admin Dashboard Layout
 * Sidebar Navigation
+* **Employee Portal**:
+  * Profile Overview
+  * Personal Data Update (Multi-tab structure)
+  * Attendance Management (Calendar, Leave, DTR, Overtime)
 * Student Management UI (mock data)
 * Teacher Management UI (mock data)
 * Settings Page
@@ -42,7 +48,7 @@ This project is designed to:
 
 ## 🧪 Current Status
 
-🚧 In Development — Initial setup phase
+🚧 In Development — Building core layouts, employee portal features, and focusing on a clean **Component-Based Architecture**.
 
 ---
 
