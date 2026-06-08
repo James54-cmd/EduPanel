@@ -1,0 +1,43 @@
+# .NET / Visual Studio / Blazor
+
+# Build outputs
+
+bin/
+obj/
+
+# User-specific files
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code
+
+.vscode/
+.idea/
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Logs
+
+*.log
+
+# .NET publish output
+
+publish/
+
+# Secrets
+
+appsettings.Development.json
+
+# Node (if ever used later)
+
+node_modules/
+
+# ASP.NET Core HTTPS dev cert
+
+*.pfx
