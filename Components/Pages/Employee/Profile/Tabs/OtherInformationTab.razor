@@ -2,392 +2,493 @@
 
 <div class="d-flex flex-column gap-6 pb-6">
 
-    <!-- Skills & Affiliations -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4" Color="Color.Primary">Skills & Affiliations</MudText>
-        <MudGrid Spacing="4">
-            <MudItem xs="12" md="4">
-                <MudTextField T="string" Label="Special Skills and Hobbies" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            </MudItem>
-            <MudItem xs="12" md="4">
-                <MudTextField T="string" Label="Non-Academic Distinctions / Recognition" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            </MudItem>
-            <MudItem xs="12" md="4">
-                <MudTextField T="string" Label="Membership in Association / Organization" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
-    <!-- Administrative & Legal Background -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-6" Color="Color.Primary">Administrative & Legal Background</MudText>
-        
-        <div class="d-flex flex-column gap-6">
-            <!-- 1. Consanguinity -->
-            <div>
-                <MudText Typo="Typo.body2" Class="font-weight-bold mb-2">Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed?</MudText>
-                
-                <MudGrid Spacing="2" Class="ml-4">
-                    <MudItem xs="12" md="6" Class="d-flex align-center">
-                        <MudText Typo="Typo.body2" Style="width: 250px;">a. within the third degree</MudText>
-                        <MudRadioGroup T="bool?" @bind-Value="relatedThirdDegree" Class="d-flex gap-4">
-                            <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                            <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                        </MudRadioGroup>
-                    </MudItem>
-                    <MudItem xs="12" md="6">
-                        @if (relatedThirdDegree == true)
-                        {
-                            <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                        }
-                    </MudItem>
-
-                    <MudItem xs="12" md="6" Class="d-flex align-center">
-                        <MudText Typo="Typo.body2" Style="width: 250px;">b. within the fourth degree (For LGU)?</MudText>
-                        <MudRadioGroup T="bool?" @bind-Value="relatedFourthDegree" Class="d-flex gap-4">
-                            <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                            <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                        </MudRadioGroup>
-                    </MudItem>
-                    <MudItem xs="12" md="6">
-                        @if (relatedFourthDegree == true)
-                        {
-                            <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                        }
-                    </MudItem>
-                </MudGrid>
-            </div>
-
-            <MudDivider />
-
-            <!-- 2. Administrative Offense -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">a. Have you ever been found guilty of any administrative offense?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="adminOffense" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 1: Skills & Affiliations               -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.Star" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                Skills & Affiliations
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <MudGrid Spacing="4">
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" Label="Special Skills and Hobbies" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
                 </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (adminOffense == true)
-                    {
-                        <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" Label="Non-Academic Distinctions / Recognition" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" Label="Membership in Association / Organization" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
                 </MudItem>
             </MudGrid>
+        </div>
+    </MudPaper>
 
-            <!-- 3. Criminal Charge -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 2: Administrative & Legal Background   -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.Gavel" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                Administrative & Legal Background
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <!-- Intro question -->
+            <MudAlert Severity="Severity.Info" Variant="Variant.Text" Dense="true" NoIcon="false" Class="mb-5 rounded-lg">
+                Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed?
+            </MudAlert>
+
+            <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;" Class="mb-6">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Question</MudText></th>
+                        <th style="width: 15%; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Response</MudText></th>
+                        <th style="width: 35%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Details</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1 -->
+                    <tr>
+                        <td><MudText Typo="Typo.body2">a. Within the third degree</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="relatedThirdDegree" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (relatedThirdDegree == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <!-- Row 2 -->
+                    <tr>
+                        <td><MudText Typo="Typo.body2">b. Within the fourth degree (For Local Government Unit - Career Employees)?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="relatedFourthDegree" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (relatedFourthDegree == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <!-- Row 3 -->
+                    <tr>
+                        <td><MudText Typo="Typo.body2">a. Have you ever been found guilty of any administrative offense?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="adminOffense" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (adminOffense == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <!-- Row 4 -->
+                    <tr>
+                        <td><MudText Typo="Typo.body2">b. Have you been criminally charged before any court?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="criminalCharge" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (criminalCharge == true)
+                            {
+                                <div class="d-flex flex-column gap-2">
+                                    <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    <MudDatePicker Placeholder="Date Filed" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    <MudTextField T="string" Placeholder="Status of Case/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                    <!-- Row 5 -->
+                    <tr>
+                        <td><MudText Typo="Typo.body2">Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="convicted" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (convicted == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <!-- Row 6 -->
+                    <tr>
+                        <td><MudText Typo="Typo.body2">Have you ever been separated from the service (resignation, retirement, dropped from rolls, dismissal, termination, end of term, finished contract, or abolition) in the public or private sector?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="separatedService" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (separatedService == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        </div>
+    </MudPaper>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 3: Government & Public Service         -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                Government & Public Service Declarations
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Question</MudText></th>
+                        <th style="width: 15%; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Response</MudText></th>
+                        <th style="width: 35%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Details</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="electionCandidate" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (electionCandidate == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">b. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="resignedCampaign" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (resignedCampaign == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        </div>
+    </MudPaper>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 4: Demographics & Special Welfare Acts -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.Diversity3" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                Demographics & Special Welfare Acts
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <MudAlert Severity="Severity.Info" Variant="Variant.Text" Dense="true" NoIcon="false" Class="mb-5 rounded-lg">
+                Pursuant to: (a) Indigenous People's Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act of 2000 (RA 8972).
+            </MudAlert>
+
+            <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Question</MudText></th>
+                        <th style="width: 15%; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Response</MudText></th>
+                        <th style="width: 35%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Details</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">a. Are you a member of any indigenous group?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="indigenous" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (indigenous == true)
+                            {
+                                <MudTextField T="string" Placeholder="Please specify..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">b. Are you a person with disability?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="pwd" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (pwd == true)
+                            {
+                                <MudTextField T="string" Placeholder="Give details..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">c. Are you a solo parent?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="soloParent" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (soloParent == true)
+                            {
+                                <div class="d-flex flex-column gap-2">
+                                    <MudTextField T="string" Placeholder="Solo Parent ID No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    <MudDatePicker Placeholder="Solo Parent ID Expiry Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        </div>
+    </MudPaper>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 5: BSP Declarations                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.Business" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                Bangko Sentral ng Pilipinas (BSP) Declarations
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <MudAlert Severity="Severity.Info" Variant="Variant.Text" Dense="true" NoIcon="false" Class="mb-5 rounded-lg">
+                Are you related to any official or employee in the BSP?
+            </MudAlert>
+
+            <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Question</MudText></th>
+                        <th style="width: 15%; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Response</MudText></th>
+                        <th style="width: 35%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Details</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">a. Within the third degree of consanguinity (i.e. mother/father, son/daughter, brother/sister, nephew/niece, uncle/aunt, grandparent, grandchild)?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="bspConsanguinity" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (bspConsanguinity == true)
+                            {
+                                <MudTextField T="string" Placeholder="Name/s of relative/s and relationship/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">b. Within the third degree of affinity (i.e. mother-in-law, father-in-law, son-in-law, daughter-in-law, brother-in-law, sister-in-law, uncle-in-law, aunt-in-law, grandparent-in-law, grandchild-in-law)?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="bspAffinity" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (bspAffinity == true)
+                            {
+                                <MudTextField T="string" Placeholder="Name/s of relative/s and relationship/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">c. Other relative/s not specified in items a and b?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="bspOtherRelative" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (bspOtherRelative == true)
+                            {
+                                <MudTextField T="string" Placeholder="Name/s of relative/s and relationship/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2" Class="font-weight-bold">Do you have relative/s who was/were former employee/s of the Bangko Sentral ng Pilipinas?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="bspFormerEmployee" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (bspFormerEmployee == true)
+                            {
+                                <MudTextField T="string" Placeholder="Name/s, relationship, dept and date of retirement" Lines="2" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2" Class="font-weight-bold">Have you ever been a respondent for a preliminary investigation before the Prosecutor's / Fiscal's Office or any law enforcement agency (police, PDEA, NBI, etc.)?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="bspInvestigation" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                        <td>
+                            @if (bspInvestigation == true)
+                            {
+                                <div class="d-flex flex-column gap-2">
+                                    <MudTextField T="string" Placeholder="Nature of the offense..." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    <MudSelect T="string" Label="Status" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                        <MudSelectItem Value="@("Ongoing")">Ongoing</MudSelectItem>
+                                        <MudSelectItem Value="@("Dismissed")">Dismissed</MudSelectItem>
+                                    </MudSelect>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        </div>
+    </MudPaper>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 6: Medical Background                  -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.MedicalServices" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                Medical Background
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Text" Dense="true" Class="mb-5 rounded-lg">
+                Please check any ailment/s for which you have been treated or are presently undergoing treatment.
+            </MudAlert>
+
             <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-start mt-2">
-                    <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">b. Have you been criminally charged before any court?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="criminalCharge" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-lg bg-transparent">
+                        <MudCheckBox T="bool" Label="Hypertension" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Acquired heart disease" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Pulmonary tuberculosis" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Malignancies/cancer" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Cardiovascular accident (CVA)" Size="Size.Small" />
+                    </MudPaper>
                 </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (criminalCharge == true)
-                    {
-                        <div class="d-flex flex-column gap-2">
-                            <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                            <MudDatePicker Label="Date Filed" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                            <MudTextField T="string" Label="Status of Case/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-lg bg-transparent">
+                        <MudCheckBox T="bool" Label="Diabetes" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Kidney disease" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Chronic pulmonary disease" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Autoimmune disease" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Neuro-psychiatric condition" Size="Size.Small" />
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-lg bg-transparent">
+                        <MudCheckBox T="bool" Label="Hematologic condition" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Major congenital anomaly/deformation" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Chronic liver disease" Size="Size.Small" />
+                        <div class="d-flex align-center gap-2 mt-2">
+                            <MudCheckBox @bind-Value="hasOtherAilments" Label="Others" Size="Size.Small" />
                         </div>
-                    }
-                </MudItem>
-            </MudGrid>
-            
-            <MudDivider />
-
-            <!-- 4. Convicted -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="convicted" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (convicted == true)
-                    {
-                        <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
-                </MudItem>
-            </MudGrid>
-
-            <MudDivider />
-
-            <!-- 5. Separated from Service -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Have you ever been separated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition) in the public or private sector?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="separatedService" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    @if (separatedService == true)
-                    {
-                        <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
+                        @if (hasOtherAilments)
+                        {
+                            <MudTextField T="string" Placeholder="Please specify..." Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2" />
+                        }
+                    </MudPaper>
                 </MudItem>
             </MudGrid>
         </div>
     </MudPaper>
 
-    <!-- Government & Public Service Declarations -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-6" Color="Color.Primary">Government & Public Service Declarations</MudText>
-        <div class="d-flex flex-column gap-6">
-            <!-- Election Candidate -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">a. Have you ever been a candidate in a national or local election held within the last year (except Barangay election)?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="electionCandidate" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (electionCandidate == true)
-                    {
-                        <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
-                </MudItem>
-            </MudGrid>
-
-            <!-- Resigned to Campaign -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">b. Have you resigned from the government service during the three (3)-month period before the last election to promote/actively campaign for a national or local candidate?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="resignedCampaign" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (resignedCampaign == true)
-                    {
-                        <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
-                </MudItem>
-            </MudGrid>
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SECTION 7: Security Guard                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="px-6 py-3 mud-border-bottom">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Warning">
+                <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Small" Class="mr-2" Style="vertical-align: middle;" />
+                FOR APPLICANTS TO A SECURITY GUARD POSITION ONLY
+            </MudText>
+        </div>
+        <div class="pa-6">
+            <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        <th style="width: 70%;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Question</MudText></th>
+                        <th style="width: 30%; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Response</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><MudText Typo="Typo.body2">If considered, are you willing to be assigned / re-assigned to the Main / SPC / regional offices / branches of the Bangko Sentral ng Pilipinas in the performance of your job?</MudText></td>
+                        <td style="text-align: center;">
+                            <MudRadioGroup T="bool?" @bind-Value="securityGuardAssign" Class="d-flex justify-center gap-4">
+                                <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small" Dense="true">Yes</MudRadio>
+                                <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small" Dense="true">No</MudRadio>
+                            </MudRadioGroup>
+                        </td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
         </div>
     </MudPaper>
 
-    <!-- Demographics & Special Welfare Acts -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-6" Color="Color.Primary">Demographics & Special Welfare Acts</MudText>
-        <MudText Typo="Typo.body2" Class="mb-4">Pursuant to: (a) Indigenous People's Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act of 2000 (RA 8972), please answer the following items:</MudText>
-
-        <MudGrid Spacing="2" Class="ml-2">
-            <!-- Indigenous -->
-            <MudItem xs="12" md="6" Class="d-flex align-center">
-                <MudText Typo="Typo.body2" Style="width: 250px;">a. Are you a member of any indigenous group?</MudText>
-                <MudRadioGroup T="bool?" @bind-Value="indigenous" Class="d-flex gap-4">
-                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                @if (indigenous == true)
-                {
-                    <MudTextField T="string" Label="If YES, please specify" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                }
-            </MudItem>
-
-            <!-- PWD -->
-            <MudItem xs="12" md="6" Class="d-flex align-center">
-                <MudText Typo="Typo.body2" Style="width: 250px;">b. Are you a person with disability?</MudText>
-                <MudRadioGroup T="bool?" @bind-Value="pwd" Class="d-flex gap-4">
-                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                @if (pwd == true)
-                {
-                    <MudTextField T="string" Label="If YES, give details" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                }
-            </MudItem>
-
-            <!-- Solo Parent -->
-            <MudItem xs="12" md="6" Class="d-flex align-center">
-                <MudText Typo="Typo.body2" Style="width: 250px;">c. Are you a solo parent?</MudText>
-                <MudRadioGroup T="bool?" @bind-Value="soloParent" Class="d-flex gap-4">
-                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                @if (soloParent == true)
-                {
-                    <div class="d-flex flex-column gap-2">
-                        <MudTextField T="string" Label="If YES, please specify ID No." Variant="Variant.Outlined" Margin="Margin.Dense" />
-                        <MudDatePicker Label="Solo Parent ID Expiry Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    </div>
-                }
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
-    <!-- BSP Specific Declarations -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-6" Color="Color.Primary">Bangko Sentral ng Pilipinas (BSP) Declarations</MudText>
-        
-        <MudText Typo="Typo.body2" Class="font-weight-bold mb-4">Are you related to any official or employee in the BSP</MudText>
-        
-        <div class="d-flex flex-column gap-4 ml-4">
-            <!-- Consanguinity BSP -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;">a. within the third degree of consanguinity (e.g. mother/father, son/daughter, brother/sister...)</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="bspConsanguinity" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (bspConsanguinity == true)
-                    {
-                        <MudTextField T="string" Label="If Yes, give name/s of relative/s and relationship/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
-                </MudItem>
-            </MudGrid>
-
-            <!-- Affinity BSP -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;">b. within the third degree of affinity (e.g. mother-in-law, son-in-law...)</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="bspAffinity" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (bspAffinity == true)
-                    {
-                        <MudTextField T="string" Label="If Yes, give name/s of relative/s and relationship/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
-                </MudItem>
-            </MudGrid>
-
-            <!-- Other Relative BSP -->
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6" Class="d-flex align-center">
-                    <MudText Typo="Typo.body2" Style="width: 350px;">c. Other relative/s not specified in items a and b?</MudText>
-                    <MudRadioGroup T="bool?" @bind-Value="bspOtherRelative" Class="d-flex gap-4">
-                        <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                        <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                    </MudRadioGroup>
-                </MudItem>
-                <MudItem xs="12" md="6">
-                    @if (bspOtherRelative == true)
-                    {
-                        <MudTextField T="string" Label="If Yes, give name/s of relative/s and relationship/s" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    }
-                </MudItem>
-            </MudGrid>
-        </div>
-
-        <MudDivider Class="my-4" />
-
-        <MudGrid Spacing="2">
-            <!-- Former Employee -->
-            <MudItem xs="12" md="6" Class="d-flex align-center">
-                <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Do you have relative/s who was/were former employee/s of the Bangko Sentral ng Pilipinas?</MudText>
-                <MudRadioGroup T="bool?" @bind-Value="bspFormerEmployee" Class="d-flex gap-4">
-                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                @if (bspFormerEmployee == true)
-                {
-                    <MudTextField T="string" Label="If Yes, give name/s, relationship, dept and date of retirement" Lines="2" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                }
-            </MudItem>
-
-            <!-- Investigation -->
-            <MudItem xs="12" md="6" Class="d-flex align-center">
-                <MudText Typo="Typo.body2" Style="width: 350px;" Class="font-weight-bold">Have you ever been a respondent for a preliminary investigation before the Prosecutor's / Fiscal's Office or any law enforcement agency such as police, PDEA, NBI, etc.?</MudText>
-                <MudRadioGroup T="bool?" @bind-Value="bspInvestigation" Class="d-flex gap-4">
-                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                @if (bspInvestigation == true)
-                {
-                    <div class="d-flex flex-column gap-2">
-                        <MudTextField T="string" Label="If Yes, state nature of the offense complained of" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                        <MudSelect T="string" Label="Status" Variant="Variant.Outlined" Margin="Margin.Dense">
-                            <MudSelectItem Value="@("Ongoing")">Ongoing</MudSelectItem>
-                            <MudSelectItem Value="@("Dismissed")">Dismissed</MudSelectItem>
-                        </MudSelect>
-                    </div>
-                }
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
-    <!-- Medical Background -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4" Color="Color.Primary">Medical Background</MudText>
-        <MudText Typo="Typo.body2" Class="font-weight-bold mb-4">Please check any ailment/s for which you have been treated or are presently undergoing treatment</MudText>
-        
-        <MudGrid Spacing="2">
-            <MudItem xs="12" sm="6" md="4">
-                <MudCheckBox T="bool" Label="Hypertension" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Acquired heart disease" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Pulmonary tuberculosis" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Malignancies/cancer" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Cardiovascular accident (CVA)" Size="Size.Small" />
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <MudCheckBox T="bool" Label="Diabetes" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Kidney disease" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Chronic pulmonary disease" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Autoimmune disease" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Neuro-psychiatric condition" Size="Size.Small" />
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <MudCheckBox T="bool" Label="Hematologic condition" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Major congenital anomaly/deformation" Size="Size.Small" />
-                <MudCheckBox T="bool" Label="Chronic liver disease" Size="Size.Small" />
-                <div class="d-flex align-center gap-2 mt-1">
-                    <MudCheckBox @bind-Value="hasOtherAilments" Label="Others" Size="Size.Small" />
-                    @if(hasOtherAilments)
-                    {
-                        <MudTextField T="string" Placeholder="Please specify" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
-                    }
-                </div>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
-    <!-- Security Guard Specifics -->
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent border-warning">
-        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Warning">FOR APPLICANTS TO A SECURITY GUARD POSITION ONLY</MudText>
-        
-        <MudGrid Spacing="2">
-            <MudItem xs="12" md="8" Class="d-flex align-center">
-                <MudText Typo="Typo.body2">If considered, are you willing to be assigned / re-assigned to the Main / SPC / regional offices / branches of the Bangko Sentral ng Pilipinas in the performance of your job?</MudText>
-            </MudItem>
-            <MudItem xs="12" md="4" Class="d-flex align-center">
-                <MudRadioGroup T="bool?" @bind-Value="securityGuardAssign" Class="d-flex gap-4">
-                    <MudRadio T="bool?" Value="@(true)" Color="Color.Primary" Size="Size.Small">Yes</MudRadio>
-                    <MudRadio T="bool?" Value="@(false)" Color="Color.Primary" Size="Size.Small">No</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
-    <div class="d-flex justify-end mt-4">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="px-8 py-2 rounded-lg text-transform-none elevation-2">Modify / Save Information</MudButton>
+    <!-- Save Button -->
+    <div class="d-flex justify-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" Class="px-8 py-2 rounded-lg text-transform-none elevation-2">
+            Modify / Save Information
+        </MudButton>
     </div>
 
 </div>
@@ -402,7 +503,7 @@
     private bool? separatedService;
     private bool? electionCandidate;
     private bool? resignedCampaign;
-    
+
     private bool? indigenous;
     private bool? pwd;
     private bool? soloParent;
