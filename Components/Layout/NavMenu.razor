@@ -34,6 +34,38 @@
                     </MudPaper>
                 </MudPopover>
             </div>
+
+            <div class="nav-profile-group mt-2">
+                <MudNavLink Icon="@Icons.Material.Filled.AccessTime"
+                            IconColor="@(IsAttendanceActive ? Color.Primary : Color.Default)"
+                            OnClick="ToggleAttendanceMenu"
+                            Match="NavLinkMatch.Prefix"
+                            Class="@AttendanceNavClass">
+                    Attendance
+                </MudNavLink>
+
+                <MudPopover Open="@_attendanceMenuOpen"
+                            AnchorOrigin="Origin.CenterRight"
+                            TransformOrigin="Origin.CenterLeft"
+                            Class="nav-flyout-popover">
+                    <MudPaper Elevation="8" Class="py-2" Style="min-width: 220px; max-height: 400px; overflow-y: auto;">
+                        <MudText Typo="Typo.overline" Class="px-4 pb-1" Style="color: var(--mud-palette-text-secondary);">Attendance</MudText>
+                        <MudDivider Class="mb-1" />
+                        <MudNavMenu Margin="Margin.Dense">
+                            <MudNavLink Href="/employee/attendance/inquiry" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Attendance Inquiry</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/schedule-calendar" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">My Schedule Calendar</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/change-shift" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Change Shift</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/change-day-off" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Change Day Off</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/time-declaration" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Time Declaration</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/leave-ob" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Leave / OB</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/leave-cancellation" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Leave Cancellation</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/leave-balance" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Leave Balance</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/overtime-application" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">Overtime Application</MudNavLink>
+                            <MudNavLink Href="/employee/attendance/dtr" Match="NavLinkMatch.All" OnClick="CloseAttendanceMenu">DTR</MudNavLink>
+                        </MudNavMenu>
+                    </MudPaper>
+                </MudPopover>
+            </div>
         }
         else
         {
@@ -41,6 +73,19 @@
             <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" Expanded="true" HideExpandIcon="false" Class="@ProfileGroupClass">
                 <MudNavLink Href="/employee/profile" Match="NavLinkMatch.All">Employee Profile</MudNavLink>
                 <MudNavLink Href="/employee/personal-data-update" Match="NavLinkMatch.All">Personal Data Update</MudNavLink>
+            </MudNavGroup>
+
+            <MudNavGroup Title="Attendance" Icon="@Icons.Material.Filled.AccessTime" Expanded="false" HideExpandIcon="false" Class="@AttendanceGroupClass">
+                <MudNavLink Href="/employee/attendance/inquiry" Match="NavLinkMatch.All">Attendance Inquiry</MudNavLink>
+                <MudNavLink Href="/employee/attendance/schedule-calendar" Match="NavLinkMatch.All">My Schedule Calendar</MudNavLink>
+                <MudNavLink Href="/employee/attendance/change-shift" Match="NavLinkMatch.All">Change Shift</MudNavLink>
+                <MudNavLink Href="/employee/attendance/change-day-off" Match="NavLinkMatch.All">Change Day Off</MudNavLink>
+                <MudNavLink Href="/employee/attendance/time-declaration" Match="NavLinkMatch.All">Time Declaration</MudNavLink>
+                <MudNavLink Href="/employee/attendance/leave-ob" Match="NavLinkMatch.All">Leave / OB</MudNavLink>
+                <MudNavLink Href="/employee/attendance/leave-cancellation" Match="NavLinkMatch.All">Leave Cancellation</MudNavLink>
+                <MudNavLink Href="/employee/attendance/leave-balance" Match="NavLinkMatch.All">Leave Balance</MudNavLink>
+                <MudNavLink Href="/employee/attendance/overtime-application" Match="NavLinkMatch.All">Overtime Application</MudNavLink>
+                <MudNavLink Href="/employee/attendance/dtr" Match="NavLinkMatch.All">DTR</MudNavLink>
             </MudNavGroup>
         }
     }
@@ -54,9 +99,9 @@
     }
 </MudNavMenu>
 
-@if (_profileMenuOpen)
+@if (_profileMenuOpen || _attendanceMenuOpen)
 {
-    <div class="nav-flyout-backdrop" @onclick="CloseProfileMenu"></div>
+    <div class="nav-flyout-backdrop" @onclick="CloseAllMenus"></div>
 }
 
 @code {
@@ -64,19 +109,28 @@
     public bool IsMini { get; set; }
 
     private bool _profileMenuOpen;
+    private bool _attendanceMenuOpen;
 
     private bool IsEmployeeView => NavManager.Uri.Contains("/employee", StringComparison.OrdinalIgnoreCase);
 
     private bool IsProfileActive => NavManager.Uri.Contains("/employee/profile", StringComparison.OrdinalIgnoreCase)
         || NavManager.Uri.Contains("/employee/personal-data-update", StringComparison.OrdinalIgnoreCase);
 
-    private string ProfileNavClass => (_profileMenuOpen || IsProfileActive) ? "nav-profile-active" : "";
+    private bool IsAttendanceActive => NavManager.Uri.Contains("/employee/attendance", StringComparison.OrdinalIgnoreCase);
 
+    private string ProfileNavClass => (_profileMenuOpen || IsProfileActive) ? "nav-profile-active" : "";
     private string ProfileGroupClass => IsProfileActive ? "nav-group-active" : "";
+
+    private string AttendanceNavClass => (_attendanceMenuOpen || IsAttendanceActive) ? "nav-profile-active" : "";
+    private string AttendanceGroupClass => IsAttendanceActive ? "nav-group-active" : "";
 
     private void ToggleProfileMenu()
     {
         _profileMenuOpen = !_profileMenuOpen;
+        if (_profileMenuOpen)
+        {
+            _attendanceMenuOpen = false;
+        }
     }
 
     private void CloseProfileMenu()
@@ -84,11 +138,34 @@
         _profileMenuOpen = false;
     }
 
+    private void ToggleAttendanceMenu()
+    {
+        _attendanceMenuOpen = !_attendanceMenuOpen;
+        if (_attendanceMenuOpen)
+        {
+            _profileMenuOpen = false;
+        }
+    }
+
+    private void CloseAttendanceMenu()
+    {
+        _attendanceMenuOpen = false;
+    }
+
+    private void CloseAllMenus()
+    {
+        _profileMenuOpen = false;
+        _attendanceMenuOpen = false;
+    }
+
     protected override void OnParametersSet()
     {
         // Close popover when switching from mini to expanded
         if (!IsMini)
+        {
             _profileMenuOpen = false;
+            _attendanceMenuOpen = false;
+        }
     }
 
     protected override void OnInitialized()
@@ -99,6 +176,7 @@
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         _profileMenuOpen = false;
+        _attendanceMenuOpen = false;
         InvokeAsync(StateHasChanged);
     }
 
