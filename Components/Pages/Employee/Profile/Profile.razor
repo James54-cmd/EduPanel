@@ -1,6 +1,7 @@
 @page "/employee/profile"
 @namespace EduPanel.Components.Pages.Employee
 @using EduPanel.Components.Pages.Employee.ProfileTabs
+@inject NavigationManager NavManager
 
 <div class="pa-4">
     <MudGrid Spacing="4">
@@ -20,7 +21,7 @@
                         var idx = tab.Key;
                         var name = tab.Value;
                         var isActive = activeIndex == idx;
-                        <div @onclick="() => activeIndex = idx"
+                        <div @onclick="() => SetActiveTab(idx)"
                              class="@($"sidebar-ribbon cursor-pointer transition-all {(isActive ? "active text-white font-weight-bold" : "mud-text-secondary font-weight-medium")}")">
                             <MudText Typo="Typo.body2" Class="inherit-font-weight" Style="letter-spacing: 0.2px;">@name</MudText>
                         </div>
@@ -150,7 +151,38 @@
 </div>
 
 @code {
+    [SupplyParameterFromQuery(Name = "tab")]
+    public string? TabQuery { get; set; }
+
     private int activeIndex = 0;
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(TabQuery))
+        {
+            var match = TabNames.FirstOrDefault(x => GetSlug(x.Value) == TabQuery);
+            if (match.Value != null)
+            {
+                activeIndex = match.Key;
+            }
+        }
+        else
+        {
+            activeIndex = 0;
+        }
+    }
+
+    private void SetActiveTab(int index)
+    {
+        activeIndex = index;
+        if (TabNames.TryGetValue(index, out var name))
+        {
+            var uri = NavManager.GetUriWithQueryParameter("tab", GetSlug(name));
+            NavManager.NavigateTo(uri, forceLoad: false, replace: true);
+        }
+    }
+
+    private string GetSlug(string name) => name.ToLowerInvariant().Replace(" ", "-");
 
     private readonly Dictionary<int, string> TabNames = new()
     {
