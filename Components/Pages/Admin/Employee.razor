@@ -1,0 +1,67 @@
+@page "/admin/employee"
+
+<div class="d-flex align-center justify-space-between mb-6">
+    <div class="d-flex align-center">
+        <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Class="mr-2" />
+        <MudText Typo="Typo.h5" Class="font-weight-bold">Employees</MudText>
+    </div>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">
+        Add Employee
+    </MudButton>
+</div>
+
+<MudPaper Elevation="0" Class="pa-4 rounded-lg">
+    <MudTable Items="@Employees" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Role</MudTh>
+            <MudTh>Department</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Name">
+                <div class="d-flex align-center">
+                    <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-3">@context.Name.Substring(0,1)</MudAvatar>
+                    <MudText Typo="Typo.body2" Class="font-weight-bold">@context.Name</MudText>
+                </div>
+            </MudTd>
+            <MudTd DataLabel="Role">@context.Role</MudTd>
+            <MudTd DataLabel="Department">@context.Department</MudTd>
+            <MudTd DataLabel="Status">
+                <MudChip T="string" Size="Size.Small" Color="@(context.IsActive ? Color.Success : Color.Error)">
+                    @(context.IsActive ? "Active" : "Inactive")
+                </MudChip>
+            </MudTd>
+            <MudTd DataLabel="Actions">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    public class EmployeeModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Role { get; set; } = "";
+        public string Department { get; set; } = "";
+        public bool IsActive { get; set; }
+    }
+
+    private List<EmployeeModel> Employees = new List<EmployeeModel>
+    {
+        new EmployeeModel { Id = 1001, Name = "Alice Smith", Role = "Senior Teacher", Department = "Science", IsActive = true },
+        new EmployeeModel { Id = 1002, Name = "Bob Jones", Role = "Teacher", Department = "Math", IsActive = true },
+        new EmployeeModel { Id = 1003, Name = "Charlie Brown", Role = "Admin", Department = "Administration", IsActive = false },
+        new EmployeeModel { Id = 1004, Name = "Diana Prince", Role = "Counselor", Department = "Support", IsActive = true },
+        new EmployeeModel { Id = 1005, Name = "Evan Wright", Role = "Teacher", Department = "History", IsActive = true }
+    };
+}
