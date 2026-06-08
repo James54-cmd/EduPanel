@@ -2,8 +2,32 @@
 @layout LoginLayout
 @using EduPanel.Components.Layout
 
-<div class="d-flex align-center justify-center px-6" style="min-height: 100vh; width: 100%;">
-    <div style="width: 100%; max-width: 400px;">
-        <LoginForm />
-    </div>
-</div>
+<MudGrid Spacing="0" Class="w-100" Style="min-height: 100vh; margin: 0; padding: 0;">
+    <!-- Left Column: Branding and Form -->
+    <MudItem xs="12" md="6" Class="d-flex flex-column" Style="min-height: 100vh;">
+        <!-- Top Logo -->
+        <div class="d-flex align-center gap-2 pa-6" style="width: 100%;">
+            <a href="#" class="d-flex align-center gap-2 font-weight-bold" style="color: var(--mud-palette-text-primary); text-decoration: none; font-size: 1.1rem;">
+                <div class="d-flex align-center justify-center rounded bg-primary text-white" style="width: 24px; height: 24px;">
+                    <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Small" Style="font-size: 1rem; color: white;" />
+                </div>
+                <span>EduPanel Inc.</span>
+            </a>
+        </div>
+
+        <!-- Centered LoginForm -->
+        <div class="d-flex flex-grow-1 align-center justify-center pa-6" style="margin-top: -40px;">
+            <div class="w-100" style="max-width: 320px;">
+                <LoginForm />
+            </div>
+        </div>
+    </MudItem>
+
+    <!-- Right Column: Image (Hidden on small viewports) -->
+    <MudItem md="6" Class="d-none d-md-block p-0 position-relative" Style="height: 100vh;">
+        <img src="/login_bg.png" 
+             alt="Educational geometry background" 
+             class="position-absolute w-100 h-100" 
+             style="object-fit: cover; top: 0; left: 0; filter: brightness(0.9);" />
+    </MudItem>
+</MudGrid>
