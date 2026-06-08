@@ -1,0 +1,90 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <!-- Modern Table (MudSimpleTable) -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="d-flex align-center px-6 py-4 mud-border-bottom">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">Service Record</MudText>
+            <MudSpacer />
+            <!-- Integrated Search Bar -->
+            <MudTextField @bind-Value="searchString" Placeholder="Search records..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mr-4" Style="max-width: 300px;" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+            <!-- Primary Action Button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="text-transform-none rounded-lg px-4 py-2">Add Record</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Date From</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Date To</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Position</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Employment Status</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Department</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Salary</MudText></th>
+                    <th style="width: 120px; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Actions</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (serviceRecords.Count == 0)
+                {
+                    <tr>
+                        <td colspan="8">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No data to display</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var record in serviceRecords)
+                    {
+                        <tr>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@record.TransactionNo</MudText></td>
+                            <td><MudText Typo="Typo.body2">@record.DateFrom</MudText></td>
+                            <td><MudText Typo="Typo.body2">@record.DateTo</MudText></td>
+                            <td class="font-weight-bold" style="color: var(--mud-palette-primary);">@record.Position</td>
+                            <td>
+                                <MudChip T="string" Color="Color.Success" Variant="Variant.Outlined" Size="Size.Small" Class="font-weight-bold">@record.Status</MudChip>
+                            </td>
+                            <td><MudText Typo="Typo.body2">@record.Department</MudText></td>
+                            <td><MudText Typo="Typo.body2" Class="font-weight-medium">@record.Salary</MudText></td>
+                            <td>
+                                <div class="d-flex justify-center gap-1">
+                                    <MudTooltip Text="View/Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" />
+                                    </MudTooltip>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+</div>
+
+@code {
+    private string searchString = "";
+
+    public class ServiceRecordItem
+    {
+        public string TransactionNo { get; set; } = "";
+        public string DateFrom { get; set; } = "";
+        public string DateTo { get; set; } = "";
+        public string Position { get; set; } = "";
+        public string Status { get; set; } = "";
+        public string Department { get; set; } = "";
+        public string Salary { get; set; } = "";
+    }
+
+    private List<ServiceRecordItem> serviceRecords = new List<ServiceRecordItem>
+    {
+        new ServiceRecordItem { TransactionNo = "SR-2023-011", DateFrom = "01/15/2023", DateTo = "Present", Position = "Senior Developer", Status = "Regular", Department = "IT Department", Salary = "₱ 85,000" },
+        new ServiceRecordItem { TransactionNo = "SR-2021-045", DateFrom = "06/01/2021", DateTo = "12/31/2022", Position = "Software Engineer", Status = "Contractual", Department = "IT Department", Salary = "₱ 60,000" }
+    };
+}

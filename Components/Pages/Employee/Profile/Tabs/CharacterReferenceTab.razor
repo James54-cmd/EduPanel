@@ -1,0 +1,85 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <!-- Information Alert -->
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text" Dense="true" Class="rounded-lg">
+        Please list character references who are not related to you by consanguinity or affinity.
+    </MudAlert>
+
+    <!-- Modern Table (MudSimpleTable) -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="d-flex align-center px-6 py-4 mud-border-bottom">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">Character Reference</MudText>
+            <MudSpacer />
+            <!-- Integrated Search Bar -->
+            <MudTextField @bind-Value="searchString" Placeholder="Search references..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mr-4" Style="max-width: 300px;" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+            <!-- Primary Action Button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="text-transform-none rounded-lg px-4 py-2">Add Reference</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Name</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Occupation / Position</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Contact No.</MudText></th>
+                    <th style="width: 120px; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Actions</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (references.Count == 0)
+                {
+                    <tr>
+                        <td colspan="5">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No data to display</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var refItem in references)
+                    {
+                        <tr>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@refItem.TransactionNo</MudText></td>
+                            <td class="font-weight-bold" style="color: var(--mud-palette-primary);">@refItem.Name</td>
+                            <td><MudText Typo="Typo.body2">@refItem.Occupation</MudText></td>
+                            <td><MudText Typo="Typo.body2">@refItem.ContactNo</MudText></td>
+                            <td>
+                                <div class="d-flex justify-center gap-1">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" />
+                                    </MudTooltip>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+</div>
+
+@code {
+    private string searchString = "";
+
+    public class CharacterReference
+    {
+        public string TransactionNo { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Occupation { get; set; } = "";
+        public string ContactNo { get; set; } = "";
+    }
+
+    private List<CharacterReference> references = new List<CharacterReference>
+    {
+        new CharacterReference { TransactionNo = "TRX-2024-001", Name = "Dr. Maria Santos", Occupation = "University Dean", ContactNo = "0917-123-4567" },
+        new CharacterReference { TransactionNo = "TRX-2024-002", Name = "Atty. Roberto Cruz", Occupation = "Corporate Lawyer", ContactNo = "0918-987-6543" },
+        new CharacterReference { TransactionNo = "TRX-2024-003", Name = "Engr. Jose Reyes", Occupation = "Civil Engineer", ContactNo = "0920-555-1234" }
+    };
+}

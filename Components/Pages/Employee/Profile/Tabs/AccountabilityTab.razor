@@ -1,0 +1,85 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <!-- Modern Table (MudSimpleTable) -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="d-flex align-center px-6 py-4 mud-border-bottom">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">Accountability</MudText>
+            <MudSpacer />
+            <!-- Integrated Search Bar -->
+            <MudTextField @bind-Value="searchString" Placeholder="Search accountability..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mr-4" Style="max-width: 300px;" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+            <!-- Primary Action Button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="text-transform-none rounded-lg px-4 py-2">Add Item</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Department Head</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">In-Charge</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Item Accountability</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Item Amount</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Remarks</MudText></th>
+                    <th style="width: 120px; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Actions</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (accountabilities.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No data to display</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in accountabilities)
+                    {
+                        <tr>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@item.TransactionNo</MudText></td>
+                            <td><MudText Typo="Typo.body2">@item.DepartmentHead</MudText></td>
+                            <td><MudText Typo="Typo.body2">@item.InCharge</MudText></td>
+                            <td class="font-weight-bold" style="color: var(--mud-palette-primary);">@item.ItemAccountability</td>
+                            <td><MudText Typo="Typo.body2" Class="font-weight-bold text-success">@item.ItemAmount</MudText></td>
+                            <td><MudText Typo="Typo.body2">@item.Remarks</MudText></td>
+                            <td>
+                                <div class="d-flex justify-center gap-1">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" />
+                                    </MudTooltip>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+</div>
+
+@code {
+    private string searchString = "";
+
+    public class AccountabilityItem
+    {
+        public string TransactionNo { get; set; } = "";
+        public string DepartmentHead { get; set; } = "";
+        public string InCharge { get; set; } = "";
+        public string ItemAccountability { get; set; } = "";
+        public string ItemAmount { get; set; } = "";
+        public string Remarks { get; set; } = "";
+    }
+
+    private List<AccountabilityItem> accountabilities = new List<AccountabilityItem>
+    {
+        new AccountabilityItem { TransactionNo = "ACC-2023-089", DepartmentHead = "Engr. Reyes", InCharge = "IT Admin", ItemAccountability = "MacBook Pro 16-inch", ItemAmount = "₱ 150,000", Remarks = "Issued for development" },
+        new AccountabilityItem { TransactionNo = "ACC-2023-091", DepartmentHead = "Dr. Santos", InCharge = "HR Dept", ItemAccountability = "Office Chair (Ergonomic)", ItemAmount = "₱ 12,500", Remarks = "WFH Setup" }
+    };
+}
