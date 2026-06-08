@@ -1,0 +1,246 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <!-- Employment Assignment -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Employment Assignment</MudText>
+        <MudGrid Spacing="4">
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Label="Plantilla No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("JR. SYSTEMS DEVELOPER")" Label="Position Title" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("1 - Entry-Level / Individual Contributor")" Label="Job Level" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Facility" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("Main")">Main</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Division" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("Operations")">Operations</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("TECHNICAL")" Label="Department" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Section" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Unit" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("CEBU")" Label="Group" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Cost Center" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("CEBU")" Label="Location / Area" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Label="Floor / Room Assignment" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Functional Title" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("MANDAFE, FRANKLEN A.")" Label="Immediate Head" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Job Grade" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("RANK AND FILE")" Label="Employee Classification" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudTextField T="string" Value="@("PROBATIONARY")" Label="Employee Status" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudSelect T="string" Label="Rank" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            
+            <MudItem xs="12">
+                <MudCheckBox T="bool" Label="Please check here to identify that he/she is an immediate head." Color="Color.Primary" Size="Size.Small" />
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Payroll Related Information -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Payroll Related Information</MudText>
+        <MudGrid Spacing="4">
+            <MudItem xs="12" sm="6" md="3"><MudTextField T="string" Value="@("PSI Non Confi")" Label="Payroll Group" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6" md="3"><MudTextField T="string" Value="@("PEOPLECORE")" Label="Company" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6" md="3"><MudTextField T="string" Value="@("Semi-Monthly")" Label="Payroll Type" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6" md="3"><MudTextField T="string" Value="@("MONTHLY 313")" Label="Rate Class" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+
+            <MudItem xs="12" sm="6" md="3"><MudSelect T="string" Label="Tax Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6" md="3"><MudSelect T="string" Label="Payment Type" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6" md="3"><MudSelect T="string" Label="Bank Type" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6" md="3"><MudTextField T="string" Label="Bank Account No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+
+            <!-- Government IDs with Checkboxes -->
+            <MudItem xs="12" md="12">
+                <MudGrid Spacing="2">
+                    <MudItem xs="12" sm="6" md="4" Class="d-flex align-center gap-2">
+                        <MudTextField T="string" Value="@("0647691186")" Label="SSS No." Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                        <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4" Class="d-flex align-center gap-2">
+                        <MudTextField T="string" Value="@("122515790797")" Label="PhilHealth No." Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                        <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4" Class="d-flex align-center gap-2">
+                        <MudTextField T="string" Value="@("121368812741")" Label="Pagibig No." Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                        <MudCheckBox T="bool" Label="Suspend" Size="Size.Small" />
+                        <MudCheckBox T="bool" Label="Charge to ER" Size="Size.Small" />
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+
+            <MudItem xs="12" sm="6"><MudTextField T="decimal" Value="0.00m" Label="Pagibig Employee Share" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6"><MudTextField T="decimal" Value="0.00m" Label="Pagibig Employer Share" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+
+            <MudItem xs="12" md="12">
+                <div class="d-flex align-center gap-4">
+                    <MudTextField T="string" Value="@("00")" Label="TIN" Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width: 200px;" />
+                    <MudCheckBox T="bool" Label="(M W E)" Size="Size.Small" />
+                    <MudCheckBox T="bool" Label="Flat Tax Rate" Size="Size.Small" />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6"><MudTextField T="decimal" Value="0.000m" Label="Percent Tax Rate" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            <MudItem xs="12" sm="6"><MudTextField T="decimal" Value="0.00m" Label="Minimum Take Home Pay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+
+            <MudItem xs="12">
+                <div class="d-flex align-center gap-4">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Union:</MudText>
+                    <MudCheckBox T="bool" Label="Member" Size="Size.Small" />
+                    <MudCheckBox T="bool" Label="Officer" Size="Size.Small" />
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Employment Timeline -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Employment Timeline</MudText>
+        <MudGrid Spacing="4">
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-4">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Orientee Date:</MudText>
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                </div>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-4">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Probationary:</MudText>
+                    <MudDatePicker Date="@(new DateTime(2026, 6, 2))" Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                    <MudDatePicker Date="@(new DateTime(2026, 12, 2))" Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-4">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Hired Date:</MudText>
+                    <MudDatePicker Date="@(new DateTime(2026, 6, 2))" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-4">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Re-hired Date:</MudText>
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-4">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Regularization:</MudText>
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                </div>
+            </MudItem>
+
+            <!-- Status Dates with Checkboxes -->
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-2">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Separated:</MudText>
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                    <MudCheckBox T="bool" Label="Separated" Size="Size.Small" />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-2">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Suspended:</MudText>
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                    <MudCheckBox T="bool" Label="Suspended" Size="Size.Small" />
+                </div>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <div class="d-flex align-center gap-2">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium" Style="min-width: 100px;">Blacklisted:</MudText>
+                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft" />
+                    <MudCheckBox T="bool" Label="Blacklisted" Size="Size.Small" />
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Company Contact Information -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Company Contact Information</MudText>
+        <MudGrid Spacing="4">
+            <MudItem xs="12" sm="6" md="4">
+                <div class="d-flex flex-column gap-1">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Mobile No.</MudText>
+                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <div class="d-flex flex-column gap-1">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Direct No.</MudText>
+                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <div class="d-flex flex-column gap-1">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Fax No.</MudText>
+                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <div class="d-flex flex-column gap-1">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Local No.</MudText>
+                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <div class="d-flex flex-column gap-1">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Email Address</MudText>
+                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+    
+    <MudItem xs="12" Class="d-flex justify-end mt-2 pb-6">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="text-transform-none px-8 py-2 rounded-lg elevation-2">Save Work Info</MudButton>
+    </MudItem>
+
+</div>

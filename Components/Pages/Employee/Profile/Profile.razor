@@ -40,6 +40,14 @@
                     </div>
                     <PersonalProfileTab />
                 }
+                else if (activeIndex == 1)
+                {
+                    <div class="d-flex align-center mb-6">
+                        <MudIcon Icon="@Icons.Material.Filled.Work" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
+                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Work Information</MudText>
+                    </div>
+                    <WorkInformationTab />
+                }
                 else
                 {
                     <div class="d-flex align-center mb-6">
