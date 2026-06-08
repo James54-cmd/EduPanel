@@ -88,6 +88,7 @@ To maintain clean Razor files and organize components effectively:
 * **Avoid Inline `<style>` Blocks**: Do not use `<style>` blocks inside `.razor` components.
 * **Use Scoped CSS**: Place component-specific styles in a dedicated isolated CSS file right next to the component (e.g., `Dashboard/Dashboard.razor.css`).
 * **Global Styles**: Utility classes and truly global styles should be kept in `wwwroot/app.css` or `wwwroot/EduPanel.styles.css`.
+* **Complex Page Structuring**: When dealing with massive forms or complex pages, avoid vertically scrolling monoliths. Break the page down into logical sections and use `MudTabs` (either vertical or horizontal) to simplify the user interface. Keep each tab's content in a separate sub-component within a `Tabs` directory (e.g., `Profile/Tabs/PersonalProfileTab.razor`).
 
 ---
 

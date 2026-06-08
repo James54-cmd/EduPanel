@@ -1,17 +1,71 @@
 @page "/employee/profile"
 @namespace EduPanel.Components.Pages.Employee
+@using EduPanel.Components.Pages.Employee.ProfileTabs
 
-<MudText Typo="Typo.h5" Class="mb-4 font-weight-bold">Employee Profile</MudText>
+<div class="pa-4">
+    <MudGrid Spacing="4">
+        <!-- Sidebar: Avatar and Vertical Tabs -->
+        <MudItem xs="12" md="3">
+            <MudPaper Elevation="0" Class="pa-4 mb-4 rounded-lg mud-width-full d-flex flex-column align-center text-center" Style="border: 1px solid var(--mud-palette-divider);">
+                <MudAvatar Size="Size.Large" Class="avatar-gradient-primary mb-3" Style="width: 100px; height: 100px; font-size: 2.5rem;">E</MudAvatar>
+                <MudText Typo="Typo.h6" Class="font-weight-bold">James Fanuel N. Damaso</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-1">Date of Birth</MudText>
+                <MudText Typo="Typo.body2" Class="font-weight-medium">May 3, 2003</MudText>
+            </MudPaper>
 
-<MudPaper Elevation="0" Class="pa-6 rounded-lg">
-    <div class="d-flex align-center gap-4 mb-6">
-        <MudAvatar Size="Size.Large" Class="avatar-gradient-primary" Style="width: 80px; height: 80px; font-size: 2rem;">E</MudAvatar>
-        <div>
-            <MudText Typo="Typo.h5" Class="font-weight-bold">Employee Name</MudText>
-            <MudText Typo="Typo.body2" Color="Color.Secondary">employee@example.com</MudText>
-        </div>
-    </div>
-    <MudDivider Class="my-4" />
-    <MudText Typo="Typo.body1">Role: <strong class="ml-2">Staff Member</strong></MudText>
-    <MudText Typo="Typo.body1">Department: <strong class="ml-2">General Operations</strong></MudText>
-</MudPaper>
+            <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="px-4 py-6" Position="Position.Left" Outlined="true" Class="mud-width-full" @bind-ActivePanelIndex="activeIndex">
+                <MudTabPanel Text="Personal Profile" />
+                <MudTabPanel Text="Work Information" />
+                <MudTabPanel Text="Education" />
+                <MudTabPanel Text="Eligibility" />
+                <MudTabPanel Text="Employment Record" />
+                <MudTabPanel Text="Training Programs" />
+                <MudTabPanel Text="Family Background" />
+                <MudTabPanel Text="Voluntary Works" />
+                <MudTabPanel Text="Language" />
+                <MudTabPanel Text="Other Information" />
+                <MudTabPanel Text="Character Reference" />
+                <MudTabPanel Text="Service Record" />
+                <MudTabPanel Text="Accountability" />
+            </MudTabs>
+        </MudItem>
+
+        <!-- Main Content Area -->
+        <MudItem xs="12" md="9">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg mud-width-full h-100" Style="border: 1px solid var(--mud-palette-divider);">
+                @if (activeIndex == 0)
+                {
+                    <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Personal Profile</MudText>
+                    <PersonalProfileTab />
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">@GetTabName(activeIndex)</MudText>
+                    <ProfilePlaceholderTab />
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    private int activeIndex = 0;
+
+    private string GetTabName(int index) => index switch
+    {
+        0 => "Personal Profile",
+        1 => "Work Information",
+        2 => "Education",
+        3 => "Eligibility",
+        4 => "Employment Record",
+        5 => "Training Programs",
+        6 => "Family Background",
+        7 => "Voluntary Works",
+        8 => "Language",
+        9 => "Other Information",
+        10 => "Character Reference",
+        11 => "Service Record",
+        12 => "Accountability",
+        _ => "Unknown"
+    };
+}

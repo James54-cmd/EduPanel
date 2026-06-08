@@ -1,0 +1,348 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4" Outlined="true" Class="mt-2">
+    <MudTabPanel Text="Primary Information">
+        <MudGrid Spacing="2">
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Employee No. :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("142")" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Card No. :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">FP ID :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Payroll Group : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("PSI Non Confi")" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Title :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("Mr.")">Mr.</MudSelectItem>
+                    <MudSelectItem Value="@("Ms.")">Ms.</MudSelectItem>
+                    <MudSelectItem Value="@("Mrs.")">Mrs.</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Surname : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("Damaso")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">First Name : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("James Fanuel")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Middle Name :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("Nancy")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Maiden Name :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9" Class="d-flex align-center gap-2">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                <MudText Typo="Typo.caption" Color="Color.Error"><i>* for married women</i></MudText>
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Name Extension :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9" Class="d-flex align-center gap-2">
+                <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1">
+                    <MudSelectItem Value="@("Jr.")">Jr.</MudSelectItem>
+                    <MudSelectItem Value="@("Sr.")">Sr.</MudSelectItem>
+                    <MudSelectItem Value="@("II")">II</MudSelectItem>
+                    <MudSelectItem Value="@("III")">III</MudSelectItem>
+                </MudSelect>
+                <MudText Typo="Typo.caption" Color="Color.Error"><i>* (Jr., II, ect.)</i></MudText>
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Nick Name :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+
+    <MudTabPanel Text="Personal Details">
+        <MudGrid Spacing="2">
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Date of Birth : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudDatePicker Date="@(new DateTime(2003, 3, 3))" Variant="Variant.Outlined" Margin="Margin.Dense" DateFormat="dd/MM/yyyy" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Age :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="int" Value="23" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-start justify-end mt-2">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Place of Birth :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Lines="3" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Sex : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudSelect T="string" Value="@("Male")" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("Male")">Male</MudSelectItem>
+                    <MudSelectItem Value="@("Female")">Female</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Citizenship : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("Filipino")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            
+            <MudItem xs="12" md="3"></MudItem>
+            <MudItem xs="12" md="9" Class="d-flex align-center gap-4">
+                <MudCheckBox T="bool" Label="With dual citizenship" Color="Color.Primary" Dense="true" />
+                <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("By Birth")">By Birth</MudSelectItem>
+                    <MudSelectItem Value="@("By Naturalization")">By Naturalization</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="3"></MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Placeholder="Please indicate country" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Civil Status : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudSelect T="string" Value="@("Single")" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("Single")">Single</MudSelectItem>
+                    <MudSelectItem Value="@("Married")">Married</MudSelectItem>
+                    <MudSelectItem Value="@("Widowed")">Widowed</MudSelectItem>
+                    <MudSelectItem Value="@("Separated")">Separated</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            
+            <!-- Other details -->
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Height (meters) :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Weight (kilograms) :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Blood Type :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("A")">A</MudSelectItem>
+                    <MudSelectItem Value="@("B")">B</MudSelectItem>
+                    <MudSelectItem Value="@("AB")">AB</MudSelectItem>
+                    <MudSelectItem Value="@("O")">O</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+    
+    <MudTabPanel Text="Spouse Details">
+        <MudGrid Spacing="2">
+            <MudItem xs="12" Class="mb-2">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold text-uppercase">If Married, Please Indicate Details</MudText>
+            </MudItem>
+            
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Date of Marriage :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-start justify-end mt-2">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Place of Marriage :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Lines="3" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" Class="mt-4 mb-2">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold text-uppercase">Spouse Details</MudText>
+            </MudItem>
+            
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Surname :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+            
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">First Name :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Middle Name :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Name Extension :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    <MudSelectItem Value="@("Jr.")">Jr.</MudSelectItem>
+                    <MudSelectItem Value="@("Sr.")">Sr.</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+
+    <MudTabPanel Text="Contact Information">
+        <MudGrid Spacing="2">
+            <MudItem xs="12" md="3" Class="d-flex align-start justify-end mt-2">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Permanent Address : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudGrid Spacing="1">
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Subdivision/Village" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Barangay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="City / Municipality" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Province" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Zip Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                </MudGrid>
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-start justify-end mt-2">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Residential Address :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudGrid Spacing="1">
+                    <MudItem xs="12" Class="d-flex justify-end">
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Class="text-transform-none">Same as the above address</MudButton>
+                    </MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Subdivision/Village" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Barangay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="City / Municipality" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Province" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                    <MudItem xs="12" sm="6"><MudTextField T="string" Placeholder="Zip Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                </MudGrid>
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Telephone No. :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Placeholder="Tel. / Phone No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Mobile No. : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("09626377043")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Email Address :</MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+
+    <MudTabPanel Text="Emergency Contact">
+        <MudGrid Spacing="2">
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Name : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("Romeo T. Damaso")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Relationship : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("Father")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-center justify-end">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Contact No. : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("09324298531")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3" Class="d-flex align-start justify-end mt-2">
+                <MudText Typo="Typo.body2" Class="font-weight-bold">Address : <span class="text-danger">*</span></MudText>
+            </MudItem>
+            <MudItem xs="12" md="9">
+                <MudTextField T="string" Value="@("121 Catalina Ouano St., Looc, Mandaue City, Cebu, Philippines, 6014")" Variant="Variant.Outlined" Lines="3" Margin="Margin.Dense" />
+            </MudItem>
+
+            <MudItem xs="12" md="3"></MudItem>
+            <MudItem xs="12" md="9" Class="mt-4">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Class="text-transform-none">Modify</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+</MudTabs>
+
+<style>
+    .text-danger {
+        color: var(--mud-palette-error);
+    }
+</style>
