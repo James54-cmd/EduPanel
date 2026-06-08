@@ -112,6 +112,12 @@
                 Snackbar.Add("Login successful!", MudBlazor.Severity.Success);
                 Nav.NavigateTo("/dashboard");
             }
+            else if (model.Email == "employee@example.com" && model.Password == "employee123")
+            {
+                Console.WriteLine("[Login] Credentials matched. Navigating to employee dashboard...");
+                Snackbar.Add("Login successful as Employee!", MudBlazor.Severity.Success);
+                Nav.NavigateTo("/employee/dashboard");
+            }
             else
             {
                 Console.WriteLine("[Login] Credentials failed. Showing error...");
