@@ -1,0 +1,91 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Class="rounded-lg mb-2">
+        Involvement in voluntary work or organization
+    </MudAlert>
+
+    <!-- Modern Voluntary Works Table (MudSimpleTable) -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="d-flex align-center px-6 py-4 mud-border-bottom">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">Voluntary Works</MudText>
+            <MudSpacer />
+            <!-- Integrated Search Bar -->
+            <MudTextField @bind-Value="searchString" Placeholder="Search voluntary work..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mr-4" Style="max-width: 300px;" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+            <!-- Primary Action Button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="text-transform-none rounded-lg px-4 py-2">Add Voluntary Work</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Organization</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">From</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">To</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Number of Hours</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Position / Nature of Work</MudText></th>
+                    <th style="width: 120px; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Actions</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (VoluntaryRecords.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No voluntary work records found.</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var record in VoluntaryRecords)
+                    {
+                        <tr>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@record.TransactionNo</MudText></td>
+                            <td class="font-weight-bold" style="color: var(--mud-palette-primary);">@record.Organization</td>
+                            <td>@record.From</td>
+                            <td>@record.To</td>
+                            <td>
+                                <MudChip T="string" Size="Size.Small" Color="Color.Secondary" Variant="Variant.Outlined" Class="font-weight-bold">@record.NumberOfHours hrs</MudChip>
+                            </td>
+                            <td class="font-weight-medium">@record.Position</td>
+                            <td>
+                                <div class="d-flex justify-center gap-1">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" />
+                                    </MudTooltip>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+</div>
+
+@code {
+    private string searchString = "";
+
+    // Added sample data
+    private List<VoluntaryRecordData> VoluntaryRecords = new()
+    {
+        new VoluntaryRecordData { TransactionNo = "TRX-VOL-001", Organization = "Red Cross", From = "Jan 2024", To = "Present", NumberOfHours = "120", Position = "Volunteer Medical Assistant" }
+    };
+
+    public class VoluntaryRecordData
+    {
+        public string TransactionNo { get; set; } = "";
+        public string Organization { get; set; } = "";
+        public string From { get; set; } = "";
+        public string To { get; set; } = "";
+        public string NumberOfHours { get; set; } = "";
+        public string Position { get; set; } = "";
+    }
+}

@@ -1,0 +1,102 @@
+@namespace EduPanel.Components.Pages.Employee.ProfileTabs
+
+<div class="d-flex flex-column gap-6">
+
+    <!-- Modern Language Table (MudSimpleTable) -->
+    <MudPaper Elevation="0" Outlined="true" Class="rounded-lg bg-transparent overflow-hidden">
+        <div class="d-flex align-center px-6 py-4 mud-border-bottom">
+            <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">Language / Dialect</MudText>
+            <MudSpacer />
+            <!-- Integrated Search Bar -->
+            <MudTextField @bind-Value="searchString" Placeholder="Search language..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mr-4" Style="max-width: 300px;" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+            <!-- Primary Action Button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="text-transform-none rounded-lg px-4 py-2">Add Language</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Bordered="true" Elevation="0" Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Transaction No.</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Language / Dialect</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Writing</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Reading</MudText></th>
+                    <th><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Speaking</MudText></th>
+                    <th style="width: 120px; text-align: center;"><MudText Typo="Typo.subtitle2" Class="font-weight-bold">Actions</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (LanguageRecords.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6">
+                            <MudText Typo="Typo.body2" Class="pa-8 mud-text-secondary text-center">No data to display</MudText>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var record in LanguageRecords)
+                    {
+                        <tr>
+                            <td><MudText Typo="Typo.body2" Color="Color.Secondary">@record.TransactionNo</MudText></td>
+                            <td class="font-weight-bold" style="color: var(--mud-palette-primary);">@record.LanguageDialect</td>
+                            <td>
+                                <MudChip T="string" Size="Size.Small" Color="@GetProficiencyColor(record.Writing)" Variant="Variant.Text" Class="font-weight-bold">@record.Writing</MudChip>
+                            </td>
+                            <td>
+                                <MudChip T="string" Size="Size.Small" Color="@GetProficiencyColor(record.Reading)" Variant="Variant.Text" Class="font-weight-bold">@record.Reading</MudChip>
+                            </td>
+                            <td>
+                                <MudChip T="string" Size="Size.Small" Color="@GetProficiencyColor(record.Speaking)" Variant="Variant.Text" Class="font-weight-bold">@record.Speaking</MudChip>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-center gap-1">
+                                    <MudTooltip Text="Edit">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Default" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="Delete">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" />
+                                    </MudTooltip>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+</div>
+
+@code {
+    private string searchString = "";
+
+    // Added sample data
+    private List<LanguageRecordData> LanguageRecords = new()
+    {
+        new LanguageRecordData { TransactionNo = "TRX-LAN-001", LanguageDialect = "English", Writing = "Excellent", Reading = "Excellent", Speaking = "Excellent" },
+        new LanguageRecordData { TransactionNo = "TRX-LAN-002", LanguageDialect = "Tagalog", Writing = "Excellent", Reading = "Excellent", Speaking = "Excellent" },
+        new LanguageRecordData { TransactionNo = "TRX-LAN-003", LanguageDialect = "Spanish", Writing = "Fair", Reading = "Good", Speaking = "Fair" }
+    };
+
+    public class LanguageRecordData
+    {
+        public string TransactionNo { get; set; } = "";
+        public string LanguageDialect { get; set; } = "";
+        public string Writing { get; set; } = "";
+        public string Reading { get; set; } = "";
+        public string Speaking { get; set; } = "";
+    }
+
+    private Color GetProficiencyColor(string proficiency)
+    {
+        return proficiency.ToLower() switch
+        {
+            "excellent" => Color.Success,
+            "good" => Color.Primary,
+            "fair" => Color.Warning,
+            "poor" => Color.Error,
+            _ => Color.Default
+        };
+    }
+}
