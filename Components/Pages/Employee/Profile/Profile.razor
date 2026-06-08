@@ -72,6 +72,22 @@
                     </div>
                     <EmploymentRecordTab />
                 }
+                else if (activeIndex == 5)
+                {
+                    <div class="d-flex align-center mb-6">
+                        <MudIcon Icon="@Icons.Material.Filled.ModelTraining" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
+                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Training Programs</MudText>
+                    </div>
+                    <TrainingProgramsTab />
+                }
+                else if (activeIndex == 6)
+                {
+                    <div class="d-flex align-center mb-6">
+                        <MudIcon Icon="@Icons.Material.Filled.FamilyRestroom" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
+                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Family Background</MudText>
+                    </div>
+                    <FamilyBackgroundTab />
+                }
                 else
                 {
                     <div class="d-flex align-center mb-6">
