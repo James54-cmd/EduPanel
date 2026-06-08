@@ -11,41 +11,29 @@
     </MudButton>
 </div>
 
-<MudPaper Elevation="0" Class="pa-4 rounded-lg">
-    <MudTable Items="@Employees" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
-        <HeaderContent>
-            <MudTh>ID</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Role</MudTh>
-            <MudTh>Department</MudTh>
-            <MudTh>Status</MudTh>
-            <MudTh>Actions</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="ID">@context.Id</MudTd>
-            <MudTd DataLabel="Name">
-                <div class="d-flex align-center">
-                    <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-3">@context.Name.Substring(0,1)</MudAvatar>
-                    <MudText Typo="Typo.body2" Class="font-weight-bold">@context.Name</MudText>
-                </div>
-            </MudTd>
-            <MudTd DataLabel="Role">@context.Role</MudTd>
-            <MudTd DataLabel="Department">@context.Department</MudTd>
-            <MudTd DataLabel="Status">
-                <MudChip T="string" Size="Size.Small" Color="@(context.IsActive ? Color.Success : Color.Error)">
-                    @(context.IsActive ? "Active" : "Inactive")
-                </MudChip>
-            </MudTd>
-            <MudTd DataLabel="Actions">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small" />
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
-</MudPaper>
+<DataTable TItem="EmployeeModel"
+           Items="@Employees"
+           Columns="@Columns"
+           PageSize="5"
+           BodyHeight="calc(100vh - 22rem)"
+           EmptyText="No employees found"
+           OnRowClick="@HandleRowClick">
+    <MobileCardTemplate Context="emp">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+            <MudAvatar Color="Color.Primary" Size="Size.Small">@emp.Name.Substring(0,1)</MudAvatar>
+            <div>
+                <div style="font-size:.9rem;font-weight:600;color:#111827;">@emp.Name</div>
+                <div style="font-size:.75rem;color:#6b7280;">@emp.Role · @emp.Department</div>
+            </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:.75rem;color:#9ca3af;">ID: @emp.Id</span>
+            <MudChip T="string" Size="Size.Small" Color="@(emp.IsActive ? Color.Success : Color.Error)">
+                @(emp.IsActive ? "Active" : "Inactive")
+            </MudChip>
+        </div>
+    </MobileCardTemplate>
+</DataTable>
 
 @code {
     public class EmployeeModel
@@ -57,12 +45,69 @@
         public bool IsActive { get; set; }
     }
 
-    private List<EmployeeModel> Employees = new List<EmployeeModel>
+    private List<EmployeeModel> Employees = new()
     {
-        new EmployeeModel { Id = 1001, Name = "Alice Smith", Role = "Senior Teacher", Department = "Science", IsActive = true },
-        new EmployeeModel { Id = 1002, Name = "Bob Jones", Role = "Teacher", Department = "Math", IsActive = true },
-        new EmployeeModel { Id = 1003, Name = "Charlie Brown", Role = "Admin", Department = "Administration", IsActive = false },
-        new EmployeeModel { Id = 1004, Name = "Diana Prince", Role = "Counselor", Department = "Support", IsActive = true },
-        new EmployeeModel { Id = 1005, Name = "Evan Wright", Role = "Teacher", Department = "History", IsActive = true }
+        new EmployeeModel { Id = 1001, Name = "Alice Smith",   Role = "Senior Teacher", Department = "Science",        IsActive = true  },
+        new EmployeeModel { Id = 1002, Name = "Bob Jones",     Role = "Teacher",        Department = "Math",           IsActive = true  },
+        new EmployeeModel { Id = 1003, Name = "Charlie Brown", Role = "Admin",          Department = "Administration", IsActive = false },
+        new EmployeeModel { Id = 1004, Name = "Diana Prince",  Role = "Counselor",      Department = "Support",        IsActive = true  },
+        new EmployeeModel { Id = 1005, Name = "Evan Wright",   Role = "Teacher",        Department = "History",        IsActive = true  },
+        new EmployeeModel { Id = 1006, Name = "Fiona Green",   Role = "Teacher",        Department = "English",        IsActive = true  },
+        new EmployeeModel { Id = 1007, Name = "George Hall",   Role = "Teacher",        Department = "PE",             IsActive = false },
     };
+
+    private List<DataTable<EmployeeModel>.ColumnDef<EmployeeModel>> Columns => new()
+    {
+        new()
+        {
+            Header     = "ID",
+            GridWidth  = "minmax(60px, 0.6fr)",
+            CellTemplate = emp => @<span style="font-weight:600;color:#374151;">@emp.Id</span>
+        },
+        new()
+        {
+            Header     = "Name",
+            GridWidth  = "minmax(140px, 2fr)",
+            CellTemplate = emp => @<div style="display:flex;align-items:center;gap:10px;">
+                <MudAvatar Color="Color.Primary" Size="Size.Small">@emp.Name.Substring(0,1)</MudAvatar>
+                <span style="font-weight:600;">@emp.Name</span>
+            </div>
+        },
+        new()
+        {
+            Header     = "Role",
+            GridWidth  = "minmax(120px, 1.5fr)",
+            CellTemplate = emp => @<span>@emp.Role</span>
+        },
+        new()
+        {
+            Header     = "Department",
+            GridWidth  = "minmax(120px, 1.5fr)",
+            CellTemplate = emp => @<span>@emp.Department</span>
+        },
+        new()
+        {
+            Header     = "Status",
+            GridWidth  = "minmax(90px, 0.9fr)",
+            CellTemplate = emp => @<MudChip T="string" Size="Size.Small"
+                                             Color="@(emp.IsActive ? Color.Success : Color.Error)">
+                @(emp.IsActive ? "Active" : "Inactive")
+            </MudChip>
+        },
+        new()
+        {
+            Header     = "Actions",
+            GridWidth  = "minmax(80px, 0.8fr)",
+            HideOnMobile = true,
+            CellTemplate = emp => @<div style="display:flex;gap:4px;">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"  Color="Color.Primary" Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"   Size="Size.Small" />
+            </div>
+        },
+    };
+
+    private void HandleRowClick(EmployeeModel emp)
+    {
+        // TODO: open detail drawer / dialog
+    }
 }

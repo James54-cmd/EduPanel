@@ -61,6 +61,7 @@
 @code {
     bool _drawerOpen = true;
     bool _isMobileOrTablet = false;
+    Guid _observerId = Guid.Empty;
 
     protected override void OnInitialized()
     {
@@ -71,16 +72,25 @@
     {
         if (firstRender)
         {
-            var breakpoint = await BrowserViewportService.GetCurrentBreakpointAsync();
-            _isMobileOrTablet = breakpoint <= Breakpoint.Sm;
+            var observer = new ViewportObserver(OnBreakpointChanged);
+            _observerId = observer.Id;
 
-            if (_isMobileOrTablet)
-            {
-                _drawerOpen = false;
-            }
-
-            StateHasChanged();
+            await BrowserViewportService.SubscribeAsync(observer, fireImmediately: true);
         }
+    }
+
+    private async Task OnBreakpointChanged(Breakpoint breakpoint)
+    {
+        var wasMobile = _isMobileOrTablet;
+
+        _isMobileOrTablet = breakpoint <= Breakpoint.Sm;
+
+        if (_isMobileOrTablet && !wasMobile)
+            _drawerOpen = false;   // shrunk to mobile → close drawer
+        else if (!_isMobileOrTablet && wasMobile)
+            _drawerOpen = true;    // expanded to desktop → open drawer
+
+        await InvokeAsync(StateHasChanged);
     }
 
     private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
@@ -92,18 +102,31 @@
         }
     }
 
-    void CloseDrawer()
-    {
-        _drawerOpen = false;
-    }
+    void CloseDrawer()  => _drawerOpen = false;
+    void DrawerToggle() => _drawerOpen = !_drawerOpen;
 
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+        _ = BrowserViewportService.UnsubscribeAsync(_observerId);
     }
 
-    void DrawerToggle()
+    private sealed class ViewportObserver : IBrowserViewportObserver
     {
-        _drawerOpen = !_drawerOpen;
+        private readonly Func<Breakpoint, Task> _callback;
+
+        public ViewportObserver(Func<Breakpoint, Task> callback)
+            => _callback = callback;
+
+        public Guid Id { get; } = Guid.NewGuid();
+
+        public MudBlazor.Services.ResizeOptions ResizeOptions { get; } = new()
+        {
+            ReportRate = 200,             // debounce ms — avoids firing on every px
+            NotifyOnBreakpointOnly = true // only fires when crossing Xs/Sm/Md/Lg/Xl
+        };
+
+        public Task NotifyBrowserViewportChangeAsync(BrowserViewportEventArgs args)
+            => _callback(args.Breakpoint);
     }
 }
