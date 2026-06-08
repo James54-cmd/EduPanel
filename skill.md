@@ -88,3 +88,28 @@ To maintain clean Razor files and organize components effectively:
 * **Avoid Inline `<style>` Blocks**: Do not use `<style>` blocks inside `.razor` components.
 * **Use Scoped CSS**: Place component-specific styles in a dedicated isolated CSS file right next to the component (e.g., `Dashboard/Dashboard.razor.css`).
 * **Global Styles**: Utility classes and truly global styles should be kept in `wwwroot/app.css` or `wwwroot/EduPanel.styles.css`.
+
+---
+
+## 🎨 Gradient Avatar Utilities
+
+To keep avatars visually consistent and premium across the app, gradient styles are defined as global utility classes in `wwwroot/app.css`. **Never use inline `Style=` or `Color=` on `MudAvatar`** — use these classes instead:
+
+| Class | Gradient |
+|---|---|
+| `avatar-gradient-primary` | Zinc-900 → Zinc-600 (dark slate) |
+| `avatar-gradient-secondary` | Zinc-500 → Zinc-400 (mid grey) |
+| `avatar-gradient-success` | Emerald-600 → Emerald-400 |
+| `avatar-gradient-warning` | Amber-600 → Amber-400 |
+| `avatar-gradient-error` | Red-600 → Red-400 |
+| `avatar-gradient-info` | Sky-600 → Sky-400 |
+
+### Usage Example:
+```razor
+@* ✅ Correct *@
+<MudAvatar Size="Size.Small" Class="avatar-gradient-primary">AB</MudAvatar>
+
+@* ❌ Avoid *@
+<MudAvatar Color="Color.Primary" Size="Size.Small">AB</MudAvatar>
+```
+

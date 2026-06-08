@@ -58,3 +58,36 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* ── Gradient Avatar Utilities ─────────────────────────────────────────────── */
+/* Usage: replace Color="Color.X" with Class="avatar-gradient-primary" etc.    */
+
+.avatar-gradient-primary .mud-avatar {
+    background: linear-gradient(135deg, #18181b 0%, #52525b 100%) !important;
+    color: #fff !important;
+}
+
+.avatar-gradient-secondary .mud-avatar {
+    background: linear-gradient(135deg, #71717a 0%, #a1a1aa 100%) !important;
+    color: #fff !important;
+}
+
+.avatar-gradient-success .mud-avatar {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    color: #fff !important;
+}
+
+.avatar-gradient-warning .mud-avatar {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%) !important;
+    color: #fff !important;
+}
+
+.avatar-gradient-error .mud-avatar {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%) !important;
+    color: #fff !important;
+}
+
+.avatar-gradient-info .mud-avatar {
+    background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
+    color: #fff !important;
+}

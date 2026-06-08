@@ -1,30 +1,40 @@
 @page "/admin/employee"
 @namespace EduPanel.Components.Pages.Admin
 
-<div class="d-flex align-center justify-space-between mb-6">
-    <div class="d-flex align-center">
+<div class="mb-6">
+    <div class="d-flex align-center mb-4">
         <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Class="mr-2" />
         <MudText Typo="Typo.h5" Class="font-weight-bold">Employees</MudText>
     </div>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">
-        Add Employee
-    </MudButton>
+    <div class="d-flex justify-end">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">
+            Add Employee
+        </MudButton>
+    </div>
 </div>
 
 <DataTable TItem="EmployeeModel"
            Items="@Employees"
            Columns="@Columns"
-           PageSize="5"
-           BodyHeight="calc(100vh - 22rem)"
+           PageSize="20"
+           BodyHeight="calc(100vh - 20rem)"
            EmptyText="No employees found"
            OnRowClick="@HandleRowClick">
     <MobileCardTemplate Context="emp">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
-            <MudAvatar Color="Color.Primary" Size="Size.Small">@emp.Name.Substring(0,1)</MudAvatar>
-            <div>
-                <div style="font-size:.9rem;font-weight:600;color:#111827;">@emp.Name</div>
-                <div style="font-size:.75rem;color:#6b7280;">@emp.Role · @emp.Department</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                <MudAvatar Size="Size.Small" Class="avatar-gradient-primary">@emp.Name.Substring(0,1)</MudAvatar>
+                <div style="min-width:0;">
+                    <div style="font-size:.9rem;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@emp.Name</div>
+                    <div style="font-size:.75rem;color:#6b7280;">@emp.Role · @emp.Department</div>
+                </div>
             </div>
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small"
+                     AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight"
+                     Dense="true">
+                <MudMenuItem Icon="@Icons.Material.Filled.Edit" IconColor="Color.Primary">Edit</MudMenuItem>
+                <MudMenuItem Icon="@Icons.Material.Filled.Delete" IconColor="Color.Error">Delete</MudMenuItem>
+            </MudMenu>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:.75rem;color:#9ca3af;">ID: @emp.Id</span>
@@ -33,9 +43,12 @@
             </MudChip>
         </div>
     </MobileCardTemplate>
+
 </DataTable>
 
 @code {
+    private bool UseEllipsisActions = true;
+
     public class EmployeeModel
     {
         public int Id { get; set; }
@@ -69,7 +82,7 @@
             Header     = "Name",
             GridWidth  = "minmax(140px, 2fr)",
             CellTemplate = emp => @<div style="display:flex;align-items:center;gap:10px;">
-                <MudAvatar Color="Color.Primary" Size="Size.Small">@emp.Name.Substring(0,1)</MudAvatar>
+                <MudAvatar Size="Size.Small" Class="avatar-gradient-primary">@emp.Name.Substring(0,1)</MudAvatar>
                 <span style="font-weight:600;">@emp.Name</span>
             </div>
         },
@@ -96,13 +109,27 @@
         },
         new()
         {
-            Header     = "Actions",
+            Header     = UseEllipsisActions ? "" : "Actions",
             GridWidth  = "minmax(80px, 0.8fr)",
             HideOnMobile = true,
-            CellTemplate = emp => @<div style="display:flex;gap:4px;">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit"  Color="Color.Primary" Size="Size.Small" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"   Size="Size.Small" />
-            </div>
+            CellTemplate = emp => @<text>
+                @if (UseEllipsisActions)
+                {
+                    <div style="display:flex; justify-content: flex-end;">
+                        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Dense="true">
+                            <MudMenuItem Icon="@Icons.Material.Filled.Edit" IconColor="Color.Primary">Edit</MudMenuItem>
+                            <MudMenuItem Icon="@Icons.Material.Filled.Delete" IconColor="Color.Error">Delete</MudMenuItem>
+                        </MudMenu>
+                    </div>
+                }
+                else
+                {
+                    <div style="display:flex;gap:4px;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"  Color="Color.Primary" Size="Size.Small" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"   Size="Size.Small" />
+                    </div>
+                }
+            </text>
         },
     };
 
