@@ -1,0 +1,9 @@
+<MudText Typo="Typo.body2" Class="@($"mud-text-secondary {Class}")" Style="@Style">
+    @ChildContent
+</MudText>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+}

@@ -1,0 +1,13 @@
+<div class="d-flex align-center my-4 @Class" style="@Style">
+    <hr class="flex-grow-1" style="border: 0; border-top: 1px solid var(--mud-palette-divider); opacity: 0.5;" />
+    <MudText Typo="Typo.body2" Class="px-3 mud-text-secondary" Style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">
+        @ChildContent
+    </MudText>
+    <hr class="flex-grow-1" style="border: 0; border-top: 1px solid var(--mud-palette-divider); opacity: 0.5;" />
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+}

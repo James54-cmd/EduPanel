@@ -17,6 +17,29 @@ To maintain a clean and modular codebase, we separate page routing and layout co
 
 ---
 
+## 🧩 Global Composable UI Components
+
+To support highly customized layouts, forms are composed of small, stateless, reusable UI components located in the `Components/UI` directory and registered globally in `_Imports.razor` under the `EduPanel.Components.UI` namespace:
+
+* **`<FieldGroup>`**: Groups multiple related fields with standard vertical gap spacing.
+* **`<Field>`**: Standard wrapper block for an individual input field.
+* **`<FieldLabel>`**: Standardized font weights and color parameters for labels.
+* **`<FieldSeparator>`**: Divider line with centered secondary styling text (e.g. "Or continue with").
+* **`<FieldDescription>`**: Standard secondary descriptive text beneath/above forms.
+
+### Usage Example:
+```razor
+<FieldGroup>
+    <Field>
+        <FieldLabel HtmlFor="email">Email</FieldLabel>
+        <MudTextField @bind-Value="email" Placeholder="m@example.com" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    </Field>
+    <FieldSeparator>Or continue with</FieldSeparator>
+</FieldGroup>
+```
+
+---
+
 ## 🛡️ FluentValidation Integration
 
 Forms are validated using standard `FluentValidation` rules mapped to a `MudForm`:
