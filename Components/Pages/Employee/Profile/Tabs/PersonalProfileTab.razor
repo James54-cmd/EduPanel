@@ -1,326 +1,357 @@
 @namespace EduPanel.Components.Pages.Employee.ProfileTabs
 
-<MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pt-6 pb-2" Color="Color.Primary" Class="mt-2">
+<MudTabs Elevation="0" PanelClass="pt-6 pb-2" Class="mt-2" SliderColor="Color.Primary">
     
     <MudTabPanel Text="Primary Information">
-        <MudGrid Spacing="4">
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Employee No.</MudText>
-                    <MudTextField T="string" Value="@("142")" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Card No.</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">FP ID</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+        <div class="d-flex flex-column gap-6">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Employee Identification</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Employee No.</MudText>
+                            <MudTextField T="string" Value="@("142")" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Card No.</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">FP ID</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Payroll Group <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("PSI Non Confi")" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
 
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Payroll Group <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("PSI Non Confi")" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Title</MudText>
-                    <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("Mr.")">Mr.</MudSelectItem>
-                        <MudSelectItem Value="@("Ms.")">Ms.</MudSelectItem>
-                        <MudSelectItem Value="@("Mrs.")">Mrs.</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Surname <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("Damaso")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Full Name</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Title</MudText>
+                            <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("Mr.")">Mr.</MudSelectItem>
+                                <MudSelectItem Value="@("Ms.")">Ms.</MudSelectItem>
+                                <MudSelectItem Value="@("Mrs.")">Mrs.</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Surname <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("Damaso")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">First Name <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("James Fanuel")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">First Name <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("James Fanuel")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Middle Name</MudText>
-                    <MudTextField T="string" Value="@("Nancy")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Maiden Name <span class="text-danger" style="font-size: 0.7rem; font-style: italic; font-weight: normal;">* for married women</span></MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Middle Name</MudText>
+                            <MudTextField T="string" Value="@("Nancy")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Maiden Name <span class="text-danger" style="font-size: 0.7rem; font-style: italic; font-weight: normal;">* for married women</span></MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Name Extension <span class="text-danger" style="font-size: 0.7rem; font-style: italic; font-weight: normal;">* (Jr., II, etc.)</span></MudText>
+                            <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("Jr.")">Jr.</MudSelectItem>
+                                <MudSelectItem Value="@("Sr.")">Sr.</MudSelectItem>
+                                <MudSelectItem Value="@("II")">II</MudSelectItem>
+                                <MudSelectItem Value="@("III")">III</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Name Extension <span class="text-danger" style="font-size: 0.7rem; font-style: italic; font-weight: normal;">* (Jr., II, etc.)</span></MudText>
-                    <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("Jr.")">Jr.</MudSelectItem>
-                        <MudSelectItem Value="@("Sr.")">Sr.</MudSelectItem>
-                        <MudSelectItem Value="@("II")">II</MudSelectItem>
-                        <MudSelectItem Value="@("III")">III</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Nick Name</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-        </MudGrid>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Nick Name</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
     </MudTabPanel>
 
     <MudTabPanel Text="Personal Details">
-        <MudGrid Spacing="4">
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Date of Birth <span class="text-danger">*</span></MudText>
-                    <MudDatePicker Date="@(new DateTime(2003, 3, 3))" Variant="Variant.Outlined" Margin="Margin.Dense" DateFormat="dd/MM/yyyy" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Age</MudText>
-                    <MudTextField T="int" Value="23" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Sex <span class="text-danger">*</span></MudText>
-                    <MudSelect T="string" Value="@("Male")" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("Male")">Male</MudSelectItem>
-                        <MudSelectItem Value="@("Female")">Female</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
+        <div class="d-flex flex-column gap-6">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Demographics</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Date of Birth <span class="text-danger">*</span></MudText>
+                            <MudDatePicker Date="@(new DateTime(2003, 3, 3))" Variant="Variant.Outlined" Margin="Margin.Dense" DateFormat="dd/MM/yyyy" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Age</MudText>
+                            <MudTextField T="int" Value="23" Variant="Variant.Outlined" Margin="Margin.Dense" ReadOnly="true" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Sex <span class="text-danger">*</span></MudText>
+                            <MudSelect T="string" Value="@("Male")" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("Male")">Male</MudSelectItem>
+                                <MudSelectItem Value="@("Female")">Female</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
 
-            <MudItem xs="12" md="12">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Place of Birth</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Lines="2" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+                    <MudItem xs="12" md="12">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Place of Birth</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Lines="2" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Citizenship <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("Filipino")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1 h-100 justify-end pb-1">
-                    <MudCheckBox T="bool" Label="With dual citizenship" Color="Color.Primary" Dense="true" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Dual Citizenship By</MudText>
-                    <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("By Birth")">By Birth</MudSelectItem>
-                        <MudSelectItem Value="@("By Naturalization")">By Naturalization</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Citizenship <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("Filipino")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1 h-100 justify-end pb-1">
+                            <MudCheckBox T="bool" Label="With dual citizenship" Color="Color.Primary" Dense="true" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Dual Citizenship By</MudText>
+                            <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("By Birth")">By Birth</MudSelectItem>
+                                <MudSelectItem Value="@("By Naturalization")">By Naturalization</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Civil Status <span class="text-danger">*</span></MudText>
-                    <MudSelect T="string" Value="@("Single")" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("Single")">Single</MudSelectItem>
-                        <MudSelectItem Value="@("Married")">Married</MudSelectItem>
-                        <MudSelectItem Value="@("Widowed")">Widowed</MudSelectItem>
-                        <MudSelectItem Value="@("Separated")">Separated</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
-            
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Height (meters)</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Weight (kilograms)</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Civil Status <span class="text-danger">*</span></MudText>
+                            <MudSelect T="string" Value="@("Single")" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("Single")">Single</MudSelectItem>
+                                <MudSelectItem Value="@("Married")">Married</MudSelectItem>
+                                <MudSelectItem Value="@("Widowed")">Widowed</MudSelectItem>
+                                <MudSelectItem Value="@("Separated")">Separated</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
 
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Blood Type</MudText>
-                    <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("A")">A</MudSelectItem>
-                        <MudSelectItem Value="@("B")">B</MudSelectItem>
-                        <MudSelectItem Value="@("AB")">AB</MudSelectItem>
-                        <MudSelectItem Value="@("O")">O</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
-        </MudGrid>
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Physical Attributes</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Height (meters)</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Weight (kilograms)</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Blood Type</MudText>
+                            <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("A")">A</MudSelectItem>
+                                <MudSelectItem Value="@("B")">B</MudSelectItem>
+                                <MudSelectItem Value="@("AB")">AB</MudSelectItem>
+                                <MudSelectItem Value="@("O")">O</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
     </MudTabPanel>
     
     <MudTabPanel Text="Spouse Details">
-        <MudGrid Spacing="4">
-            <MudItem xs="12" Class="mb-1">
-                <MudText Typo="Typo.subtitle2" Class="font-weight-bold text-uppercase" Color="Color.Primary">If Married, Please Indicate Details</MudText>
-            </MudItem>
-            
-            <MudItem xs="12" sm="6">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Date of Marriage</MudText>
-                    <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Place of Marriage</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+        <div class="d-flex flex-column gap-6">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">If Married, Please Indicate Details</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Date of Marriage</MudText>
+                            <MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Place of Marriage</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
 
-            <MudItem xs="12" Class="mt-2 mb-1">
-                <MudDivider />
-            </MudItem>
-            <MudItem xs="12" Class="mb-1">
-                <MudText Typo="Typo.subtitle2" Class="font-weight-bold text-uppercase" Color="Color.Primary">Spouse Details</MudText>
-            </MudItem>
-            
-            <MudItem xs="12" sm="6" md="3">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Surname</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">First Name</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Middle Name</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="3">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Name Extension</MudText>
-                    <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("Jr.")">Jr.</MudSelectItem>
-                        <MudSelectItem Value="@("Sr.")">Sr.</MudSelectItem>
-                    </MudSelect>
-                </div>
-            </MudItem>
-        </MudGrid>
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Spouse Identity</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Surname</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">First Name</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Middle Name</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="3">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Name Extension</MudText>
+                            <MudSelect T="string" Placeholder="-- Select --" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("Jr.")">Jr.</MudSelectItem>
+                                <MudSelectItem Value="@("Sr.")">Sr.</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
     </MudTabPanel>
 
     <MudTabPanel Text="Contact Information">
-        <MudGrid Spacing="4">
-            <MudItem xs="12" md="6">
-                <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-lg bg-transparent">
-                    <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Permanent Address <span class="text-danger">*</span></MudText>
-                    <MudGrid Spacing="2">
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Label="House/Block/Lot No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Label="Street" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Subdivision/Village" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Barangay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="City/Municipality" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Province" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Zip Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                    </MudGrid>
-                </MudPaper>
-            </MudItem>
+        <div class="d-flex flex-column gap-6">
+            <MudGrid Spacing="4">
+                <MudItem xs="12" md="6">
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent h-100">
+                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Permanent Address <span class="text-danger">*</span></MudText>
+                        <MudGrid Spacing="2">
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Label="House/Block/Lot No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Label="Street" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Subdivision/Village" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Barangay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="City/Municipality" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Province" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Zip Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                </MudItem>
 
-            <MudItem xs="12" md="6">
-                <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-lg bg-transparent">
-                    <div class="d-flex align-center justify-space-between mb-4">
-                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold" Color="Color.Primary">Residential Address</MudText>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Class="text-transform-none">Same as Permanent</MudButton>
-                    </div>
-                    <MudGrid Spacing="2">
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Label="House/Block/Lot No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Label="Street" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Subdivision/Village" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Barangay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="City/Municipality" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Province" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                        <MudItem xs="12" sm="6"><MudTextField T="string" Label="Zip Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
-                    </MudGrid>
-                </MudPaper>
-            </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent h-100">
+                        <div class="d-flex align-center justify-space-between mb-4">
+                            <MudText Typo="Typo.subtitle2" Class="font-weight-bold" Color="Color.Primary">Residential Address</MudText>
+                            <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" Class="text-transform-none">Same as Permanent</MudButton>
+                        </div>
+                        <MudGrid Spacing="2">
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("121")" Label="House/Block/Lot No." Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Value="@("Catalina Ouano St")" Label="Street" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Subdivision/Village" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Barangay" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="City/Municipality" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Province" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                            <MudItem xs="12" sm="6"><MudTextField T="string" Label="Zip Code" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
 
-            <MudItem xs="12" sm="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Telephone No.</MudText>
-                    <MudTextField T="string" Placeholder="Tel. / Phone No." Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Mobile No. <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("09626377043")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Email Address</MudText>
-                    <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-        </MudGrid>
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">Contact Numbers</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Telephone No.</MudText>
+                            <MudTextField T="string" Placeholder="Tel. / Phone No." Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Mobile No. <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("09626377043")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Email Address</MudText>
+                            <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </div>
     </MudTabPanel>
 
     <MudTabPanel Text="Emergency Contact">
-        <MudGrid Spacing="4">
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Name <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("Romeo T. Damaso")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Relationship <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("Father")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Contact No. <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("09324298531")" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+        <div class="d-flex flex-column gap-6">
+            <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-lg bg-transparent">
+                <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-4" Color="Color.Primary">In Case of Emergency</MudText>
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Name <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("Romeo T. Damaso")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Relationship <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("Father")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Contact No. <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("09324298531")" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
 
-            <MudItem xs="12" md="12">
-                <div class="d-flex flex-column gap-1">
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Address <span class="text-danger">*</span></MudText>
-                    <MudTextField T="string" Value="@("121 Catalina Ouano St., Looc, Mandaue City, Cebu, Philippines, 6014")" Variant="Variant.Outlined" Lines="2" Margin="Margin.Dense" />
-                </div>
-            </MudItem>
+                    <MudItem xs="12" md="12">
+                        <div class="d-flex flex-column gap-1">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="font-weight-medium">Address <span class="text-danger">*</span></MudText>
+                            <MudTextField T="string" Value="@("121 Catalina Ouano St., Looc, Mandaue City, Cebu, Philippines, 6014")" Variant="Variant.Outlined" Lines="2" Margin="Margin.Dense" />
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
 
-            <MudItem xs="12" Class="d-flex justify-end mt-4">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="text-transform-none px-6">Save Changes</MudButton>
+            <MudItem xs="12" Class="d-flex justify-end mt-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="text-transform-none px-8 py-2 rounded-lg elevation-2">Save Changes</MudButton>
             </MudItem>
-        </MudGrid>
+        </div>
     </MudTabPanel>
 </MudTabs>
 
