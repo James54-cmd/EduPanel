@@ -6,41 +6,46 @@
     <MudGrid Spacing="4">
         <!-- Sidebar: Avatar and Vertical Tabs -->
         <MudItem xs="12" md="3">
-            <MudPaper Elevation="0" Class="pa-4 mb-4 rounded-lg mud-width-full d-flex flex-column align-center text-center" Style="border: 1px solid var(--mud-palette-divider);">
-                <MudAvatar Size="Size.Large" Class="avatar-gradient-primary mb-3" Style="width: 100px; height: 100px; font-size: 2.5rem;">E</MudAvatar>
-                <MudText Typo="Typo.h6" Class="font-weight-bold">James Fanuel N. Damaso</MudText>
-                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-1">Date of Birth</MudText>
-                <MudText Typo="Typo.body2" Class="font-weight-medium">May 3, 2003</MudText>
+            <MudPaper Elevation="2" Class="pa-6 mb-4 rounded-xl mud-width-full d-flex flex-column align-center text-center">
+                <MudAvatar Size="Size.Large" Class="avatar-gradient-primary mb-4 elevation-4" Style="width: 120px; height: 120px; font-size: 3rem;">E</MudAvatar>
+                <MudText Typo="Typo.h5" Class="font-weight-bold mb-1" Style="letter-spacing: -0.5px;">James Fanuel N. Damaso</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-1 text-uppercase font-weight-bold" Style="letter-spacing: 1px; font-size: 0.75rem;">Date of Birth</MudText>
+                <MudText Typo="Typo.body1" Class="font-weight-medium">May 3, 2003</MudText>
             </MudPaper>
 
-            <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="px-4 py-6" Position="Position.Left" Outlined="true" Class="mud-width-full" @bind-ActivePanelIndex="activeIndex">
-                <MudTabPanel Text="Personal Profile" />
-                <MudTabPanel Text="Work Information" />
-                <MudTabPanel Text="Education" />
-                <MudTabPanel Text="Eligibility" />
-                <MudTabPanel Text="Employment Record" />
-                <MudTabPanel Text="Training Programs" />
-                <MudTabPanel Text="Family Background" />
-                <MudTabPanel Text="Voluntary Works" />
-                <MudTabPanel Text="Language" />
-                <MudTabPanel Text="Other Information" />
-                <MudTabPanel Text="Character Reference" />
-                <MudTabPanel Text="Service Record" />
-                <MudTabPanel Text="Accountability" />
-            </MudTabs>
+            <MudPaper Elevation="2" Class="rounded-xl overflow-hidden">
+                <div class="d-flex flex-column pa-2 gap-1">
+                    @foreach (var tab in TabNames)
+                    {
+                        var idx = tab.Key;
+                        var name = tab.Value;
+                        var isActive = activeIndex == idx;
+                        <div @onclick="() => activeIndex = idx"
+                             class="@($"px-4 py-3 rounded-lg cursor-pointer transition-all d-flex align-center {(isActive ? "bg-primary text-white mud-elevation-2 font-weight-bold" : "hover-bg-light mud-text-secondary font-weight-medium")}")">
+                            <MudText Typo="Typo.body2" Class="inherit-font-weight" Style="letter-spacing: 0.2px;">@name</MudText>
+                        </div>
+                    }
+                </div>
+            </MudPaper>
         </MudItem>
 
         <!-- Main Content Area -->
         <MudItem xs="12" md="9">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg mud-width-full h-100" Style="border: 1px solid var(--mud-palette-divider);">
+            <MudPaper Elevation="2" Class="pa-8 rounded-xl mud-width-full h-100">
                 @if (activeIndex == 0)
                 {
-                    <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Personal Profile</MudText>
+                    <div class="d-flex align-center mb-6">
+                        <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
+                        <MudText Typo="Typo.h4" Class="font-weight-bold" Style="letter-spacing: -0.5px;">Personal Profile</MudText>
+                    </div>
                     <PersonalProfileTab />
                 }
                 else
                 {
-                    <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">@GetTabName(activeIndex)</MudText>
+                    <div class="d-flex align-center mb-6">
+                        <MudIcon Icon="@Icons.Material.Filled.Folder" Size="Size.Large" Color="Color.Secondary" Class="mr-3" />
+                        <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Secondary" Style="letter-spacing: -0.5px;">@GetTabName(activeIndex)</MudText>
+                    </div>
                     <ProfilePlaceholderTab />
                 }
             </MudPaper>
@@ -51,21 +56,31 @@
 @code {
     private int activeIndex = 0;
 
-    private string GetTabName(int index) => index switch
+    private readonly Dictionary<int, string> TabNames = new()
     {
-        0 => "Personal Profile",
-        1 => "Work Information",
-        2 => "Education",
-        3 => "Eligibility",
-        4 => "Employment Record",
-        5 => "Training Programs",
-        6 => "Family Background",
-        7 => "Voluntary Works",
-        8 => "Language",
-        9 => "Other Information",
-        10 => "Character Reference",
-        11 => "Service Record",
-        12 => "Accountability",
-        _ => "Unknown"
+        { 0, "Personal Profile" },
+        { 1, "Work Information" },
+        { 2, "Education" },
+        { 3, "Eligibility" },
+        { 4, "Employment Record" },
+        { 5, "Training Programs" },
+        { 6, "Family Background" },
+        { 7, "Voluntary Works" },
+        { 8, "Language" },
+        { 9, "Other Information" },
+        { 10, "Character Reference" },
+        { 11, "Service Record" },
+        { 12, "Accountability" }
     };
+
+    private string GetTabName(int index) => TabNames.TryGetValue(index, out var name) ? name : "Unknown";
 }
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .transition-all { transition: all 0.2s ease-in-out; }
+    .hover-bg-light:hover { background-color: var(--mud-palette-action-default-hover); }
+    .bg-primary { background-color: var(--mud-palette-primary) !important; }
+    .text-white { color: #ffffff !important; }
+    .inherit-font-weight { font-weight: inherit !important; }
+</style>
