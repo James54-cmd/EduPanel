@@ -1,6 +1,11 @@
 @namespace EduPanel.Components.UI
 
 <MudButton Disabled="@IsLoading"
+           OnClick="@OnClick"
+           Color="@Color"
+           Variant="@Variant"
+           FullWidth="@FullWidth"
+           ButtonType="@ButtonType"
            Class="@($"py-2.5 {Class}")"
            Style="@($"text-transform: none; {Style}")"
            @attributes="UserAttributes">
@@ -25,6 +30,21 @@
 </MudButton>
 
 @code {
+    [Parameter]
+    public EventCallback<Microsoft.AspNetCore.Components.Web.MouseEventArgs> OnClick { get; set; }
+
+    [Parameter]
+    public MudBlazor.Color Color { get; set; } = MudBlazor.Color.Default;
+
+    [Parameter]
+    public MudBlazor.Variant Variant { get; set; } = MudBlazor.Variant.Text;
+
+    [Parameter]
+    public bool FullWidth { get; set; }
+
+    [Parameter]
+    public MudBlazor.ButtonType ButtonType { get; set; } = MudBlazor.ButtonType.Button;
+
     [Parameter]
     public bool IsLoading { get; set; }
 
