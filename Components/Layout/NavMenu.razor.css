@@ -103,3 +103,59 @@
         overflow-y: auto;
     }
 }
+
+/* ── Profile flyout submenu ── */
+
+.nav-profile-group {
+    position: relative;
+}
+
+::deep .nav-profile-active {
+    background-color: var(--mud-palette-action-default-hover);
+    border-radius: var(--mud-default-borderradius);
+}
+
+/* Transparent backdrop to close the flyout when clicking outside */
+.nav-flyout-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1299;
+    background: transparent;
+}
+
+/* Popover styling overrides */
+::deep .nav-flyout-popover {
+    z-index: 1300 !important;
+    margin-left: 4px;
+}
+
+::deep .nav-flyout-popover .mud-navlink {
+    font-size: 0.875rem;
+    padding-left: 16px;
+    padding-right: 24px;
+}
+
+::deep .nav-flyout-popover .mud-navlink:hover {
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+::deep .nav-flyout-popover .mud-navlink.active {
+    color: var(--mud-palette-primary);
+    background-color: var(--mud-palette-primary-hover);
+}
+
+/* ── Active highlight for expanded MudNavGroup ── */
+::deep .nav-group-active > .mud-nav-link {
+    color: var(--mud-palette-primary) !important;
+    background-color: var(--mud-palette-primary-hover);
+    border-radius: var(--mud-default-borderradius);
+}
+
+::deep .nav-profile-active {
+    background-color: var(--mud-palette-primary-hover);
+    border-radius: var(--mud-default-borderradius);
+    color: var(--mud-palette-primary) !important;
+}

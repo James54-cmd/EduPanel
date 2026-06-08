@@ -4,8 +4,45 @@
 <MudNavMenu Margin="Margin.Dense">
     @if (IsEmployeeView)
     {
-        <MudNavLink Href="/employee/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
-        <MudNavLink Href="/employee/profile" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
+        @if (IsMini)
+        {
+            @* ── Mini mode: icon click opens a flyout popover ── *@
+            <div class="nav-profile-group">
+                <MudNavLink Icon="@Icons.Material.Filled.Person"
+                            IconColor="@(IsProfileActive ? Color.Primary : Color.Default)"
+                            OnClick="ToggleProfileMenu"
+                            Match="NavLinkMatch.Prefix"
+                            Class="@ProfileNavClass">
+                    My Profile
+                </MudNavLink>
+
+                <MudPopover Open="@_profileMenuOpen"
+                            AnchorOrigin="Origin.CenterRight"
+                            TransformOrigin="Origin.CenterLeft"
+                            Class="nav-flyout-popover">
+                    <MudPaper Elevation="8" Class="py-2" Style="min-width: 200px;">
+                        <MudText Typo="Typo.overline" Class="px-4 pb-1" Style="color: var(--mud-palette-text-secondary);">My Profile</MudText>
+                        <MudDivider Class="mb-1" />
+                        <MudNavMenu Margin="Margin.Dense">
+                            <MudNavLink Href="/employee/profile"
+                                        Match="NavLinkMatch.All"
+                                        OnClick="CloseProfileMenu">Employee Profile</MudNavLink>
+                            <MudNavLink Href="/employee/personal-data-update"
+                                        Match="NavLinkMatch.All"
+                                        OnClick="CloseProfileMenu">Personal Data Update</MudNavLink>
+                        </MudNavMenu>
+                    </MudPaper>
+                </MudPopover>
+            </div>
+        }
+        else
+        {
+            @* ── Expanded mode: normal inline submenu ── *@
+            <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" Expanded="true" HideExpandIcon="false" Class="@ProfileGroupClass">
+                <MudNavLink Href="/employee/profile" Match="NavLinkMatch.All">Employee Profile</MudNavLink>
+                <MudNavLink Href="/employee/personal-data-update" Match="NavLinkMatch.All">Personal Data Update</MudNavLink>
+            </MudNavGroup>
+        }
     }
     else
     {
@@ -17,11 +54,42 @@
     }
 </MudNavMenu>
 
+@if (_profileMenuOpen)
+{
+    <div class="nav-flyout-backdrop" @onclick="CloseProfileMenu"></div>
+}
+
 @code {
     [Parameter]
     public bool IsMini { get; set; }
 
+    private bool _profileMenuOpen;
+
     private bool IsEmployeeView => NavManager.Uri.Contains("/employee", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsProfileActive => NavManager.Uri.Contains("/employee/profile", StringComparison.OrdinalIgnoreCase)
+        || NavManager.Uri.Contains("/employee/personal-data-update", StringComparison.OrdinalIgnoreCase);
+
+    private string ProfileNavClass => (_profileMenuOpen || IsProfileActive) ? "nav-profile-active" : "";
+
+    private string ProfileGroupClass => IsProfileActive ? "nav-group-active" : "";
+
+    private void ToggleProfileMenu()
+    {
+        _profileMenuOpen = !_profileMenuOpen;
+    }
+
+    private void CloseProfileMenu()
+    {
+        _profileMenuOpen = false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Close popover when switching from mini to expanded
+        if (!IsMini)
+            _profileMenuOpen = false;
+    }
 
     protected override void OnInitialized()
     {
@@ -30,7 +98,8 @@
     
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        StateHasChanged();
+        _profileMenuOpen = false;
+        InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()

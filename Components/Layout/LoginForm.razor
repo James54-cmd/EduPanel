@@ -114,9 +114,9 @@
             }
             else if (model.Email == "employee@example.com" && model.Password == "employee123")
             {
-                Console.WriteLine("[Login] Credentials matched. Navigating to employee dashboard...");
+                Console.WriteLine("[Login] Credentials matched. Navigating to employee profile...");
                 Snackbar.Add("Login successful as Employee!", MudBlazor.Severity.Success);
-                Nav.NavigateTo("/employee/dashboard");
+                Nav.NavigateTo("/employee/profile");
             }
             else
             {
