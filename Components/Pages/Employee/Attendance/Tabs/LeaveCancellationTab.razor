@@ -1,0 +1,70 @@
+@namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@inject ISnackbar Snackbar
+
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Approved Upcoming Leaves</MudText>
+        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <thead>
+                <tr>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Days</th>
+                    <th>Current Status</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!LeaveRequests.Any(l => l.Status == "Approved"))
+                {
+                    <tr>
+                        <td colspan="6" class="text-center pa-4 mud-text-secondary">No approved upcoming leaves available to cancel.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var leave in LeaveRequests.Where(l => l.Status == "Approved"))
+                    {
+                        <tr>
+                            <td class="font-weight-bold">@leave.Type</td>
+                            <td>@leave.Start.ToString("MMMM dd, yyyy")</td>
+                            <td>@leave.End.ToString("MMMM dd, yyyy")</td>
+                            <td>@leave.TotalDays days</td>
+                            <td>
+                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Filled">Approved</MudChip>
+                            </td>
+                            <td style="text-align: right;">
+                                <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="() => CancelLeave(leave)">Cancel Leave</MudButton>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    public class LeaveRequestModel
+    {
+        public string Type { get; set; } = "";
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public int TotalDays => (End - Start).Days + 1;
+        public string Status { get; set; } = "";
+    }
+
+    private List<LeaveRequestModel> LeaveRequests = new()
+    {
+        new() { Type = "Vacation Leave", Start = DateTime.Today.AddDays(10), End = DateTime.Today.AddDays(12), Status = "Approved" },
+        new() { Type = "Sick Leave", Start = DateTime.Today.AddDays(-15), End = DateTime.Today.AddDays(-15), Status = "Approved" },
+        new() { Type = "Official Business (OB)", Start = DateTime.Today.AddDays(2), End = DateTime.Today.AddDays(2), Status = "Pending" }
+    };
+
+    private void CancelLeave(LeaveRequestModel leave)
+    {
+        leave.Status = "Cancelled";
+        Snackbar.Add("Leave request has been cancelled.", Severity.Normal);
+    }
+}

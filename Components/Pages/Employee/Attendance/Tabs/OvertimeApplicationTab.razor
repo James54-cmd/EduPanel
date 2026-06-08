@@ -1,0 +1,96 @@
+@namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@inject ISnackbar Snackbar
+
+<MudItem xs="12" md="5">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">File Overtime (OT)</MudText>
+        <MudForm>
+            <MudDatePicker Label="OT Date" @bind-Date="_otDate" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
+            <div class="d-flex gap-2 mb-3">
+                <MudTimePicker Label="Start Time" @bind-Time="_otStart" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 50%;" />
+                <MudTimePicker Label="End Time" @bind-Time="_otEnd" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 50%;" />
+            </div>
+            <MudTextField T="string" Label="OT Purpose / Project Name" @bind-Value="_otPurpose" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitOvertimeRequest">Submit Application</MudButton>
+        </MudForm>
+    </MudPaper>
+</MudItem>
+<MudItem xs="12" md="7">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Overtime History</MudText>
+        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <thead>
+                <tr>
+                    <th>OT Date</th>
+                    <th>Time Range</th>
+                    <th>Hours</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ot in OvertimeRequests)
+                {
+                    <tr>
+                        <td>@ot.Date.ToString("MM/dd/yyyy")</td>
+                        <td>@ot.Start.ToString(@"hh\:mm") - @ot.End.ToString(@"hh\:mm")</td>
+                        <td>@ot.Hours.ToString("0.0") hrs</td>
+                        <td>
+                            <MudChip T="string" Color="@GetRequestStatusColor(ot.Status)" Size="Size.Small" Variant="Variant.Filled">@ot.Status</MudChip>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private DateTime? _otDate = DateTime.Today;
+    private TimeSpan? _otStart = new TimeSpan(17, 0, 0);
+    private TimeSpan? _otEnd = new TimeSpan(19, 0, 0);
+    private string _otPurpose = "";
+
+    private Color GetRequestStatusColor(string status) => status switch
+    {
+        "Approved" => Color.Success,
+        "Pending" => Color.Warning,
+        "Rejected" => Color.Error,
+        "Cancelled" => Color.Default,
+        _ => Color.Default
+    };
+
+    public class OvertimeRequestModel
+    {
+        public DateTime Date { get; set; }
+        public TimeSpan Start { get; set; }
+        public TimeSpan End { get; set; }
+        public double Hours => (End - Start).TotalHours;
+        public string Status { get; set; } = "";
+    }
+
+    private List<OvertimeRequestModel> OvertimeRequests = new()
+    {
+        new() { Date = DateTime.Today.AddDays(-3), Start = new TimeSpan(17, 0, 0), End = new TimeSpan(18, 30, 0), Status = "Approved" },
+        new() { Date = DateTime.Today.AddDays(1), Start = new TimeSpan(17, 0, 0), End = new TimeSpan(19, 0, 0), Status = "Pending" }
+    };
+
+    private void SubmitOvertimeRequest()
+    {
+        if (_otDate == null || _otStart == null || _otEnd == null || string.IsNullOrWhiteSpace(_otPurpose))
+        {
+            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
+            return;
+        }
+
+        OvertimeRequests.Insert(0, new()
+        {
+            Date = _otDate.Value,
+            Start = _otStart.Value,
+            End = _otEnd.Value,
+            Status = "Pending"
+        });
+
+        _otPurpose = "";
+        Snackbar.Add("Overtime application submitted successfully!", Severity.Success);
+    }
+}

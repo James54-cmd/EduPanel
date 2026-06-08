@@ -1,0 +1,106 @@
+@namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@inject ISnackbar Snackbar
+
+<MudItem xs="12" md="5">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">New Request</MudText>
+        <MudForm>
+            <MudDatePicker Label="Target Date" @bind-Date="_shiftRequestDate" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
+            <MudSelect T="string" Label="Current Shift" @bind-Value="_currentShift" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
+                <MudSelectItem Value="@("08:00 AM - 05:00 PM")">Regular Shift (08:00 AM - 05:00 PM)</MudSelectItem>
+            </MudSelect>
+            <MudSelect T="string" Label="Proposed Shift" @bind-Value="_proposedShift" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
+                <MudSelectItem Value="@("06:00 AM - 03:00 PM")">Early Shift (06:00 AM - 03:00 PM)</MudSelectItem>
+                <MudSelectItem Value="@("10:00 AM - 07:00 PM")">Late Shift (10:00 AM - 07:00 PM)</MudSelectItem>
+                <MudSelectItem Value="@("10:00 PM - 07:00 AM")">Night Shift (10:00 PM - 07:00 AM)</MudSelectItem>
+            </MudSelect>
+            <MudTextField T="string" Label="Reason" @bind-Value="_shiftReason" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitShiftChange">Submit Request</MudButton>
+        </MudForm>
+    </MudPaper>
+</MudItem>
+<MudItem xs="12" md="7">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Request History</MudText>
+        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <thead>
+                <tr>
+                    <th>Date Requested</th>
+                    <th>Target Date</th>
+                    <th>Details</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var req in ShiftChangeRequests)
+                {
+                    <tr>
+                        <td>@req.DateRequested.ToString("MM/dd/yyyy")</td>
+                        <td>@req.TargetDate.ToString("MM/dd/yyyy")</td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="text-caption mud-text-secondary">From: @req.CurrentShift</span>
+                                <span class="text-caption font-weight-bold">To: @req.ProposedShift</span>
+                            </div>
+                        </td>
+                        <td>
+                            <MudChip T="string" Color="@GetRequestStatusColor(req.Status)" Size="Size.Small" Variant="Variant.Filled">@req.Status</MudChip>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private DateTime? _shiftRequestDate = DateTime.Today;
+    private string _currentShift = "08:00 AM - 05:00 PM";
+    private string _proposedShift = "06:00 AM - 03:00 PM";
+    private string _shiftReason = "";
+
+    private Color GetRequestStatusColor(string status) => status switch
+    {
+        "Approved" => Color.Success,
+        "Pending" => Color.Warning,
+        "Rejected" => Color.Error,
+        "Cancelled" => Color.Default,
+        _ => Color.Default
+    };
+
+    private class ShiftRequest
+    {
+        public DateTime DateRequested { get; set; }
+        public DateTime TargetDate { get; set; }
+        public string CurrentShift { get; set; } = "";
+        public string ProposedShift { get; set; } = "";
+        public string Status { get; set; } = "";
+    }
+
+    private List<ShiftRequest> ShiftChangeRequests = new()
+    {
+        new() { DateRequested = DateTime.Today.AddDays(-2), TargetDate = DateTime.Today.AddDays(3), CurrentShift = "08:00 AM - 05:00 PM", ProposedShift = "06:00 AM - 03:00 PM", Status = "Pending" },
+        new() { DateRequested = DateTime.Today.AddDays(-10), TargetDate = DateTime.Today.AddDays(-8), CurrentShift = "08:00 AM - 05:00 PM", ProposedShift = "10:00 AM - 07:00 PM", Status = "Approved" }
+    };
+
+    private void SubmitShiftChange()
+    {
+        if (_shiftRequestDate == null || string.IsNullOrWhiteSpace(_shiftReason))
+        {
+            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
+            return;
+        }
+
+        ShiftChangeRequests.Insert(0, new()
+        {
+            DateRequested = DateTime.Today,
+            TargetDate = _shiftRequestDate.Value,
+            CurrentShift = _currentShift,
+            ProposedShift = _proposedShift,
+            Status = "Pending"
+        });
+
+        _shiftReason = "";
+        Snackbar.Add("Shift change request submitted successfully!", Severity.Success);
+    }
+}

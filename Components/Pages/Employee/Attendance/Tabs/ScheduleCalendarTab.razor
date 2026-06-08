@@ -1,0 +1,61 @@
+@namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
+        <div class="d-flex align-center justify-space-between mb-6">
+            <div class="d-flex align-center gap-2">
+                <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" Variant="Variant.Outlined" Size="Size.Small" />
+                <MudText Typo="Typo.h6" Class="font-weight-bold">June 2026</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" Variant="Variant.Outlined" Size="Size.Small" />
+            </div>
+            <div class="d-flex gap-4">
+                <div class="d-flex align-center gap-1"><span class="legend-color-dot" style="background-color: var(--mud-palette-primary);"></span> <MudText Typo="Typo.caption">Regular Shift</MudText></div>
+                <div class="d-flex align-center gap-1"><span class="legend-color-dot" style="background-color: var(--mud-palette-secondary);"></span> <MudText Typo="Typo.caption">Rest Day</MudText></div>
+                <div class="d-flex align-center gap-1"><span class="legend-color-dot" style="background-color: var(--mud-palette-success);"></span> <MudText Typo="Typo.caption">Holiday</MudText></div>
+            </div>
+        </div>
+
+        <div class="calendar-grid">
+            <!-- Days of Week -->
+            <div class="calendar-header">Sun</div>
+            <div class="calendar-header">Mon</div>
+            <div class="calendar-header">Tue</div>
+            <div class="calendar-header">Wed</div>
+            <div class="calendar-header">Thu</div>
+            <div class="calendar-header">Fri</div>
+            <div class="calendar-header">Sat</div>
+
+            <!-- Calendar Days -->
+            @for (int i = 1; i <= 30; i++)
+            {
+                var day = i;
+                var isRestDay = (day % 7 == 0 || day % 7 == 6);
+                var isHoliday = (day == 12); // June 12 Independence Day
+                var cellClass = isRestDay ? "calendar-cell rest-day" : isHoliday ? "calendar-cell holiday" : "calendar-cell work-day";
+
+                <div class="@cellClass">
+                    <span class="day-number">@day</span>
+                    <div class="cell-content">
+                        @if (isHoliday)
+                        {
+                            <div class="cell-label-holiday">Independence Day</div>
+                            <div class="cell-time">No Work</div>
+                        }
+                        else if (isRestDay)
+                        {
+                            <div class="cell-label-rest">Rest Day</div>
+                        }
+                        else
+                        {
+                            <div class="cell-label-work">Regular Shift</div>
+                            <div class="cell-time">08:00 AM - 05:00 PM</div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </MudPaper>
+</MudItem>
+
+@code {
+}

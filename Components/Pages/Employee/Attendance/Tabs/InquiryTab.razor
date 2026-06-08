@@ -1,0 +1,98 @@
+@namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
+        <div class="d-flex flex-wrap gap-4 align-center justify-space-between mb-4">
+            <div class="d-flex gap-2">
+                <MudDateRangePicker Label="Select Date Range" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 260px;" />
+                <MudSelect T="string" Label="Status" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 140px;" @bind-Value="_statusFilter">
+                    <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                    <MudSelectItem Value="@("Present")">Present</MudSelectItem>
+                    <MudSelectItem Value="@("Late")">Late</MudSelectItem>
+                    <MudSelectItem Value="@("Absent")">Absent</MudSelectItem>
+                </MudSelect>
+            </div>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Search">Filter Logs</MudButton>
+        </div>
+
+        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Scheduled Shift</th>
+                    <th>First In</th>
+                    <th>Last Out</th>
+                    <th>Late (min)</th>
+                    <th>Undertime (min)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in MockAttendanceLogs.Where(l => _statusFilter == "All" || l.Status == _statusFilter))
+                {
+                    <tr>
+                        <td>@log.Date.ToString("MMMM dd, yyyy")</td>
+                        <td>@log.Shift</td>
+                        <td>@(log.FirstIn?.ToString("hh:mm tt") ?? "--:--")</td>
+                        <td>@(log.LastOut?.ToString("hh:mm tt") ?? "--:--")</td>
+                        <td>
+                            @if (log.LateMinutes > 0)
+                            {
+                                <span class="text-error font-weight-bold">@log.LateMinutes min</span>
+                            }
+                            else
+                            {
+                                <span class="text-secondary">0</span>
+                            }
+                        </td>
+                        <td>
+                            @if (log.UndertimeMinutes > 0)
+                            {
+                                <span class="text-warning font-weight-bold">@log.UndertimeMinutes min</span>
+                            }
+                            else
+                            {
+                                <span class="text-secondary">0</span>
+                            }
+                        </td>
+                        <td>
+                            <MudChip T="string" Color="@GetStatusColor(log.Status)" Size="Size.Small" Variant="Variant.Filled" Class="font-weight-bold">@log.Status</MudChip>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private string _statusFilter = "All";
+
+    private Color GetStatusColor(string status) => status switch
+    {
+        "Present" => Color.Success,
+        "Late" => Color.Error,
+        "Absent" => Color.Warning,
+        _ => Color.Default
+    };
+
+    private class AttendanceLog
+    {
+        public DateTime Date { get; set; }
+        public string Shift { get; set; } = "";
+        public DateTime? FirstIn { get; set; }
+        public DateTime? LastOut { get; set; }
+        public int LateMinutes { get; set; }
+        public int UndertimeMinutes { get; set; }
+        public string Status { get; set; } = "";
+    }
+
+    private List<AttendanceLog> MockAttendanceLogs = new()
+    {
+        new() { Date = DateTime.Today.AddDays(-1), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-1).AddHours(7).AddMinutes(52), LastOut = DateTime.Today.AddDays(-1).AddHours(17).AddMinutes(5), LateMinutes = 0, UndertimeMinutes = 0, Status = "Present" },
+        new() { Date = DateTime.Today.AddDays(-2), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-2).AddHours(8).AddMinutes(12), LastOut = DateTime.Today.AddDays(-2).AddHours(17).AddMinutes(0), LateMinutes = 12, UndertimeMinutes = 0, Status = "Late" },
+        new() { Date = DateTime.Today.AddDays(-3), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-3).AddHours(7).AddMinutes(55), LastOut = DateTime.Today.AddDays(-3).AddHours(16).AddMinutes(45), LateMinutes = 0, UndertimeMinutes = 15, Status = "Present" },
+        new() { Date = DateTime.Today.AddDays(-4), Shift = "08:00 AM - 05:00 PM", FirstIn = null, LastOut = null, LateMinutes = 0, UndertimeMinutes = 0, Status = "Absent" },
+        new() { Date = DateTime.Today.AddDays(-5), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-5).AddHours(7).AddMinutes(58), LastOut = DateTime.Today.AddDays(-5).AddHours(17).AddMinutes(10), LateMinutes = 0, UndertimeMinutes = 0, Status = "Present" }
+    };
+}

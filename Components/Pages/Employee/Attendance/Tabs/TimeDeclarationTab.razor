@@ -1,0 +1,102 @@
+@namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@inject ISnackbar Snackbar
+
+<MudItem xs="12" md="5">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Declare Missing Time</MudText>
+        <MudForm>
+            <MudDatePicker Label="Date of Log" @bind-Date="_declDate" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
+            <MudSelect T="string" Label="Log Type" @bind-Value="_declType" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
+                <MudSelectItem Value="@("Time In")">Time In</MudSelectItem>
+                <MudSelectItem Value="@("Time Out")">Time Out</MudSelectItem>
+            </MudSelect>
+            <MudTimePicker Label="Actual Log Time" @bind-Time="_declTime" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
+            <MudTextField T="string" Label="Reason / Remarks" @bind-Value="_declReason" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitTimeDeclaration">Submit Declaration</MudButton>
+        </MudForm>
+    </MudPaper>
+</MudItem>
+<MudItem xs="12" md="7">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Declaration History</MudText>
+        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <thead>
+                <tr>
+                    <th>Date Filed</th>
+                    <th>Target Date</th>
+                    <th>Log Details</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var req in TimeDeclarations)
+                {
+                    <tr>
+                        <td>@req.DateRequested.ToString("MM/dd/yyyy")</td>
+                        <td>@req.TargetDate.ToString("MM/dd/yyyy")</td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="font-weight-bold">@req.LogType</span>
+                                <span class="text-caption mud-text-secondary">Time: @req.ActualTime.ToString(@"hh\:mm")</span>
+                            </div>
+                        </td>
+                        <td>
+                            <MudChip T="string" Color="@GetRequestStatusColor(req.Status)" Size="Size.Small" Variant="Variant.Filled">@req.Status</MudChip>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private DateTime? _declDate = DateTime.Today;
+    private string _declType = "Time In";
+    private TimeSpan? _declTime = new TimeSpan(8, 0, 0);
+    private string _declReason = "";
+
+    private Color GetRequestStatusColor(string status) => status switch
+    {
+        "Approved" => Color.Success,
+        "Pending" => Color.Warning,
+        "Rejected" => Color.Error,
+        "Cancelled" => Color.Default,
+        _ => Color.Default
+    };
+
+    private class TimeDeclarationRequest
+    {
+        public DateTime DateRequested { get; set; }
+        public DateTime TargetDate { get; set; }
+        public string LogType { get; set; } = "";
+        public TimeSpan ActualTime { get; set; }
+        public string Status { get; set; } = "";
+    }
+
+    private List<TimeDeclarationRequest> TimeDeclarations = new()
+    {
+        new() { DateRequested = DateTime.Today.AddDays(-1), TargetDate = DateTime.Today.AddDays(-1), LogType = "Time In", ActualTime = new TimeSpan(8, 0, 0), Status = "Pending" }
+    };
+
+    private void SubmitTimeDeclaration()
+    {
+        if (_declDate == null || _declTime == null || string.IsNullOrWhiteSpace(_declReason))
+        {
+            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
+            return;
+        }
+
+        TimeDeclarations.Insert(0, new()
+        {
+            DateRequested = DateTime.Today,
+            TargetDate = _declDate.Value,
+            LogType = _declType,
+            ActualTime = _declTime.Value,
+            Status = "Pending"
+        });
+
+        _declReason = "";
+        Snackbar.Add("Time declaration submitted successfully!", Severity.Success);
+    }
+}
