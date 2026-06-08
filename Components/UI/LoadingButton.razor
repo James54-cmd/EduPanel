@@ -1,0 +1,45 @@
+@namespace EduPanel.Components.UI
+
+<MudButton Disabled="@IsLoading"
+           Class="@($"py-2.5 {Class}")"
+           Style="@($"text-transform: none; {Style}")"
+           @attributes="UserAttributes">
+    <div class="d-flex align-center justify-center gap-2">
+        @if (IsLoading)
+        {
+            <MudProgressCircular Class="ms-n1" Style="width:16px;height:16px;" Indeterminate="true"/>
+            @if (!string.IsNullOrEmpty(LoadingText))
+            {
+                <span>@LoadingText</span>
+            }
+            else
+            {
+                @ChildContent
+            }
+        }
+        else
+        {
+            @ChildContent
+        }
+    </div>
+</MudButton>
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string? LoadingText { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "";
+
+    [Parameter]
+    public string Style { get; set; } = "";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> UserAttributes { get; set; } = new();
+}

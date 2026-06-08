@@ -48,23 +48,15 @@
         }
 
         <Field>
-            <MudButton OnClick="SubmitLogin"
-                       Disabled="@_loading"
-                       Color="Color.Primary"
-                       Variant="Variant.Filled"
-                       FullWidth="true"
-                       Class="py-2.5 font-weight-bold"
-                       Style="text-transform: none;">
-                @if (_loading)
-                {
-                    <MudProgressCircular Class="ms-n1 mr-2" Style="width:16px;height:16px;" Indeterminate="true"/>
-                    <span>Logging in...</span>
-                }
-                else
-                {
-                    <span>Login</span>
-                }
-            </MudButton>
+            <LoadingButton OnClick="SubmitLogin"
+                           IsLoading="@_loading"
+                           LoadingText="Logging in..."
+                           Color="Color.Primary"
+                           Variant="Variant.Filled"
+                           FullWidth="true"
+                           Class="font-weight-bold">
+                <span>Login</span>
+            </LoadingButton>
         </Field>
 
         <FieldSeparator>Or continue with</FieldSeparator>
