@@ -63,7 +63,7 @@
             <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Student Distribution</MudText>
             <MudChart T="double" ChartType="ChartType.Donut" InputData="@DonutData" InputLabels="@DonutLabels" Width="100%" Height="300px">
                 <CustomGraphics>
-                    <text class="mud-donut-text mud-typography-h3" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">@DonutData.Sum()</text>
+                    <text class="mud-donut-text mud-typography-h3" x="50%" y="50%">@DonutData.Sum()</text>
                 </CustomGraphics>
             </MudChart>
             
@@ -76,21 +76,21 @@
                         <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #594ae2;"></div>
                         <MudText Typo="Typo.body2" Color="Color.Secondary">Freshmen</MudText>
                     </div>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">30%</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">500</MudText>
                 </div>
                 <div class="d-flex justify-space-between align-center">
                     <div class="d-flex align-center gap-2">
                         <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #00c853;"></div>
                         <MudText Typo="Typo.body2" Color="Color.Secondary">Sophomores</MudText>
                     </div>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">30%</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">450</MudText>
                 </div>
                 <div class="d-flex justify-space-between align-center">
                     <div class="d-flex align-center gap-2">
                         <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #ff5252;"></div>
                         <MudText Typo="Typo.body2" Color="Color.Secondary">Seniors & Juniors</MudText>
                     </div>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">40%</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">300</MudText>
                 </div>
             </div>
         </MudPaper>
@@ -140,7 +140,7 @@
     };
     public string[] XAxisLabels = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG" };
 
-    public double[] DonutData = { 30, 30, 40 };
+    public double[] DonutData = { 500, 450, 300 };
     public string[] DonutLabels = { "Freshmen", "Sophomores", "Seniors & Juniors" };
 
     public class Enrollment
