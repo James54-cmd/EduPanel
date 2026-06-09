@@ -1,0 +1,162 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Tabs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@using EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-end gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+        </div>
+    </MudPaper>
+</MudItem>
+
+<!-- Main Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 100%; max-width: 250px;">
+                <MudSelectItem Value="@("ALL")">ALL</MudSelectItem>
+                <MudSelectItem Value="@("Open")">Open</MudSelectItem>
+                <MudSelectItem Value="@("Closed")">Closed</MudSelectItem>
+                <MudSelectItem Value="@("Cancelled")">Cancelled</MudSelectItem>
+            </MudSelect>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<EmployeeRequestModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Requested</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Request Type</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Served</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" Disabled="@(context.Status != "Open")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Date Requested" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DateRequested</MudTd>
+                <MudTd DataLabel="Request Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.RequestType</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Reason</MudTd>
+                <MudTd DataLabel="Remarks" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Remarks</MudTd>
+                <MudTd DataLabel="Date Served" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DateServed</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private string _searchString = "";
+    private string _statusFilter = "Open";
+    private HashSet<EmployeeRequestModel> _selectedRequests = new();
+
+    private List<EmployeeRequestModel> _requests = new()
+    {
+        new()
+        {
+            TransactionNo = "REQ-0012",
+            DateRequested = "06/09/2026",
+            RequestType = "Certificate of Employment",
+            Reason = "For bank loan requirements",
+            Status = "Open"
+        }
+    };
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<EmployeeRequestDialog>
+        {
+            { x => x.DialogTitle, "Employee Request" },
+            { x => x.DialogDescription, "Fill out the details below to submit a request." },
+            { x => x.Request, new EmployeeRequestModel { TransactionNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<EmployeeRequestDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (EmployeeRequestModel)result.Data!;
+            req.TransactionNo = $"REQ-{new Random().Next(1000, 9999)}";
+            if (string.IsNullOrEmpty(req.DateRequested))
+            {
+                req.DateRequested = DateTime.Now.ToString("MM/dd/yyyy");
+            }
+            req.Status = "Open";
+            _requests.Insert(0, req);
+            Snackbar.Add("Request created successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(EmployeeRequestModel req)
+    {
+        var clonedReq = new EmployeeRequestModel
+        {
+            TransactionNo = req.TransactionNo,
+            DateRequested = req.DateRequested,
+            RequestType = req.RequestType,
+            Reason = req.Reason,
+            Remarks = req.Remarks,
+            DateServed = req.DateServed,
+            Status = req.Status
+        };
+
+        var parameters = new DialogParameters<EmployeeRequestDialog>
+        {
+            { x => x.DialogTitle, "Edit Employee Request" },
+            { x => x.DialogDescription, "Make changes to your request." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<EmployeeRequestDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (EmployeeRequestModel)result.Data!;
+            var index = _requests.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            if (index != -1)
+            {
+                _requests[index] = updatedReq;
+                Snackbar.Add("Request updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(EmployeeRequestModel req)
+    {
+        if (_statusFilter != "ALL" && req.Status != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.RequestType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}

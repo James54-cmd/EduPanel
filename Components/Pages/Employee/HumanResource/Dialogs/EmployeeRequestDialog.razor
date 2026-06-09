@@ -1,0 +1,90 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <div class="px-2 pt-2">
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" Class="pa-2">
+            <div class="d-flex flex-column gap-4 mt-2 px-4 pb-4">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Transaction No.</MudText>
+                    <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Date Requested <span class="text-error">*</span></MudText>
+                    <MudTextField T="DateTime?" @bind-Value="_dateRequested" Format="MM/dd/yyyy" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Request Type <span class="text-error">*</span></MudText>
+                    <MudSelect T="string" @bind-Value="Request.RequestType" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense">
+                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                        <MudSelectItem Value="@("Certificate of Employment")">Certificate of Employment</MudSelectItem>
+                        <MudSelectItem Value="@("ID Replacement")">ID Replacement</MudSelectItem>
+                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Reason <span class="text-error">*</span></MudText>
+                    <MudTextField T="string" @bind-Value="Request.Reason" Required="true" Lines="4" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudText Typo="Typo.caption" Style="font-style: italic;" Color="Color.Secondary" Class="mt-1 d-block">Please indicate your contact information in case of HR query.</MudText>
+                </MudItem>
+            </div>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-end">
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string DialogTitle { get; set; } = "Employee Request";
+    [Parameter] public string DialogDescription { get; set; } = "Fill out the details below to submit a request.";
+    [Parameter] public EmployeeRequestModel Request { get; set; } = new();
+
+    private MudForm _form = default!;
+    private DateTime? _dateRequested;
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.TryParse(Request.DateRequested, out var dr)) _dateRequested = dr;
+        else _dateRequested = DateTime.Today;
+
+        if (string.IsNullOrEmpty(Request.RequestType))
+        {
+            Request.RequestType = "-- Select --";
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        await _form.ValidateAsync();
+        if (!_form.IsValid || Request.RequestType == "-- Select --")
+        {
+            Snackbar.Add("Please fill in all required fields and select a valid Request Type.", Severity.Warning);
+            return;
+        }
+
+        if (_dateRequested.HasValue)
+        {
+            Request.DateRequested = _dateRequested.Value.ToString("MM/dd/yyyy");
+        }
+
+        MudDialog.Close(DialogResult.Ok(Request));
+    }
+}
