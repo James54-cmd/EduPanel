@@ -1,8 +1,388 @@
 @namespace EduPanel.Components.Pages.Employee.Payroll.Tabs
 
+<!-- Pay Date Selector -->
 <MudItem xs="12">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h5" Class="mb-4">Payroll Inquiry</MudText>
-        <MudAlert Severity="Severity.Info" Class="mb-4">This section is currently under development. Here you will be able to view and manage your payroll details.</MudAlert>
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl">
+        <div class="d-flex flex-wrap align-center gap-4">
+            <MudSelect T="string" Label="Pay Date" Variant="Variant.Outlined" Margin="Margin.Dense"
+                       Style="max-width: 280px;" @bind-Value="_selectedPayDate" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var date in _payDates)
+                {
+                    <MudSelectItem Value="@date">@date</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSpacer />
+            <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Class="rounded-lg">
+                <MudButton StartIcon="@Icons.Material.Filled.Print">Print</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+            </MudButtonGroup>
+        </div>
     </MudPaper>
 </MudItem>
+
+<!-- Left Column: Employee Info, YTD Totals, Leave -->
+<MudItem xs="12" md="4">
+    <!-- Payroll Information Card -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl mb-4">
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.Badge" Color="Color.Primary" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Payroll Information</MudText>
+        </div>
+
+        <MudSimpleTable Bordered="true" Hover="true" Dense="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Style="table-layout: fixed;">
+            <colgroup>
+                <col style="width: 45%;" />
+                <col style="width: 55%;" />
+            </colgroup>
+            <tbody>
+                @foreach (var item in _payrollInfo)
+                {
+                    <tr>
+                        <td class="font-weight-medium" style="color: var(--mud-palette-text-secondary); font-size: 0.8125rem; vertical-align: middle;">@item.Label</td>
+                        <td style="font-size: 0.8125rem; vertical-align: middle;">@item.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+    <!-- Year To Date Total Card -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl mb-4">
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Info" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Year To Date Total</MudText>
+        </div>
+
+        <MudSimpleTable Bordered="true" Hover="true" Dense="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Style="table-layout: fixed;">
+            <colgroup>
+                <col style="width: 55%;" />
+                <col style="width: 45%;" />
+            </colgroup>
+            <tbody>
+                @foreach (var item in _ytdTotals)
+                {
+                    <tr>
+                        <td class="font-weight-medium" style="color: var(--mud-palette-text-secondary); font-size: 0.8125rem; vertical-align: middle;">@item.Label</td>
+                        <td style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@item.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+    <!-- Leave Balance Card -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.EventAvailable" Color="Color.Success" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Leave Balance</MudText>
+        </div>
+
+        <MudSimpleTable Bordered="true" Hover="true" Dense="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Style="table-layout: fixed;">
+            <colgroup>
+                <col style="width: 40%;" />
+                <col style="width: 30%;" />
+                <col style="width: 30%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="font-size: 0.8125rem;"></th>
+                    <th style="text-align: center; font-size: 0.8125rem;">VL</th>
+                    <th style="text-align: center; font-size: 0.8125rem;">SL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="font-weight-medium" style="color: var(--mud-palette-text-secondary); font-size: 0.8125rem; vertical-align: middle;">Last Availed</td>
+                    <td style="text-align: center; font-size: 0.8125rem; vertical-align: middle;">@_leaveBalance.VLLastAvailed</td>
+                    <td style="text-align: center; font-size: 0.8125rem; vertical-align: middle;">@_leaveBalance.SLLastAvailed</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-medium" style="color: var(--mud-palette-text-secondary); font-size: 0.8125rem; vertical-align: middle;">Balance</td>
+                    <td style="text-align: center; font-size: 0.8125rem; vertical-align: middle;">
+                        <MudChip T="string" Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled">@_leaveBalance.VLBalance</MudChip>
+                    </td>
+                    <td style="text-align: center; font-size: 0.8125rem; vertical-align: middle;">
+                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Filled">@_leaveBalance.SLBalance</MudChip>
+                    </td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+<!-- Right Column: Payroll Summary, Income Details, Deduction Details -->
+<MudItem xs="12" md="8">
+    <!-- Payroll Summary Card -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl mb-4">
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.Summarize" Color="Color.Primary" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Payroll Summary</MudText>
+        </div>
+
+        <!-- Net Pay Highlight -->
+        <MudGrid Spacing="3" Class="mb-4">
+            <MudItem xs="12" md="4">
+                <MudPaper Elevation="0" Class="pa-4 rounded-lg d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); min-height: 90px;">
+                    <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: #2e7d32;">Total Income</MudText>
+                    <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #1b5e20;">₱ @_summary.TotalIncome.ToString("N2")</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudPaper Elevation="0" Class="pa-4 rounded-lg d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); min-height: 90px;">
+                    <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: #c62828;">Total Deduction</MudText>
+                    <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #b71c1c;">₱ @_summary.TotalDeduction.ToString("N2")</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudPaper Elevation="0" Class="pa-4 rounded-lg d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, var(--mud-palette-primary-lighten), var(--mud-palette-primary)); min-height: 90px;">
+                    <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: rgba(255,255,255,0.85);">Net Pay</MudText>
+                    <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #fff;">₱ @_summary.NetPay.ToString("N2")</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+        <!-- Schedule Details -->
+        <MudSimpleTable Bordered="true" Dense="true" Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Style="table-layout: fixed;">
+            <colgroup>
+                <col style="width: 33.33%;" />
+                <col style="width: 33.33%;" />
+                <col style="width: 33.34%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="font-size: 0.8125rem; vertical-align: middle;">Payroll Schedule</th>
+                    <th style="font-size: 0.8125rem; vertical-align: middle;">Tax Code</th>
+                    <th style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">Basic Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-size: 0.8125rem; vertical-align: middle;">@_summary.PayrollSchedule</td>
+                    <td style="font-size: 0.8125rem; vertical-align: middle;">
+                        <MudChip T="string" Color="Color.Info" Size="Size.Small" Variant="Variant.Filled">@_summary.TaxCode</MudChip>
+                    </td>
+                    <td class="font-weight-bold" style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">₱ @_summary.BasicRate.ToString("N2")</td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+    <!-- Income Details Card -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl mb-4">
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Income Details</MudText>
+        </div>
+
+        <MudSimpleTable Bordered="true" Hover="true" Dense="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Style="table-layout: fixed;">
+            <colgroup>
+                <col style="width: 70%;" />
+                <col style="width: 30%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="vertical-align: middle;">Description</th>
+                    <th style="text-align: right; vertical-align: middle;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_incomeDetails.Any())
+                {
+                    @foreach (var income in _incomeDetails)
+                    {
+                        <tr>
+                            <td style="font-size: 0.8125rem; vertical-align: middle;">@income.Description</td>
+                            <td style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@income.Amount.ToString("N2")</td>
+                        </tr>
+                    }
+                    <tr style="border-top: 2px solid var(--mud-palette-lines-default);">
+                        <td class="font-weight-bold" style="font-size: 0.875rem; vertical-align: middle;">Total Income</td>
+                        <td class="font-weight-bold text-success" style="font-size: 0.875rem; text-align: right; vertical-align: middle;">
+                            @_incomeDetails.Sum(x => x.Amount).ToString("N2")
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" style="text-align: center; color: var(--mud-palette-text-secondary); font-size: 0.8125rem; padding: 1.5rem; vertical-align: middle;">
+                            <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                            No income data to display
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+
+    <!-- Deduction Details Card -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Error" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Deduction Details</MudText>
+        </div>
+
+        <MudSimpleTable Bordered="true" Hover="true" Dense="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Style="table-layout: fixed;">
+            <colgroup>
+                <col style="width: 35%;" />
+                <col style="width: 20%;" />
+                <col style="width: 22.5%;" />
+                <col style="width: 22.5%;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="vertical-align: middle;">Description</th>
+                    <th style="vertical-align: middle;">Loan No.</th>
+                    <th style="text-align: right; vertical-align: middle;">Balance</th>
+                    <th style="text-align: right; vertical-align: middle;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_deductionDetails.Any())
+                {
+                    @foreach (var deduction in _deductionDetails)
+                    {
+                        <tr>
+                            <td style="font-size: 0.8125rem; vertical-align: middle;">@deduction.Description</td>
+                            <td style="font-size: 0.8125rem; vertical-align: middle;">@deduction.LoanNo</td>
+                            <td style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@deduction.Balance.ToString("N2")</td>
+                            <td style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@deduction.Amount.ToString("N2")</td>
+                        </tr>
+                    }
+                    <tr style="border-top: 2px solid var(--mud-palette-lines-default);">
+                        <td colspan="3" class="font-weight-bold" style="font-size: 0.875rem; vertical-align: middle;">Total Deductions</td>
+                        <td class="font-weight-bold text-error" style="font-size: 0.875rem; text-align: right; vertical-align: middle;">
+                            @_deductionDetails.Sum(x => x.Amount).ToString("N2")
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--mud-palette-text-secondary); font-size: 0.8125rem; padding: 1.5rem; vertical-align: middle;">
+                            <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                            No deduction data to display
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    // ── State ──
+    private string _selectedPayDate = "June 15, 2026";
+
+    // ── Data Models ──
+    private class LabelValue
+    {
+        public string Label { get; set; } = "";
+        public string Value { get; set; } = "";
+    }
+
+    private class LeaveBalanceData
+    {
+        public string VLLastAvailed { get; set; } = "";
+        public string SLLastAvailed { get; set; } = "";
+        public string VLBalance { get; set; } = "";
+        public string SLBalance { get; set; } = "";
+    }
+
+    private class PayrollSummaryData
+    {
+        public string PayrollSchedule { get; set; } = "";
+        public string TaxCode { get; set; } = "";
+        public decimal BasicRate { get; set; }
+        public decimal TotalIncome { get; set; }
+        public decimal TotalDeduction { get; set; }
+        public decimal NetPay => TotalIncome - TotalDeduction;
+    }
+
+    private class IncomeItem
+    {
+        public string Description { get; set; } = "";
+        public decimal Amount { get; set; }
+    }
+
+    private class DeductionItem
+    {
+        public string Description { get; set; } = "";
+        public string LoanNo { get; set; } = "";
+        public decimal Balance { get; set; }
+        public decimal Amount { get; set; }
+    }
+
+    // ── Sample Data ──
+    private readonly List<string> _payDates = new()
+    {
+        "June 15, 2026",
+        "May 30, 2026",
+        "May 15, 2026",
+        "April 30, 2026",
+        "April 15, 2026"
+    };
+
+    private readonly List<LabelValue> _payrollInfo = new()
+    {
+        new() { Label = "Employee No.", Value = "142" },
+        new() { Label = "Name", Value = "Damaso, James Fanuel N" },
+        new() { Label = "SSS", Value = "0647691186" },
+        new() { Label = "TIN", Value = "00" },
+        new() { Label = "PhilHealth", Value = "122515790797" },
+        new() { Label = "HDMF", Value = "121368812741" },
+        new() { Label = "Bank Name", Value = "BDO Unibank" },
+        new() { Label = "Bank Account No.", Value = "••••••7890" }
+    };
+
+    private readonly List<LabelValue> _ytdTotals = new()
+    {
+        new() { Label = "Payroll Period", Value = "Jan - Jun 2026" },
+        new() { Label = "Total Taxable Basic", Value = "₱ 150,000.00" },
+        new() { Label = "Total Taxable Non-Basic", Value = "₱ 12,500.00" },
+        new() { Label = "Total Taxable Bonus", Value = "₱ 25,000.00" },
+        new() { Label = "Total Taxable Income", Value = "₱ 187,500.00" },
+        new() { Label = "Total Tax Exemption", Value = "₱ 0.00" },
+        new() { Label = "Total Tax Withheld", Value = "₱ 18,750.00" }
+    };
+
+    private readonly LeaveBalanceData _leaveBalance = new()
+    {
+        VLLastAvailed = "May 20, 2026",
+        SLLastAvailed = "Apr 10, 2026",
+        VLBalance = "9.00",
+        SLBalance = "6.00"
+    };
+
+    private readonly PayrollSummaryData _summary = new()
+    {
+        PayrollSchedule = "Semi-Monthly",
+        TaxCode = "S/ME",
+        BasicRate = 25000.00m,
+        TotalIncome = 27150.00m,
+        TotalDeduction = 3862.50m
+    };
+
+    private readonly List<LabelValue> _payrollSummaryLeft = new()
+    {
+        new() { Label = "Payroll Schedule", Value = "Semi-Monthly" },
+        new() { Label = "Tax Code", Value = "S/ME" },
+        new() { Label = "Basic Rate", Value = "₱ 25,000.00" }
+    };
+
+    private readonly List<IncomeItem> _incomeDetails = new()
+    {
+        new() { Description = "Basic Pay", Amount = 25000.00m },
+        new() { Description = "Overtime Pay", Amount = 1500.00m },
+        new() { Description = "Holiday Premium", Amount = 650.00m }
+    };
+
+    private readonly List<DeductionItem> _deductionDetails = new()
+    {
+        new() { Description = "SSS Contribution", LoanNo = "—", Balance = 0, Amount = 900.00m },
+        new() { Description = "PhilHealth", LoanNo = "—", Balance = 0, Amount = 500.00m },
+        new() { Description = "Pag-IBIG", LoanNo = "—", Balance = 0, Amount = 200.00m },
+        new() { Description = "Withholding Tax", LoanNo = "—", Balance = 0, Amount = 1562.50m },
+        new() { Description = "SSS Salary Loan", LoanNo = "SL-2025-0412", Balance = 15000.00m, Amount = 700.00m }
+    };
+}
