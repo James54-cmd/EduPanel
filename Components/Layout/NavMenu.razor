@@ -54,8 +54,8 @@
     private bool IsPayrollActive => NavManager.Uri.Contains("/employee/payroll", StringComparison.OrdinalIgnoreCase);
 
     private string ProfileGroupClass => IsProfileActive ? "nav-group-active" : "";
-    private string AttendanceGroupClass => IsAttendanceActive ? "nav-group-active mt-2" : "mt-2";
-    private string PayrollGroupClass => IsPayrollActive ? "nav-group-active mt-2" : "mt-2";
+    private string AttendanceGroupClass => IsAttendanceActive ? "nav-group-active" : "mt-2";
+    private string PayrollGroupClass => IsPayrollActive ? "nav-group-active" : "mt-2";
 
     protected override void OnInitialized()
     {

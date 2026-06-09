@@ -5,10 +5,7 @@
 
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Primary" Dense="true">
-        @if (_isMobileOrTablet)
-        {
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" Size="Size.Small" />
-        }
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" Size="Size.Small" />
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" Size="Size.Small" />
         <MudAvatar Size="Size.Small" Class="ml-4 avatar-gradient-secondary">AD</MudAvatar>
@@ -38,10 +35,10 @@
     }
     else
     {
-        <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md">
-            <div class="d-flex align-center pa-4 flex-shrink-0 border-b mud-border-lines-default" style="height: 48px;">
+        <MudDrawer Class="@($"edu-mini-drawer {(!_drawerOpen ? "edu-drawer-minimized" : "")}")" @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None" MiniWidth="64px">
+            <div class="d-flex align-center pa-4 flex-shrink-0 border-b mud-border-lines-default" style="height: 48px; overflow: hidden; white-space: nowrap;">
                 <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Medium" Class="mr-2"/>
-                <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold text-truncate">EduPanel</MudText>
+                <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold edu-brand-text">EduPanel</MudText>
             </div>
             <div class="flex-grow-1" style="overflow-y: auto;">
                 <NavMenu />

@@ -188,3 +188,31 @@ h1:focus {
 .text-error { color: var(--mud-palette-error) !important; }
 .text-warning { color: var(--mud-palette-warning) !important; }
 .text-secondary { color: var(--mud-palette-text-secondary) !important; }
+
+/* ── Mini Drawer Global Fixes ── */
+/* When drawer is closed (Mini mode) and NOT hovered, hide text elements */
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-link-text,
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-group-text,
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .edu-brand-text {
+    display: none !important;
+}
+
+/* Hide expand icons on groups */
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-group-expand-icon,
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-link-expand-icon {
+    display: none !important;
+}
+
+/* Hide child links of groups completely */
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-collapse-container {
+    display: none !important;
+}
+
+/* Ensure text doesn't wrap horizontally when the drawer is expanding */
+.edu-mini-drawer .mud-nav-link-text,
+.edu-mini-drawer .mud-nav-group-text,
+.edu-mini-drawer .edu-brand-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
