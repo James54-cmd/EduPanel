@@ -1,70 +1,127 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
 @inject ISnackbar Snackbar
 
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <MudText Typo="Typo.h6" Class="font-weight-bold text-center text-md-left">Leave Cancellation</MudText>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
+    </MudPaper>
+</MudItem>
+
+<!-- Request History Table -->
 <MudItem xs="12">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Approved Upcoming Leaves</MudText>
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Leave Type</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Total Days</th>
-                    <th>Current Status</th>
-                    <th style="text-align: right;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (!LeaveRequests.Any(l => l.Status == "Approved"))
-                {
-                    <tr>
-                        <td colspan="6" class="text-center pa-4 mud-text-secondary">No approved upcoming leaves available to cancel.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (var leave in LeaveRequests.Where(l => l.Status == "Approved"))
-                    {
-                        <tr>
-                            <td class="font-weight-bold">@leave.Type</td>
-                            <td>@leave.Start.ToString("MMMM dd, yyyy")</td>
-                            <td>@leave.End.ToString("MMMM dd, yyyy")</td>
-                            <td>@leave.TotalDays days</td>
-                            <td>
-                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Filled">Approved</MudChip>
-                            </td>
-                            <td style="text-align: right;">
-                                <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="() => CancelLeave(leave)">Cancel Leave</MudButton>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </MudSimpleTable>
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 100%; max-width: 250px;">
+                <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
+            </MudSelect>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+        </div>
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<LeaveCancellationModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Leave Type</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Filed<br/>Hrs</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approval<br/>Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date<br/>Applied</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" Disabled="@(context.ApprovalStatus != "For Approval")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Leave Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.LeaveType</MudTd>
+                <MudTd DataLabel="Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Date</MudTd>
+                <MudTd DataLabel="Filed Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.FiledHrs</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Reason</MudTd>
+                <MudTd DataLabel="Approval Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Approved By" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDisapprovedBy</MudTd>
+                <MudTd DataLabel="Approved Date" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDisapprovedDate</MudTd>
+                <MudTd DataLabel="Date Applied" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DateApplied</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
-    public class LeaveRequestModel
-    {
-        public string Type { get; set; } = "";
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public int TotalDays => (End - Start).Days + 1;
-        public string Status { get; set; } = "";
-    }
+    private string _searchString = "";
+    private string _statusFilter = "All";
+    private HashSet<LeaveCancellationModel> _selectedRequests = new();
 
-    private List<LeaveRequestModel> LeaveRequests = new()
+    private List<LeaveCancellationModel> _requests = new()
     {
-        new() { Type = "Vacation Leave", Start = DateTime.Today.AddDays(10), End = DateTime.Today.AddDays(12), Status = "Approved" },
-        new() { Type = "Sick Leave", Start = DateTime.Today.AddDays(-15), End = DateTime.Today.AddDays(-15), Status = "Approved" },
-        new() { Type = "Official Business (OB)", Start = DateTime.Today.AddDays(2), End = DateTime.Today.AddDays(2), Status = "Pending" }
+        new()
+        {
+            TransactionNo = "TRN-00160",
+            LeaveType = "Vacation Leave",
+            Date = "06/20/2026",
+            FiledHrs = "8",
+            Reason = "Trip cancelled",
+            ApprovalStatus = "For Approval",
+            DateApplied = "06/09/2026"
+        },
+        new()
+        {
+            TransactionNo = "TRN-00085",
+            LeaveType = "Sick Leave",
+            Date = "05/12/2026",
+            FiledHrs = "8",
+            Reason = "Recovered early",
+            ApprovalStatus = "Approved",
+            ApprovedDisapprovedBy = "M. Manager",
+            ApprovedDisapprovedDate = "05/13/2026",
+            DateApplied = "05/12/2026"
+        }
     };
 
-    private void CancelLeave(LeaveRequestModel leave)
+    private bool FilterFunc(LeaveCancellationModel req)
     {
-        leave.Status = "Cancelled";
-        Snackbar.Add("Leave request has been cancelled.", Severity.Normal);
+        if (_statusFilter != "All" && req.ApprovalStatus != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.LeaveType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
     }
+
+    private Color GetStatusColor(string status) => status switch
+    {
+        "Approved" => Color.Success,
+        "For Approval" => Color.Warning,
+        "Disapproved" => Color.Error,
+        _ => Color.Default
+    };
 }
