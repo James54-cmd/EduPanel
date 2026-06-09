@@ -1,102 +1,206 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Dialogs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<MudItem xs="12" md="5">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Declare Missing Time</MudText>
-        <MudForm>
-            <MudDatePicker Label="Date of Log" @bind-Date="_declDate" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
-            <MudSelect T="string" Label="Log Type" @bind-Value="_declType" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
-                <MudSelectItem Value="@("Time In")">Time In</MudSelectItem>
-                <MudSelectItem Value="@("Time Out")">Time Out</MudSelectItem>
+<MudItem xs="12">
+    <!-- Top Action Bar -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4">
+        <MudText Typo="Typo.h6" Class="font-weight-bold text-center text-md-left">Time Declaration</MudText>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
+    </MudPaper>
+
+    <!-- Main Table -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl mt-4">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 100%; max-width: 250px;">
+                <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
             </MudSelect>
-            <MudTimePicker Label="Actual Log Time" @bind-Time="_declTime" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
-            <MudTextField T="string" Label="Reason / Remarks" @bind-Value="_declReason" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitTimeDeclaration">Submit Declaration</MudButton>
-        </MudForm>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+        </div>
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<TimeDeclarationModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests" @bind-SelectedItem="_selectedDeclaration"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">In1</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Out1</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">In2</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Out2</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Approval Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Approved / Disapproved By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Approved / Disapproved Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Date Applied</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Details</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(() => OpenEditDialog(context))" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Style="font-size: 0.8125rem; vertical-align: middle;">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Date" Style="font-size: 0.8125rem; vertical-align: middle;">@context.Date</MudTd>
+                <MudTd DataLabel="In1" Style="font-size: 0.8125rem; vertical-align: middle;">@context.In1</MudTd>
+                <MudTd DataLabel="Out1" Style="font-size: 0.8125rem; vertical-align: middle;">@context.Out1</MudTd>
+                <MudTd DataLabel="In2" Style="font-size: 0.8125rem; vertical-align: middle;">@context.In2</MudTd>
+                <MudTd DataLabel="Out2" Style="font-size: 0.8125rem; vertical-align: middle;">@context.Out2</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.8125rem; vertical-align: middle; max-width: 200px;" Class="text-truncate">@context.Reason</MudTd>
+                <MudTd DataLabel="Approval Status" Style="font-size: 0.8125rem; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.Status)" Size="Size.Small" Variant="Variant.Filled">@context.Status</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Approved / Disapproved By" Style="font-size: 0.8125rem; vertical-align: middle;">@context.ApprovedBy</MudTd>
+                <MudTd DataLabel="Approved / Disapproved Date" Style="font-size: 0.8125rem; vertical-align: middle;">@context.ApprovedDate</MudTd>
+                <MudTd DataLabel="Date Applied" Style="font-size: 0.8125rem; vertical-align: middle;">@context.DateApplied</MudTd>
+                <MudTd DataLabel="Details" Style="text-align: center; vertical-align: middle;">
+                    <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small">View</MudButton>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
-</MudItem>
-<MudItem xs="12" md="7">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Declaration History</MudText>
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Date Filed</th>
-                    <th>Target Date</th>
-                    <th>Log Details</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var req in TimeDeclarations)
-                {
-                    <tr>
-                        <td>@req.DateRequested.ToString("MM/dd/yyyy")</td>
-                        <td>@req.TargetDate.ToString("MM/dd/yyyy")</td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <span class="font-weight-bold">@req.LogType</span>
-                                <span class="text-caption mud-text-secondary">Time: @req.ActualTime.ToString(@"hh\:mm")</span>
-                            </div>
-                        </td>
-                        <td>
-                            <MudChip T="string" Color="@GetRequestStatusColor(req.Status)" Size="Size.Small" Variant="Variant.Filled">@req.Status</MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
-    </MudPaper>
+
+    <!-- Detail Table -->
+    @if (_selectedDeclaration != null)
+    {
+        <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl mt-4">
+            <div class="d-flex flex-column flex-md-row align-center justify-space-between gap-4 mb-4">
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Transaction No. : @_selectedDeclaration.TransactionNo</MudText>
+                <div class="d-flex flex-wrap justify-center gap-2">
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small">Add</MudButton>
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error">Delete</MudButton>
+                </div>
+            </div>
+            <MudTable Items="@_selectedDeclaration.Details" Dense="true" Hover="true" Bordered="true" Striped="false" MultiSelection="true"
+                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+                <HeaderContent>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Detail No.</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Charge To</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Activity</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Hours Worked</MudTh>
+                </HeaderContent>
+                <RowTemplate Context="detail">
+                    <MudTd DataLabel="Edit" Style="text-align: center; vertical-align: middle;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" />
+                    </MudTd>
+                    <MudTd DataLabel="Detail No." Style="font-size: 0.8125rem; vertical-align: middle;">@detail.DetailNo</MudTd>
+                    <MudTd DataLabel="Charge To" Style="font-size: 0.8125rem; vertical-align: middle;">@detail.ChargeTo</MudTd>
+                    <MudTd DataLabel="Activity" Style="font-size: 0.8125rem; vertical-align: middle;">@detail.Activity</MudTd>
+                    <MudTd DataLabel="Remarks" Style="font-size: 0.8125rem; vertical-align: middle;">@detail.Remarks</MudTd>
+                    <MudTd DataLabel="Hours Worked" Style="font-size: 0.8125rem; vertical-align: middle;">@detail.HoursWorked</MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                        No data to display
+                    </MudText>
+                </NoRecordsContent>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudPaper>
+    }
 </MudItem>
 
 @code {
-    private DateTime? _declDate = DateTime.Today;
-    private string _declType = "Time In";
-    private TimeSpan? _declTime = new TimeSpan(8, 0, 0);
-    private string _declReason = "";
+    private string _searchString = "";
+    private string _statusFilter = "For Approval";
+    private HashSet<TimeDeclarationModel> _selectedRequests = new();
+    private TimeDeclarationModel? _selectedDeclaration;
 
-    private Color GetRequestStatusColor(string status) => status switch
+    private List<TimeDeclarationModel> _requests = new()
+    {
+        new()
+        {
+            TransactionNo = "TD-202506-001",
+            Date = "06/05/2025",
+            In1 = "08:00",
+            Out1 = "12:00",
+            In2 = "13:00",
+            Out2 = "17:00",
+            ChargeTo = "Company A",
+            DeclarationType = "Missing Time In",
+            Reason = "Forgot to biometric log in",
+            Status = "For Approval",
+            ApprovedBy = "",
+            ApprovedDate = "",
+            DateApplied = "06/06/2025",
+            Details = new()
+            {
+                new() { DetailNo = 1, ChargeTo = "Company A", Activity = "Development", Remarks = "Coding", HoursWorked = "8" }
+            }
+        }
+    };
+
+    private bool FilterFunc(TimeDeclarationModel request)
+    {
+        if (_statusFilter != "All" && request.Status != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (request.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (request.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
     {
         "Approved" => Color.Success,
-        "Pending" => Color.Warning,
-        "Rejected" => Color.Error,
-        "Cancelled" => Color.Default,
+        "For Approval" => Color.Warning,
+        "Disapproved" => Color.Error,
         _ => Color.Default
     };
 
-    private class TimeDeclarationRequest
+    private async Task OpenAddDialog()
     {
-        public DateTime DateRequested { get; set; }
-        public DateTime TargetDate { get; set; }
-        public string LogType { get; set; } = "";
-        public TimeSpan ActualTime { get; set; }
-        public string Status { get; set; } = "";
+        var parameters = new DialogParameters<TimeDeclarationDialog>();
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<TimeDeclarationDialog>("Add Time Declaration", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is TimeDeclarationModel newReq)
+        {
+            newReq.TransactionNo = $"TD-{DateTime.Now:yyyyMM}-{new Random().Next(100, 999)}";
+            newReq.DateApplied = DateTime.Now.ToString("MM/dd/yyyy");
+            _requests.Insert(0, newReq);
+            Snackbar.Add("Time Declaration submitted successfully", Severity.Success);
+        }
     }
 
-    private List<TimeDeclarationRequest> TimeDeclarations = new()
+    private async Task OpenEditDialog(TimeDeclarationModel request)
     {
-        new() { DateRequested = DateTime.Today.AddDays(-1), TargetDate = DateTime.Today.AddDays(-1), LogType = "Time In", ActualTime = new TimeSpan(8, 0, 0), Status = "Pending" }
-    };
-
-    private void SubmitTimeDeclaration()
-    {
-        if (_declDate == null || _declTime == null || string.IsNullOrWhiteSpace(_declReason))
+        var parameters = new DialogParameters<TimeDeclarationDialog>
         {
-            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
-            return;
+            { x => x.Request, request }
+        };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<TimeDeclarationDialog>("Edit Time Declaration", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Snackbar.Add("Time Declaration updated successfully", Severity.Success);
         }
-
-        TimeDeclarations.Insert(0, new()
-        {
-            DateRequested = DateTime.Today,
-            TargetDate = _declDate.Value,
-            LogType = _declType,
-            ActualTime = _declTime.Value,
-            Status = "Pending"
-        });
-
-        _declReason = "";
-        Snackbar.Add("Time declaration submitted successfully!", Severity.Success);
     }
 }
