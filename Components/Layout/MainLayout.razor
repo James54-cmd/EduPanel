@@ -20,11 +20,13 @@
         {
             <div class="mobile-nav-overlay" @onclick="CloseDrawer"></div>
             <div class="mobile-nav-panel">
-                <div class="d-flex align-center pa-3 border-b" style="position: sticky; top: 0; z-index: 10; background-color: var(--mud-palette-surface);">
+                <div class="d-flex align-center pa-3 border-b flex-shrink-0">
                     <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Small" Class="mr-2"/>
                     <MudText Typo="Typo.subtitle1" Color="Color.Primary" Class="font-weight-bold">EduPanel</MudText>
                 </div>
-                <NavMenu />
+                <div class="flex-grow-1" style="overflow-y: auto;">
+                    <NavMenu />
+                </div>
             </div>
         }
 
@@ -37,11 +39,13 @@
     else
     {
         <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Responsive" Breakpoint="Breakpoint.Md">
-            <div class="d-flex align-center pa-4" style="height: 48px; position: sticky; top: 0; z-index: 10; background-color: var(--mud-palette-surface);">
+            <div class="d-flex align-center pa-4 flex-shrink-0 border-b mud-border-lines-default" style="height: 48px;">
                 <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Medium" Class="mr-2"/>
                 <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold text-truncate">EduPanel</MudText>
             </div>
-            <NavMenu />
+            <div class="flex-grow-1" style="overflow-y: auto;">
+                <NavMenu />
+            </div>
         </MudDrawer>
 
         <MudMainContent Class="mud-main-content-custom">
