@@ -1,106 +1,259 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@using EduPanel.Components.Pages.Employee.Attendance.Dialogs
 @inject ISnackbar Snackbar
-
-<MudItem xs="12" md="5">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">File Leave / Official Business</MudText>
-        <MudForm>
-            <MudSelect T="string" Label="Application Type" @bind-Value="_leaveType" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
-                <MudSelectItem Value="@("Vacation Leave")">Vacation Leave</MudSelectItem>
-                <MudSelectItem Value="@("Sick Leave")">Sick Leave</MudSelectItem>
-                <MudSelectItem Value="@("Official Business (OB)")">Official Business (OB)</MudSelectItem>
-                <MudSelectItem Value="@("Emergency Leave")">Emergency Leave</MudSelectItem>
-            </MudSelect>
-            <div class="d-flex gap-2 mb-3">
-                <MudDatePicker Label="Start Date" @bind-Date="_leaveStart" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 50%;" />
-                <MudDatePicker Label="End Date" @bind-Date="_leaveEnd" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 50%;" />
-            </div>
-            <MudTextField T="string" Label="Reason" @bind-Value="_leaveReason" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitLeaveRequest">Submit Request</MudButton>
-        </MudForm>
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <MudText Typo="Typo.h6" Class="font-weight-bold text-center text-md-left">Leave & Official Business</MudText>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
     </MudPaper>
 </MudItem>
-<MudItem xs="12" md="7">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Leave & OB History</MudText>
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Dates</th>
-                    <th>Days</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var leave in LeaveRequests)
-                {
-                    <tr>
-                        <td class="font-weight-bold">@leave.Type</td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <span class="text-body2">@leave.Start.ToString("MM/dd/yyyy") - @leave.End.ToString("MM/dd/yyyy")</span>
-                            </div>
-                        </td>
-                        <td>@leave.TotalDays</td>
-                        <td>
-                            <MudChip T="string" Color="@GetRequestStatusColor(leave.Status)" Size="Size.Small" Variant="Variant.Filled">@leave.Status</MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+
+<!-- Request History Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 100%; max-width: 250px;">
+                <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
+            </MudSelect>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+        </div>
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<LeaveOBModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
+                  OnRowClick="@RowClickEvent" T="LeaveOBModel"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Leave Type</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">From</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">To</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Filed<br/>Hrs</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Paid<br/>Hrs</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approval<br/>Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date<br/>Applied</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Details</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" Disabled="@(context.ApprovalStatus != "For Approval")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Leave Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.LeaveType</MudTd>
+                <MudTd DataLabel="From" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.CoveredDateFrom</MudTd>
+                <MudTd DataLabel="To" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.CoveredDateTo</MudTd>
+                <MudTd DataLabel="Filed Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.FiledHrs</MudTd>
+                <MudTd DataLabel="Paid Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.PaidHrs</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Reason</MudTd>
+                <MudTd DataLabel="Approval Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Approved By" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDisapprovedBy</MudTd>
+                <MudTd DataLabel="Approved Date" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDisapprovedDate</MudTd>
+                <MudTd DataLabel="Date Applied" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DateApplied</MudTd>
+                <MudTd DataLabel="Details" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudLink Href="#" Typo="Typo.body2" Color="Color.Primary" OnClick="() => SelectRequest(context)">View</MudLink>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+<!-- Details Section -->
+<MudItem xs="12" Class="mt-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <MudText Typo="Typo.subtitle1" Class="font-weight-medium mb-4">Transaction No. : @(_selectedRequest?.TransactionNo)</MudText>
+        <MudTable Items="@(_selectedRequest?.Details ?? new List<LeaveOBDetailModel>())" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Detail No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">DTR Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Day</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Paid Hrs</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" Disabled="true" />
+                </MudTd>
+                <MudTd DataLabel="Detail No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.DetailNo</MudTd>
+                <MudTd DataLabel="DTR Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DtrDate</MudTd>
+                <MudTd DataLabel="Day" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Day</MudTd>
+                <MudTd DataLabel="Paid Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.PaidHrs</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
-    private string _leaveType = "Vacation Leave";
-    private DateTime? _leaveStart = DateTime.Today.AddDays(7);
-    private DateTime? _leaveEnd = DateTime.Today.AddDays(8);
-    private string _leaveReason = "";
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+    private string _searchString = "";
+    private string _statusFilter = "All";
+    private HashSet<LeaveOBModel> _selectedRequests = new();
+    private LeaveOBModel? _selectedRequest;
 
-    private Color GetRequestStatusColor(string status) => status switch
+    private List<LeaveOBModel> _requests = new()
+    {
+        new()
+        {
+            TransactionNo = "TRN-00150",
+            LeaveType = "Vacation Leave",
+            CoveredDateFrom = "06/15/2026",
+            CoveredDateTo = "06/16/2026",
+            FiledHrs = "16",
+            PaidHrs = "16",
+            Reason = "Family vacation out of town",
+            ApprovalStatus = "For Approval",
+            DateApplied = "06/08/2026",
+            Details = new()
+            {
+                new() { DetailNo = "DTL-01", DtrDate = "06/15/2026", Day = "Monday", PaidHrs = "8" },
+                new() { DetailNo = "DTL-02", DtrDate = "06/16/2026", Day = "Tuesday", PaidHrs = "8" }
+            }
+        },
+        new()
+        {
+            TransactionNo = "TRN-00080",
+            LeaveType = "Sick Leave",
+            CoveredDateFrom = "05/10/2026",
+            CoveredDateTo = "05/10/2026",
+            FiledHrs = "8",
+            PaidHrs = "8",
+            Reason = "Fever and flu",
+            ApprovalStatus = "Approved",
+            ApprovedDisapprovedBy = "M. Manager",
+            ApprovedDisapprovedDate = "05/11/2026",
+            DateApplied = "05/10/2026",
+            Details = new()
+            {
+                new() { DetailNo = "DTL-03", DtrDate = "05/10/2026", Day = "Friday", PaidHrs = "8" }
+            }
+        }
+    };
+
+    private void RowClickEvent(TableRowClickEventArgs<LeaveOBModel> args)
+    {
+        _selectedRequest = args.Item;
+    }
+
+    private void SelectRequest(LeaveOBModel req)
+    {
+        _selectedRequest = req;
+    }
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<LeaveOBDialog>
+        {
+            { x => x.DialogTitle, "New Leave / OB Request" },
+            { x => x.DialogDescription, "Submit a new leave or official business request." },
+            { x => x.Request, new LeaveOBModel { TransactionNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<LeaveOBDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (LeaveOBModel)result.Data!;
+            req.TransactionNo = $"TRN-{new Random().Next(1000, 9999)}";
+            req.DateApplied = DateTime.Now.ToString("MM/dd/yyyy");
+            _requests.Insert(0, req);
+            Snackbar.Add("Request created successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(LeaveOBModel req)
+    {
+        var clonedReq = new LeaveOBModel
+        {
+            TransactionNo = req.TransactionNo,
+            LeaveType = req.LeaveType,
+            CoveredDateFrom = req.CoveredDateFrom,
+            CoveredDateTo = req.CoveredDateTo,
+            FiledHrs = req.FiledHrs,
+            PaidHrs = req.PaidHrs,
+            Reason = req.Reason,
+            ApprovalStatus = req.ApprovalStatus,
+            ApprovedDisapprovedBy = req.ApprovedDisapprovedBy,
+            ApprovedDisapprovedDate = req.ApprovedDisapprovedDate,
+            DateApplied = req.DateApplied,
+            LeaveDayType = req.LeaveDayType,
+            Details = req.Details
+        };
+
+        var parameters = new DialogParameters<LeaveOBDialog>
+        {
+            { x => x.DialogTitle, "Edit Leave / OB Request" },
+            { x => x.DialogDescription, "Make changes to your leave or official business request here." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<LeaveOBDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (LeaveOBModel)result.Data!;
+            var index = _requests.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            if (index != -1)
+            {
+                _requests[index] = updatedReq;
+                Snackbar.Add("Request updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(LeaveOBModel req)
+    {
+        if (_statusFilter != "All" && req.ApprovalStatus != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.LeaveType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
     {
         "Approved" => Color.Success,
-        "Pending" => Color.Warning,
-        "Rejected" => Color.Error,
-        "Cancelled" => Color.Default,
+        "For Approval" => Color.Warning,
+        "Disapproved" => Color.Error,
         _ => Color.Default
     };
-
-    public class LeaveRequestModel
-    {
-        public string Type { get; set; } = "";
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public int TotalDays => (End - Start).Days + 1;
-        public string Status { get; set; } = "";
-    }
-
-    private List<LeaveRequestModel> LeaveRequests = new()
-    {
-        new() { Type = "Vacation Leave", Start = DateTime.Today.AddDays(10), End = DateTime.Today.AddDays(12), Status = "Approved" },
-        new() { Type = "Sick Leave", Start = DateTime.Today.AddDays(-15), End = DateTime.Today.AddDays(-15), Status = "Approved" },
-        new() { Type = "Official Business (OB)", Start = DateTime.Today.AddDays(2), End = DateTime.Today.AddDays(2), Status = "Pending" }
-    };
-
-    private void SubmitLeaveRequest()
-    {
-        if (_leaveStart == null || _leaveEnd == null || string.IsNullOrWhiteSpace(_leaveReason))
-        {
-            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
-            return;
-        }
-
-        LeaveRequests.Insert(0, new()
-        {
-            Type = _leaveType,
-            Start = _leaveStart.Value,
-            End = _leaveEnd.Value,
-            Status = "Pending"
-        });
-
-        _leaveReason = "";
-        Snackbar.Add("Leave / OB application submitted successfully!", Severity.Success);
-    }
 }
