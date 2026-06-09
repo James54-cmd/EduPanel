@@ -19,7 +19,7 @@
                     <div class="d-flex flex-column gap-4">
                         <MudItem xs="12">
                             <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Transaction No.</MudText>
-                            <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true" />
+                            <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
                         </MudItem>
 
                         <MudItem xs="12">
@@ -27,8 +27,8 @@
                                 Date <span class="text-error">*</span>
                             </MudText>
                             <div class="d-flex gap-3">
-                                <MudDatePicker @bind-Date="_fromDate" Placeholder="From Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true" Class="flex-grow-1" />
-                                <MudDatePicker @bind-Date="_toDate" Placeholder="To Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true" Class="flex-grow-1" />
+                                <MudDatePicker @bind-Date="_fromDate" Placeholder="From Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                                <MudDatePicker @bind-Date="_toDate" Placeholder="To Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
                             </div>
                             <MudLink Href="#" Typo="Typo.caption" Color="Color.Primary" Class="d-flex align-center mt-2">
                                 Current Schedule: View your assigned schedule &rarr;
@@ -39,8 +39,8 @@
                             <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">
                                 Global Shift <span class="text-error">*</span>
                             </MudText>
-                            <MudSelect T="string" @bind-Value="Request.GlobalShift" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.GlobalShift" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01: 06AM-03PM")">SH-01: 06AM-03PM</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02: 08AM-05PM")">SH-02: 08AM-05PM</MudSelectItem>
                                 <MudSelectItem Value="@("SH-03: 10AM-07PM")">SH-03: 10AM-07PM</MudSelectItem>
@@ -62,8 +62,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Monday</MudText>
                                 <MudCheckBox @bind-Value="_enMon" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftMon" Disabled="@(!_enMon)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftMon" Disabled="@(!_enMon)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -75,8 +75,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Tuesday</MudText>
                                 <MudCheckBox @bind-Value="_enTue" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftTue" Disabled="@(!_enTue)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftTue" Disabled="@(!_enTue)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -88,8 +88,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Wednesday</MudText>
                                 <MudCheckBox @bind-Value="_enWed" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftWed" Disabled="@(!_enWed)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftWed" Disabled="@(!_enWed)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -101,8 +101,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Thursday</MudText>
                                 <MudCheckBox @bind-Value="_enThu" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftThu" Disabled="@(!_enThu)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftThu" Disabled="@(!_enThu)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -114,8 +114,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Friday</MudText>
                                 <MudCheckBox @bind-Value="_enFri" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftFri" Disabled="@(!_enFri)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftFri" Disabled="@(!_enFri)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -127,8 +127,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Saturday</MudText>
                                 <MudCheckBox @bind-Value="_enSat" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftSat" Disabled="@(!_enSat)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftSat" Disabled="@(!_enSat)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -140,8 +140,8 @@
                                 <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Sunday</MudText>
                                 <MudCheckBox @bind-Value="_enSun" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
                             </div>
-                            <MudSelect T="string" @bind-Value="Request.ShiftSun" Disabled="@(!_enSun)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
-                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                            <MudSelect T="string" @bind-Value="Request.ShiftSun" Disabled="@(!_enSun)" Variant="Variant.Outlined" Margin="Margin.Dense">
+
                                 <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
                                 <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
                             </MudSelect>
@@ -157,7 +157,7 @@
                     <div class="d-flex flex-column gap-4">
                         <MudItem xs="12">
                             <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Charge To</MudText>
-                            <MudSelect T="string" @bind-Value="Request.ChargeTo" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
+                            <MudSelect T="string" @bind-Value="Request.ChargeTo" Variant="Variant.Outlined" Margin="Margin.Dense">
                                 <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
                                 <MudSelectItem Value="@("Company")">Company</MudSelectItem>
                                 <MudSelectItem Value="@("Client")">Client</MudSelectItem>
@@ -168,7 +168,7 @@
                             <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">
                                 Reason <span class="text-error">*</span>
                             </MudText>
-                            <MudTextField T="string" @bind-Value="Request.Reason" Required="true" Lines="5" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true" />
+                            <MudTextField T="string" @bind-Value="Request.Reason" Required="true" Lines="5" Variant="Variant.Outlined" Margin="Margin.Dense" />
                         </MudItem>
                     </div>
                 </div>
@@ -203,13 +203,13 @@
         if (DateTime.TryParse(Request.CoveredDateFrom, out var fd)) _fromDate = fd;
         if (DateTime.TryParse(Request.CoveredDateTo, out var td)) _toDate = td;
         
-        _enMon = Request.ShiftMon != "-- Select --";
-        _enTue = Request.ShiftTue != "-- Select --";
-        _enWed = Request.ShiftWed != "-- Select --";
-        _enThu = Request.ShiftThu != "-- Select --";
-        _enFri = Request.ShiftFri != "-- Select --";
-        _enSat = Request.ShiftSat != "-- Select --";
-        _enSun = Request.ShiftSun != "-- Select --";
+        _enMon = !string.IsNullOrEmpty(Request.ShiftMon);
+        _enTue = !string.IsNullOrEmpty(Request.ShiftTue);
+        _enWed = !string.IsNullOrEmpty(Request.ShiftWed);
+        _enThu = !string.IsNullOrEmpty(Request.ShiftThu);
+        _enFri = !string.IsNullOrEmpty(Request.ShiftFri);
+        _enSat = !string.IsNullOrEmpty(Request.ShiftSat);
+        _enSun = !string.IsNullOrEmpty(Request.ShiftSun);
     }
 
     private void Cancel() => MudDialog.Cancel();
