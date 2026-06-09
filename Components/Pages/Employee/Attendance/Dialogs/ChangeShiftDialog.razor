@@ -4,171 +4,184 @@
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6" Class="font-weight-bold">@DialogTitle</MudText>
-        <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        <div class="px-2 pt-2 pb-2">
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        </div>
     </TitleContent>
     <DialogContent>
-        <MudForm @ref="_form" Style="max-height: 60vh; overflow-y: auto; overflow-x: hidden; padding-right: 8px;">
-            <MudGrid Spacing="2">
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Transaction No. :</MudText>
-                </MudItem>
-                <MudItem xs="8">
-                    <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </MudItem>
+        <MudForm @ref="_form" Class="px-2 pb-2" Style="max-height: 65vh; overflow-y: auto; overflow-x: hidden;">
+            <div class="d-flex flex-column gap-6 mt-2">
+                
+                <!-- General Information Section -->
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4">General Information</MudText>
+                    <div class="d-flex flex-column gap-4">
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Transaction No.</MudText>
+                            <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </MudItem>
 
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">
-                        Date : <span class="text-error">*</span>
-                    </MudText>
-                </MudItem>
-                <MudItem xs="8">
-                    <div class="d-flex gap-2">
-                        <MudDatePicker @bind-Date="_fromDate" Placeholder="From" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                        <MudDatePicker @bind-Date="_toDate" Placeholder="To" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">
+                                Date <span class="text-error">*</span>
+                            </MudText>
+                            <div class="d-flex gap-3">
+                                <MudDatePicker @bind-Date="_fromDate" Placeholder="From Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                                <MudDatePicker @bind-Date="_toDate" Placeholder="To Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                            </div>
+                            <MudLink Href="#" Typo="Typo.caption" Color="Color.Primary" Class="d-flex align-center mt-2">
+                                Current Schedule: View your assigned schedule &rarr;
+                            </MudLink>
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">
+                                Global Shift <span class="text-error">*</span>
+                            </MudText>
+                            <MudSelect T="string" @bind-Value="Request.GlobalShift" Required="true" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01: 06AM-03PM")">SH-01: 06AM-03PM</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02: 08AM-05PM")">SH-02: 08AM-05PM</MudSelectItem>
+                                <MudSelectItem Value="@("SH-03: 10AM-07PM")">SH-03: 10AM-07PM</MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
                     </div>
-                </MudItem>
+                </div>
 
-                <MudItem xs="4"></MudItem>
-                <MudItem xs="8">
-                    <MudLink Href="#" Typo="Typo.caption" Color="Color.Primary" Class="d-flex align-center">
-                        <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="mr-1" />
-                        Click here to view current shift scheduled
-                    </MudLink>
-                </MudItem>
+                <MudDivider />
 
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">
-                        Shift : <span class="text-error">*</span>
-                    </MudText>
-                </MudItem>
-                <MudItem xs="8">
-                    <MudSelect T="string" @bind-Value="Request.GlobalShift" Required="true" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01: 06AM-03PM")">SH-01: 06AM-03PM</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02: 08AM-05PM")">SH-02: 08AM-05PM</MudSelectItem>
-                        <MudSelectItem Value="@("SH-03: 10AM-07PM")">SH-03: 10AM-07PM</MudSelectItem>
-                    </MudSelect>
-                </MudItem>
+                <!-- Weekly Shift Override Section -->
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4">Weekly Shift Override</MudText>
+                    <div class="d-flex flex-column gap-4">
+                        
+                        <!-- Monday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Monday</MudText>
+                                <MudCheckBox @bind-Value="_enMon" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftMon" Disabled="@(!_enMon)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
 
-                <!-- Monday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Mon :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftMon" Disabled="@(!_enMon)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enMon" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                        <!-- Tuesday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Tuesday</MudText>
+                                <MudCheckBox @bind-Value="_enTue" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftTue" Disabled="@(!_enTue)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
 
-                <!-- Tuesday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Tue :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftTue" Disabled="@(!_enTue)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enTue" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                        <!-- Wednesday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Wednesday</MudText>
+                                <MudCheckBox @bind-Value="_enWed" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftWed" Disabled="@(!_enWed)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
 
-                <!-- Wednesday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Wed :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftWed" Disabled="@(!_enWed)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enWed" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                        <!-- Thursday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Thursday</MudText>
+                                <MudCheckBox @bind-Value="_enThu" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftThu" Disabled="@(!_enThu)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
 
-                <!-- Thursday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Thu :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftThu" Disabled="@(!_enThu)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enThu" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                        <!-- Friday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Friday</MudText>
+                                <MudCheckBox @bind-Value="_enFri" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftFri" Disabled="@(!_enFri)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
 
-                <!-- Friday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Fri :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftFri" Disabled="@(!_enFri)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enFri" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                        <!-- Saturday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Saturday</MudText>
+                                <MudCheckBox @bind-Value="_enSat" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftSat" Disabled="@(!_enSat)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
 
-                <!-- Saturday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Sat :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftSat" Disabled="@(!_enSat)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enSat" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                        <!-- Sunday -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center justify-space-between">
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-medium">Sunday</MudText>
+                                <MudCheckBox @bind-Value="_enSun" Label="Enable override" Size="Size.Small" Color="Color.Primary" Class="ma-0 pa-0" />
+                            </div>
+                            <MudSelect T="string" @bind-Value="Request.ShiftSun" Disabled="@(!_enSun)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
+                                <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
+                            </MudSelect>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Sunday -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Shift Sun :</MudText>
-                </MudItem>
-                <MudItem xs="8" Class="d-flex align-center gap-2">
-                    <MudSelect T="string" @bind-Value="Request.ShiftSun" Disabled="@(!_enSun)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("SH-01")">SH-01</MudSelectItem>
-                        <MudSelectItem Value="@("SH-02")">SH-02</MudSelectItem>
-                    </MudSelect>
-                    <MudCheckBox @bind-Value="_enSun" Label="click to enable." Size="Size.Small" Color="Color.Primary" Class="text-nowrap" />
-                </MudItem>
+                <MudDivider />
 
-                <!-- Charge To -->
-                <MudItem xs="4" Class="d-flex align-center justify-end">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">Charge To :</MudText>
-                </MudItem>
-                <MudItem xs="8">
-                    <MudSelect T="string" @bind-Value="Request.ChargeTo" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
-                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
-                        <MudSelectItem Value="@("Company")">Company</MudSelectItem>
-                        <MudSelectItem Value="@("Client")">Client</MudSelectItem>
-                    </MudSelect>
-                </MudItem>
+                <!-- Additional Information Section -->
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4">Additional Information</MudText>
+                    <div class="d-flex flex-column gap-4">
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Charge To</MudText>
+                            <MudSelect T="string" @bind-Value="Request.ChargeTo" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                <MudSelectItem Value="@("Company")">Company</MudSelectItem>
+                                <MudSelectItem Value="@("Client")">Client</MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
 
-                <!-- Reason -->
-                <MudItem xs="4" Class="d-flex align-start justify-end mt-2">
-                    <MudText Typo="Typo.body2" Class="font-weight-medium">
-                        Reason : <span class="text-error">*</span>
-                    </MudText>
-                </MudItem>
-                <MudItem xs="8">
-                    <MudTextField T="string" @bind-Value="Request.Reason" Required="true" Lines="4" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                </MudItem>
-            </MudGrid>
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">
+                                Reason <span class="text-error">*</span>
+                            </MudText>
+                            <MudTextField T="string" @bind-Value="Request.Reason" Required="true" Lines="5" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </MudItem>
+                    </div>
+                </div>
+
+            </div>
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="Cancel">Cancel</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Save changes</MudButton>
+        <div class="d-flex w-100 px-4 pb-4 pt-2">
+            <MudSpacer />
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="px-4">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-6">Save changes</MudButton>
+        </div>
     </DialogActions>
 </MudDialog>
 
