@@ -10,7 +10,7 @@
         </div>
     </TitleContent>
     <DialogContent>
-        <MudForm @ref="_form" Class="px-2 pb-2" Style="max-height: 65vh; overflow-y: auto; overflow-x: hidden;">
+        <MudForm @ref="_form" Class="px-2 pb-2">
             <div class="d-flex flex-column gap-6 mt-2">
                 
                 <!-- General Information Section -->
@@ -177,10 +177,9 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <div class="d-flex w-100 px-4 pb-4 pt-2">
-            <MudSpacer />
-            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="px-4">Cancel</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-6">Save changes</MudButton>
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-end">
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save changes</MudButton>
         </div>
     </DialogActions>
 </MudDialog>
