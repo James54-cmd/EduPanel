@@ -1,8 +1,157 @@
 @namespace EduPanel.Components.Pages.Employee.Payroll.Tabs
 
+<!-- Filter / Status Bar -->
 <MudItem xs="12">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h5" Class="mb-4">Contribution Inquiry</MudText>
-        <MudAlert Severity="Severity.Info" Class="mb-4">This section is currently under development. Here you will be able to view your contribution inquiries.</MudAlert>
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl">
+        <div class="d-flex flex-wrap align-center gap-4">
+            <MudSelect T="string" Label="Year" Variant="Variant.Outlined" Margin="Margin.Dense"
+                       Style="max-width: 150px;" @bind-Value="_selectedYear" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var year in _years)
+                {
+                    <MudSelectItem Value="@year">@year</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSpacer />
+            <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Class="rounded-lg">
+                <MudButton StartIcon="@Icons.Material.Filled.Print">Print</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+            </MudButtonGroup>
+        </div>
     </MudPaper>
 </MudItem>
+
+<!-- Summary Stat Cards -->
+<MudItem xs="12">
+    <MudGrid Spacing="3">
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="0" Class="pa-4 rounded-xl d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); min-height: 90px;">
+                <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: #1565c0;">Total SSS</MudText>
+                <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #0d47a1;">₱ @_contributions.Sum(c => c.SssEe + c.SssEr).ToString("N2")</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="0" Class="pa-4 rounded-xl d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); min-height: 90px;">
+                <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: #2e7d32;">Total PhilHealth</MudText>
+                <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #1b5e20;">₱ @_contributions.Sum(c => c.PhEe + c.PhEr).ToString("N2")</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="0" Class="pa-4 rounded-xl d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); min-height: 90px;">
+                <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: #e65100;">Total HDMF</MudText>
+                <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #bf360c;">₱ @_contributions.Sum(c => c.HdmfEe + c.HdmfEr).ToString("N2")</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="0" Class="pa-4 rounded-xl d-flex flex-column align-center justify-center" Style="background: linear-gradient(135deg, var(--mud-palette-primary-lighten), var(--mud-palette-primary)); min-height: 90px;">
+                <MudText Typo="Typo.caption" Class="font-weight-bold text-uppercase" Style="letter-spacing: 1px; color: rgba(255,255,255,0.85);">Total Contributions</MudText>
+                <MudText Typo="Typo.h5" Class="font-weight-bold mt-1" Style="color: #fff;">₱ @_contributions.Sum(c => c.Total).ToString("N2")</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudItem>
+
+<!-- Contribution Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <MudTable Items="@_contributions" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<ContributionRecord,bool>(FilterFunc)"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+            <ToolBarContent>
+                <MudIcon Icon="@Icons.Material.Filled.AssignmentTurnedIn" Color="Color.Primary" Size="Size.Small" Class="mr-2" />
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Contribution History</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search contributions..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 280px;"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Month</MudTh>
+                <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Year</MudTh>
+                <MudTh Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">SSS EE</MudTh>
+                <MudTh Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">SSS ER</MudTh>
+                <MudTh Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">PH EE</MudTh>
+                <MudTh Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">PH ER</MudTh>
+                <MudTh Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">HDMF EE</MudTh>
+                <MudTh Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">HDMF ER</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.8125rem; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Month" Style="font-size: 0.8125rem; vertical-align: middle;">@context.Month</MudTd>
+                <MudTd DataLabel="Year" Style="font-size: 0.8125rem; vertical-align: middle;">@context.Year</MudTd>
+                <MudTd DataLabel="SSS EE" Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@context.SssEe.ToString("N2")</MudTd>
+                <MudTd DataLabel="SSS ER" Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@context.SssEr.ToString("N2")</MudTd>
+                <MudTd DataLabel="PH EE" Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@context.PhEe.ToString("N2")</MudTd>
+                <MudTd DataLabel="PH ER" Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@context.PhEr.ToString("N2")</MudTd>
+                <MudTd DataLabel="HDMF EE" Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@context.HdmfEe.ToString("N2")</MudTd>
+                <MudTd DataLabel="HDMF ER" Style="font-size: 0.8125rem; text-align: right; vertical-align: middle;">@context.HdmfEr.ToString("N2")</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No contribution data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    // ── State ──
+    private string _searchString = "";
+    private string _selectedYear = "2026";
+    private readonly List<string> _years = new() { "2026", "2025", "2024", "2023" };
+
+    // ── Data Models ──
+    private class ContributionRecord
+    {
+        public string TransactionNo { get; set; } = "";
+        public string Month { get; set; } = "";
+        public string Year { get; set; } = "";
+        public decimal SssEe { get; set; }
+        public decimal SssEr { get; set; }
+        public decimal PhEe { get; set; }
+        public decimal PhEr { get; set; }
+        public decimal HdmfEe { get; set; }
+        public decimal HdmfEr { get; set; }
+
+        public decimal Total => SssEe + SssEr + PhEe + PhEr + HdmfEe + HdmfEr;
+    }
+
+    // ── Sample Data ──
+    private readonly List<ContributionRecord> _contributions = new()
+    {
+        new() { TransactionNo = "TRN-202606-112", Month = "June", Year = "2026", SssEe = 1125.00m, SssEr = 2175.00m, PhEe = 500.00m, PhEr = 500.00m, HdmfEe = 200.00m, HdmfEr = 200.00m },
+        new() { TransactionNo = "TRN-202605-094", Month = "May", Year = "2026", SssEe = 1125.00m, SssEr = 2175.00m, PhEe = 500.00m, PhEr = 500.00m, HdmfEe = 200.00m, HdmfEr = 200.00m },
+        new() { TransactionNo = "TRN-202604-081", Month = "April", Year = "2026", SssEe = 1125.00m, SssEr = 2175.00m, PhEe = 500.00m, PhEr = 500.00m, HdmfEe = 200.00m, HdmfEr = 200.00m },
+        new() { TransactionNo = "TRN-202603-075", Month = "March", Year = "2026", SssEe = 1125.00m, SssEr = 2175.00m, PhEe = 500.00m, PhEr = 500.00m, HdmfEe = 200.00m, HdmfEr = 200.00m },
+        new() { TransactionNo = "TRN-202602-062", Month = "February", Year = "2026", SssEe = 1125.00m, SssEr = 2175.00m, PhEe = 500.00m, PhEr = 500.00m, HdmfEe = 200.00m, HdmfEr = 200.00m },
+        new() { TransactionNo = "TRN-202601-051", Month = "January", Year = "2026", SssEe = 1125.00m, SssEr = 2175.00m, PhEe = 500.00m, PhEr = 500.00m, HdmfEe = 200.00m, HdmfEr = 200.00m },
+        new() { TransactionNo = "TRN-202512-143", Month = "December", Year = "2025", SssEe = 1012.50m, SssEr = 1957.50m, PhEe = 450.00m, PhEr = 450.00m, HdmfEe = 100.00m, HdmfEr = 100.00m },
+        new() { TransactionNo = "TRN-202511-133", Month = "November", Year = "2025", SssEe = 1012.50m, SssEr = 1957.50m, PhEe = 450.00m, PhEr = 450.00m, HdmfEe = 100.00m, HdmfEr = 100.00m },
+        new() { TransactionNo = "TRN-202510-120", Month = "October", Year = "2025", SssEe = 1012.50m, SssEr = 1957.50m, PhEe = 450.00m, PhEr = 450.00m, HdmfEe = 100.00m, HdmfEr = 100.00m },
+        new() { TransactionNo = "TRN-202509-111", Month = "September", Year = "2025", SssEe = 1012.50m, SssEr = 1957.50m, PhEe = 450.00m, PhEr = 450.00m, HdmfEe = 100.00m, HdmfEr = 100.00m },
+        new() { TransactionNo = "TRN-202508-098", Month = "August", Year = "2025", SssEe = 1012.50m, SssEr = 1957.50m, PhEe = 450.00m, PhEr = 450.00m, HdmfEe = 100.00m, HdmfEr = 100.00m },
+        new() { TransactionNo = "TRN-202507-087", Month = "July", Year = "2025", SssEe = 1012.50m, SssEr = 1957.50m, PhEe = 450.00m, PhEr = 450.00m, HdmfEe = 100.00m, HdmfEr = 100.00m }
+    };
+
+    // ── Filter Method ──
+    private bool FilterFunc(ContributionRecord record)
+    {
+        // First filter by year drop-down
+        if (!string.IsNullOrEmpty(_selectedYear) && record.Year != _selectedYear)
+            return false;
+
+        // Then filter by search text
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+        
+        if (record.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (record.Month.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+            
+        return false;
+    }
+}
