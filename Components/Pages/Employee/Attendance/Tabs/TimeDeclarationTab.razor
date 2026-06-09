@@ -26,7 +26,7 @@
             </MudSelect>
             <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
         </div>
-        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+        <MudTable T="TimeDeclarationModel" Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
                   Filter="new Func<TimeDeclarationModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests" @bind-SelectedItem="_selectedDeclaration"
                   Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
             <HeaderContent>
@@ -179,7 +179,7 @@
         var dialog = await DialogService.ShowAsync<TimeDeclarationDialog>("Add Time Declaration", parameters, options);
         var result = await dialog.Result;
 
-        if (!result.Canceled && result.Data is TimeDeclarationModel newReq)
+        if (result != null && !result.Canceled && result.Data is TimeDeclarationModel newReq)
         {
             newReq.TransactionNo = $"TD-{DateTime.Now:yyyyMM}-{new Random().Next(100, 999)}";
             newReq.DateApplied = DateTime.Now.ToString("MM/dd/yyyy");
@@ -198,7 +198,7 @@
         var dialog = await DialogService.ShowAsync<TimeDeclarationDialog>("Edit Time Declaration", parameters, options);
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result != null && !result.Canceled)
         {
             Snackbar.Add("Time Declaration updated successfully", Severity.Success);
         }

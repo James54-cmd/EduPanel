@@ -41,13 +41,10 @@
                 
                 <MudItem xs="12">
                     <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Evaluation Form</MudText>
-                    <MudFileUpload T="IBrowserFile" Accept=".pdf,.jpg,.png">
-                        <ActivatorContent>
-                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">
-                                Upload Form
-                            </MudButton>
-                        </ActivatorContent>
-                    </MudFileUpload>
+                    <MudButton HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="er-activities-upload">
+                        Upload Form
+                    </MudButton>
+                    <InputFile id="er-activities-upload" style="display: none;" accept=".pdf,.jpg,.png" />
                 </MudItem>
             </div>
         </MudForm>

@@ -60,9 +60,9 @@
             </div>
             <MudTextField @bind-Value="_searchLoan" Placeholder="Search loans..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
         </div>
-        <MudTable Items="@_loans" Dense="true" Hover="true" Bordered="true" Striped="false" 
+        <MudTable T="LoanRecord" Items="@_loans" Dense="true" Hover="true" Bordered="true" Striped="false" 
                   Filter="new Func<LoanRecord,bool>(FilterLoanRecord)" @bind-SelectedItem="_selectedLoan"
-                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden mb-4">
             <HeaderContent>
                 <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Loan No.</MudTh>
                 <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Loan Type</MudTh>

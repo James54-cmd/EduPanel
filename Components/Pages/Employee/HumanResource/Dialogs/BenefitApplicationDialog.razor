@@ -11,7 +11,7 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_form" Class="pa-2">
-            <MudTabs Elevation="0" Rounded="true" PanelClass="pa-6 mt-2" Class="w-100">
+            <MudTabs Elevation="0" Rounded="true" Class="mt-2">
                 <MudTabPanel Text="Details">
                     <div class="d-flex flex-column gap-4 mt-2">
                         <MudItem xs="12">
@@ -47,13 +47,10 @@
                 </MudTabPanel>
                 <MudTabPanel Text="Attachment">
                     <MudText Typo="Typo.h6" Class="mb-4">Attachments</MudText>
-                    <MudFileUpload T="IBrowserFile" Accept=".pdf,.jpg,.png">
-                        <ActivatorContent>
-                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">
-                                Upload File
-                            </MudButton>
-                        </ActivatorContent>
-                    </MudFileUpload>
+                    <MudButton HtmlTag="label" Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="benefit-application-upload">
+                        Upload File
+                    </MudButton>
+                    <InputFile id="benefit-application-upload" style="display: none;" accept=".pdf,.jpg,.png" />
                 </MudTabPanel>
                 <MudTabPanel Text="Dependent/s">
                     <MudText Typo="Typo.h6" Class="mb-4">Dependent/s</MudText>
