@@ -1,0 +1,117 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <div class="px-2 pt-2 pb-2">
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" Class="pa-2">
+            <MudTabs Elevation="0" Rounded="true"  PanelClass="pa-6 mt-2" Class="w-100">
+                <MudTabPanel Text="Details">
+                    <div class="d-flex flex-column gap-4 mt-2">
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Transaction No.</MudText>
+                            <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Date Filed <span class="text-error">*</span></MudText>
+                            <MudTextField T="DateTime?" @bind-Value="_dateFiled" Format="MM/dd/yyyy" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Benefit Type <span class="text-error">*</span></MudText>
+                            <MudSelect T="string" @bind-Value="Request.BenefitType" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                <MudSelectItem Value="@("--Select--")">--Select--</MudSelectItem>
+                                <MudSelectItem Value="@("Health Insurance")">Health Insurance</MudSelectItem>
+                                <MudSelectItem Value="@("Life Insurance")">Life Insurance</MudSelectItem>
+                                <MudSelectItem Value="@("Rice Subsidy")">Rice Subsidy</MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Remarks</MudText>
+                            <MudTextField T="string" @bind-Value="Request.Remarks" Lines="4" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Approval Status</MudText>
+                            <MudTextField T="string" Value="@Request.ApprovalStatus" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                        </MudItem>
+                    </div>
+                </MudTabPanel>
+                <MudTabPanel Text="Attachment">
+                    <MudText Typo="Typo.h6" Class="mb-4">Attachments</MudText>
+                    <MudFileUpload T="IBrowserFile" Accept=".pdf,.jpg,.png">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Upload File
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudTabPanel>
+                <MudTabPanel Text="Dependents">
+                    <MudText Typo="Typo.h6" Class="mb-4">Dependents</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Manage your enrolled dependents here.</MudText>
+                </MudTabPanel>
+            </MudTabs>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-end">
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string DialogTitle { get; set; } = "Benefit Enrollment";
+    [Parameter] public string DialogDescription { get; set; } = "Fill out the details below to enroll in a benefit.";
+    [Parameter] public BenefitEnrollmentModel Request { get; set; } = new();
+
+    private MudForm _form = default!;
+    private DateTime? _dateFiled;
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.TryParse(Request.DateFiled, out var df)) _dateFiled = df;
+        else _dateFiled = DateTime.Today;
+
+        if (string.IsNullOrEmpty(Request.BenefitType))
+        {
+            Request.BenefitType = "--Select--";
+        }
+        
+        if (string.IsNullOrEmpty(Request.ApprovalStatus) || Request.ApprovalStatus == "Autonumber")
+        {
+            Request.ApprovalStatus = "For Review";
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        await _form.ValidateAsync();
+        if (!_form.IsValid || Request.BenefitType == "--Select--")
+        {
+            Snackbar.Add("Please fill in all required fields and select a valid Benefit Type.", Severity.Warning);
+            return;
+        }
+
+        if (_dateFiled.HasValue)
+        {
+            Request.DateFiled = _dateFiled.Value.ToString("MM/dd/yyyy");
+        }
+
+        MudDialog.Close(DialogResult.Ok(Request));
+    }
+}

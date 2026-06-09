@@ -28,6 +28,7 @@
     private Type CurrentTabType => PageSlug.ToLowerInvariant() switch
     {
         "benefit-balance" => typeof(BenefitBalanceTab),
+        "benefit-enrollment" => typeof(BenefitEnrollmentTab),
         _ => typeof(UnderDevelopmentTab)
     };
 
