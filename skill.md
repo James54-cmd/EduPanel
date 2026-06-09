@@ -114,3 +114,17 @@ To keep avatars visually consistent and premium across the app, gradient styles 
 <MudAvatar Color="Color.Primary" Size="Size.Small">AB</MudAvatar>
 ```
 
+---
+
+## 🏗️ Domain-Driven Organization for Dialogs & Models
+
+To keep features maintainable and modular, avoid dumping all models or dialogs into global root folders or hiding them inside massive page components. Instead, co-locate them by domain/feature:
+
+* **Models**: Place data transfer objects and state models in a `Models` subfolder specific to the domain (e.g., `Components/Pages/Employee/Attendance/Models/ShiftRequestModel.cs`).
+* **Dialogs**: Extract complex popup forms into dedicated reusable UI components and place them in a `Dialogs` subfolder (e.g., `Components/Pages/Employee/Attendance/Dialogs/ChangeShiftDialog.razor`).
+* **MudDialog Usage**: 
+  - Never use inline `<MudDialog>` tags within complex page layouts.
+  - Always invoke dialog components programmatically via `IDialogService.ShowAsync<T>()`.
+  - Structure dialog components cleanly using `<TitleContent>`, `<DialogContent>`, and `<DialogActions>` to mimic clear, Shadcn-like pop-up aesthetics.
+  - Use `[CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;` to control the dialog state.
+

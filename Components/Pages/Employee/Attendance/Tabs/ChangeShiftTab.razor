@@ -1,106 +1,213 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@using EduPanel.Components.Pages.Employee.Attendance.Dialogs
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
-<MudItem xs="12" md="5">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">New Request</MudText>
-        <MudForm>
-            <MudDatePicker Label="Target Date" @bind-Date="_shiftRequestDate" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
-            <MudSelect T="string" Label="Current Shift" @bind-Value="_currentShift" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
-                <MudSelectItem Value="@("08:00 AM - 05:00 PM")">Regular Shift (08:00 AM - 05:00 PM)</MudSelectItem>
-            </MudSelect>
-            <MudSelect T="string" Label="Proposed Shift" @bind-Value="_proposedShift" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3">
-                <MudSelectItem Value="@("06:00 AM - 03:00 PM")">Early Shift (06:00 AM - 03:00 PM)</MudSelectItem>
-                <MudSelectItem Value="@("10:00 AM - 07:00 PM")">Late Shift (10:00 AM - 07:00 PM)</MudSelectItem>
-                <MudSelectItem Value="@("10:00 PM - 07:00 AM")">Night Shift (10:00 PM - 07:00 AM)</MudSelectItem>
-            </MudSelect>
-            <MudTextField T="string" Label="Reason" @bind-Value="_shiftReason" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitShiftChange">Submit Request</MudButton>
-        </MudForm>
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex align-center justify-space-between">
+        <MudText Typo="Typo.h6" Class="font-weight-bold">Shift Change Requests</MudText>
+        <div class="d-flex gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
     </MudPaper>
 </MudItem>
-<MudItem xs="12" md="7">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Request History</MudText>
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Date Requested</th>
-                    <th>Target Date</th>
-                    <th>Details</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var req in ShiftChangeRequests)
-                {
-                    <tr>
-                        <td>@req.DateRequested.ToString("MM/dd/yyyy")</td>
-                        <td>@req.TargetDate.ToString("MM/dd/yyyy")</td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <span class="text-caption mud-text-secondary">From: @req.CurrentShift</span>
-                                <span class="text-caption font-weight-bold">To: @req.ProposedShift</span>
-                            </div>
-                        </td>
-                        <td>
-                            <MudChip T="string" Color="@GetRequestStatusColor(req.Status)" Size="Size.Small" Variant="Variant.Filled">@req.Status</MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+
+<!-- Request History Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<ShiftRequestModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true">
+            <ToolBarContent>
+                <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width: 200px;" Class="mr-4">
+                    <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                    <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                    <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                    <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
+                </MudSelect>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 280px;"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Covered Date<br/><span style="font-size: 0.65rem; font-weight: normal;">From - To</span></MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Mon</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Tue</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Wed</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Thu</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Fri</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Sat</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Sun</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approval<br/>Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date<br/>Applied</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" Disabled="@(context.ApprovalStatus != "For Approval")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Covered Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.CoveredDateFrom<br/>@context.CoveredDateTo</MudTd>
+                <MudTd DataLabel="Mon" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftMon</MudTd>
+                <MudTd DataLabel="Tue" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftTue</MudTd>
+                <MudTd DataLabel="Wed" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftWed</MudTd>
+                <MudTd DataLabel="Thu" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftThu</MudTd>
+                <MudTd DataLabel="Fri" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftFri</MudTd>
+                <MudTd DataLabel="Sat" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftSat</MudTd>
+                <MudTd DataLabel="Sun" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ShiftSun</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Reason</MudTd>
+                <MudTd DataLabel="Approval Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Approved By" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedBy</MudTd>
+                <MudTd DataLabel="Approved Date" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDate</MudTd>
+                <MudTd DataLabel="Date Applied" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DateApplied</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
-    private DateTime? _shiftRequestDate = DateTime.Today;
-    private string _currentShift = "08:00 AM - 05:00 PM";
-    private string _proposedShift = "06:00 AM - 03:00 PM";
-    private string _shiftReason = "";
+    private string _searchString = "";
+    private string _statusFilter = "All";
+    private HashSet<ShiftRequestModel> _selectedRequests = new();
 
-    private Color GetRequestStatusColor(string status) => status switch
+    private List<ShiftRequestModel> _requests = new()
+    {
+        new()
+        {
+            TransactionNo = "TRN-00105",
+            CoveredDateFrom = "06/10/2026",
+            CoveredDateTo = "06/14/2026",
+            ShiftMon = "SH-01",
+            ShiftTue = "SH-01",
+            ShiftWed = "SH-01",
+            ShiftThu = "SH-01",
+            ShiftFri = "SH-01",
+            Reason = "Covering for morning shift due to team event.",
+            ApprovalStatus = "For Approval",
+            DateApplied = "06/08/2026"
+        },
+        new()
+        {
+            TransactionNo = "TRN-00084",
+            CoveredDateFrom = "05/15/2026",
+            CoveredDateTo = "05/15/2026",
+            ShiftFri = "SH-03",
+            Reason = "Late shift to complete deployment.",
+            ApprovalStatus = "Approved",
+            ApprovedBy = "M. Manager",
+            ApprovedDate = "05/14/2026",
+            DateApplied = "05/13/2026"
+        }
+    };
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<ChangeShiftDialog>
+        {
+            { x => x.DialogTitle, "New Shift Request" },
+            { x => x.DialogDescription, "Submit a new shift change request for approval." },
+            { x => x.Request, new ShiftRequestModel { TransactionNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<ChangeShiftDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (ShiftRequestModel)result.Data!;
+            req.TransactionNo = $"TRN-{new Random().Next(1000, 9999)}";
+            req.DateApplied = DateTime.Now.ToString("MM/dd/yyyy");
+            _requests.Insert(0, req);
+            Snackbar.Add("Request created successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(ShiftRequestModel req)
+    {
+        var clonedReq = new ShiftRequestModel
+        {
+            TransactionNo = req.TransactionNo,
+            CoveredDateFrom = req.CoveredDateFrom,
+            CoveredDateTo = req.CoveredDateTo,
+            GlobalShift = req.GlobalShift,
+            ShiftMon = req.ShiftMon,
+            ShiftTue = req.ShiftTue,
+            ShiftWed = req.ShiftWed,
+            ShiftThu = req.ShiftThu,
+            ShiftFri = req.ShiftFri,
+            ShiftSat = req.ShiftSat,
+            ShiftSun = req.ShiftSun,
+            ChargeTo = req.ChargeTo,
+            Reason = req.Reason,
+            ApprovalStatus = req.ApprovalStatus,
+            ApprovedBy = req.ApprovedBy,
+            ApprovedDate = req.ApprovedDate,
+            DateApplied = req.DateApplied
+        };
+
+        var parameters = new DialogParameters<ChangeShiftDialog>
+        {
+            { x => x.DialogTitle, "Edit Shift Request" },
+            { x => x.DialogDescription, "Make changes to your shift request here. Click save when you're done." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<ChangeShiftDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (ShiftRequestModel)result.Data!;
+            var index = _requests.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            if (index != -1)
+            {
+                _requests[index] = updatedReq;
+                Snackbar.Add("Request updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(ShiftRequestModel req)
+    {
+        if (_statusFilter != "All" && req.ApprovalStatus != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
     {
         "Approved" => Color.Success,
-        "Pending" => Color.Warning,
-        "Rejected" => Color.Error,
-        "Cancelled" => Color.Default,
+        "For Approval" => Color.Warning,
+        "Disapproved" => Color.Error,
         _ => Color.Default
     };
-
-    private class ShiftRequest
-    {
-        public DateTime DateRequested { get; set; }
-        public DateTime TargetDate { get; set; }
-        public string CurrentShift { get; set; } = "";
-        public string ProposedShift { get; set; } = "";
-        public string Status { get; set; } = "";
-    }
-
-    private List<ShiftRequest> ShiftChangeRequests = new()
-    {
-        new() { DateRequested = DateTime.Today.AddDays(-2), TargetDate = DateTime.Today.AddDays(3), CurrentShift = "08:00 AM - 05:00 PM", ProposedShift = "06:00 AM - 03:00 PM", Status = "Pending" },
-        new() { DateRequested = DateTime.Today.AddDays(-10), TargetDate = DateTime.Today.AddDays(-8), CurrentShift = "08:00 AM - 05:00 PM", ProposedShift = "10:00 AM - 07:00 PM", Status = "Approved" }
-    };
-
-    private void SubmitShiftChange()
-    {
-        if (_shiftRequestDate == null || string.IsNullOrWhiteSpace(_shiftReason))
-        {
-            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
-            return;
-        }
-
-        ShiftChangeRequests.Insert(0, new()
-        {
-            DateRequested = DateTime.Today,
-            TargetDate = _shiftRequestDate.Value,
-            CurrentShift = _currentShift,
-            ProposedShift = _proposedShift,
-            Status = "Pending"
-        });
-
-        _shiftReason = "";
-        Snackbar.Add("Shift change request submitted successfully!", Severity.Success);
-    }
 }

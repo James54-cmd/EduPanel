@@ -4,12 +4,12 @@
 <MudNavMenu Margin="Margin.Dense" Bordered="true">
     @if (IsEmployeeView)
     {
-        <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Profile")" ExpandedChanged="@((e) => _expandedGroup = e ? "Profile" : "")" HideExpandIcon="false" Class="@ProfileGroupClass">
+        <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Profile")" ExpandedChanged="@((e) => _expandedGroup = e ? "Profile" : "")" HideExpandIcon="false" Class="@ProfileGroupClass">
             <MudNavLink Href="/employee/profile" Match="NavLinkMatch.All">Employee Profile</MudNavLink>
             <MudNavLink Href="/employee/personal-data-update" Match="NavLinkMatch.All">Personal Data Update</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Attendance" Icon="@Icons.Material.Filled.AccessTime" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Attendance")" ExpandedChanged="@((e) => _expandedGroup = e ? "Attendance" : "")" HideExpandIcon="false" Class="@AttendanceGroupClass">
+        <MudNavGroup Title="Attendance" Icon="@Icons.Material.Filled.AccessTime" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Attendance")" ExpandedChanged="@((e) => _expandedGroup = e ? "Attendance" : "")" HideExpandIcon="false" Class="@AttendanceGroupClass">
             <MudNavLink Href="/employee/attendance/inquiry" Match="NavLinkMatch.All">Attendance Inquiry</MudNavLink>
             <MudNavLink Href="/employee/attendance/schedule-calendar" Match="NavLinkMatch.All">My Schedule Calendar</MudNavLink>
             <MudNavLink Href="/employee/attendance/change-shift" Match="NavLinkMatch.All">Change Shift</MudNavLink>
@@ -22,7 +22,7 @@
             <MudNavLink Href="/employee/attendance/dtr" Match="NavLinkMatch.All">DTR</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Payroll" Icon="@Icons.Material.Filled.AttachMoney" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Payroll")" ExpandedChanged="@((e) => _expandedGroup = e ? "Payroll" : "")" HideExpandIcon="false" Class="@PayrollGroupClass">
+        <MudNavGroup Title="Payroll" Icon="@Icons.Material.Filled.AttachMoney" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Payroll")" ExpandedChanged="@((e) => _expandedGroup = e ? "Payroll" : "")" HideExpandIcon="false" Class="@PayrollGroupClass">
             <MudNavLink Href="/employee/payroll/payroll-inquiry" Match="NavLinkMatch.All">Payroll Inquiry</MudNavLink>
             <MudNavLink Href="/employee/payroll/loan-inquiry" Match="NavLinkMatch.All">Loan Inquiry</MudNavLink>
             <MudNavLink Href="/employee/payroll/contribution-inquiry" Match="NavLinkMatch.All">Contribution Inquiry</MudNavLink>
@@ -30,11 +30,11 @@
     }
     else
     {
-        <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" IconSize="Size.Small">Dashboard</MudNavLink>
-        <MudNavLink Href="/admin/employee" Icon="@Icons.Material.Filled.People" IconSize="Size.Small">Employees</MudNavLink>
-        <MudNavLink Href="#" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store" IconSize="Size.Small">Store</MudNavLink>
-        <MudNavLink Href="#" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks" IconSize="Size.Small">Library</MudNavLink>
-        <MudNavLink Href="#" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group" IconSize="Size.Small">Community</MudNavLink>
+        <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+        <MudNavLink Href="/admin/employee" Icon="@Icons.Material.Filled.People">Employees</MudNavLink>
+        <MudNavLink Href="#" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Store</MudNavLink>
+        <MudNavLink Href="#" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Library</MudNavLink>
+        <MudNavLink Href="#" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Community</MudNavLink>
     }
 </MudNavMenu>
 
