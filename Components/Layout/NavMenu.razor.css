@@ -147,13 +147,6 @@
     background-color: var(--mud-palette-primary-hover);
 }
 
-/* ── Active highlight for expanded MudNavGroup ── */
-::deep .nav-group-active > .mud-nav-link {
-    color: var(--mud-palette-primary) !important;
-    background-color: var(--mud-palette-primary-hover);
-    border-radius: var(--mud-default-borderradius);
-}
-
 ::deep .nav-profile-active {
     background-color: var(--mud-palette-primary-hover);
     border-radius: var(--mud-default-borderradius);

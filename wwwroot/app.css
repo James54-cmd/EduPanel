@@ -216,3 +216,24 @@ h1:focus {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* ── Global Nav Menu Border Highlights ── */
+/* Base NavLink for seamless border transitions */
+.mud-nav-menu .mud-nav-link {
+    border-left: 4px solid transparent;
+    border-radius: 0 var(--mud-default-borderradius) var(--mud-default-borderradius) 0;
+}
+
+/* Active highlight for expanded MudNavGroup */
+.mud-nav-menu .nav-group-active > .mud-nav-link {
+    color: var(--mud-palette-primary) !important;
+    background-color: var(--mud-palette-primary-hover);
+    border-left: 4px solid var(--mud-palette-primary) !important;
+}
+
+/* Active highlight for individual MudNavLink */
+.mud-nav-menu .mud-nav-link.active {
+    color: var(--mud-palette-primary) !important;
+    background-color: var(--mud-palette-primary-hover);
+    border-left: 4px solid var(--mud-palette-primary) !important;
+}
