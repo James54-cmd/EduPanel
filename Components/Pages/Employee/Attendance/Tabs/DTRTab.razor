@@ -1,54 +1,110 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@inject ISnackbar Snackbar
 
-<MudItem xs="12">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <div class="d-flex flex-wrap align-center justify-space-between gap-4 mb-4">
-            <MudText Typo="Typo.h6" Class="font-weight-bold">Timesheet - June 2026</MudText>
-            <div class="d-flex gap-2">
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download">Export CSV</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Print">Print DTR</MudButton>
-            </div>
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Outlined" Color="Color.Default">Export</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Class="px-6 font-weight-bold">IN</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Class="px-6 font-weight-bold">OUT</MudButton>
         </div>
+    </MudPaper>
+</MudItem>
 
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Shift Schedule</th>
-                    <th>Clock In</th>
-                    <th>Clock Out</th>
-                    <th>Late (m)</th>
-                    <th>Under (m)</th>
-                    <th>OT (h)</th>
-                    <th>Total Hrs</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 1; i <= 10; i++)
-                {
-                    var day = i;
-                    var isRest = (day == 6 || day == 7);
-                    <tr>
-                        <td class="font-weight-bold">June @day, 2026</td>
-                        <td>@(isRest ? "REST DAY" : "08:00 AM - 05:00 PM")</td>
-                        <td>@(isRest ? "--" : "07:54 AM")</td>
-                        <td>@(isRest ? "--" : "05:05 PM")</td>
-                        <td>@(isRest ? "0" : "0")</td>
-                        <td>@(isRest ? "0" : "0")</td>
-                        <td>@(isRest ? "0.0" : (day == 3 ? "1.5" : "0.0"))</td>
-                        <td>@(isRest ? "0" : (day == 3 ? "9.5" : "8.0"))</td>
-                        <td>
-                            <MudChip T="string" Color="@(isRest ? Color.Secondary : Color.Success)" Size="Size.Small" Variant="Variant.Filled">
-                                @(isRest ? "Rest Day" : "Present")
-                            </MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+<!-- DTR History Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row align-start w-100 mb-4">
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        <MudTable Items="@_logs" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<DTRModel,bool>(FilterFunc)"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">FPID</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">DTR Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Log Type</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">DTR Time</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Machine Name</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Status</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="FPID" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Fpid</MudTd>
+                <MudTd DataLabel="DTR Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DtrDate</MudTd>
+                <MudTd DataLabel="Log Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.LogType</MudTd>
+                <MudTd DataLabel="DTR Time" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DtrTime</MudTd>
+                <MudTd DataLabel="Machine Name" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.MachineName</MudTd>
+                <MudTd DataLabel="Status" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Status</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
+    private string _searchString = "";
+    private string _keyword = "";
+
+    private List<DTRModel> _logs = new()
+    {
+        new()
+        {
+            TransactionNo = "0000126595",
+            Fpid = "0",
+            DtrDate = "06/09/2026",
+            LogType = "i",
+            DtrTime = "0852",
+            MachineName = "",
+            Status = "For Downloading"
+        },
+        new()
+        {
+            TransactionNo = "0000126533",
+            Fpid = "0",
+            DtrDate = "06/08/2026",
+            LogType = "o",
+            DtrTime = "1817",
+            MachineName = "",
+            Status = "For Downloading"
+        },
+        new()
+        {
+            TransactionNo = "0000126520",
+            Fpid = "0",
+            DtrDate = "06/08/2026",
+            LogType = "i",
+            DtrTime = "1057",
+            MachineName = "",
+            Status = "For Downloading"
+        }
+    };
+
+    private bool FilterFunc(DTRModel log)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (log.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (log.LogType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (log.DtrDate.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (log.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
 }
