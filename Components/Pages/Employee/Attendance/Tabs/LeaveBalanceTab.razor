@@ -1,32 +1,269 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@inject ISnackbar Snackbar
 
-<MudItem xs="12" md="4">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl text-center flex-column justify-center align-center">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">Vacation Leave</MudText>
-        <MudProgressCircular Color="Color.Primary" Value="75" Size="Size.Large" StrokeWidth="8" Style="height:120px; width:120px;" Class="my-4">
-            <MudText Typo="Typo.h5" Class="font-weight-bold">9 / 12</MudText>
-        </MudProgressCircular>
-        <MudText Typo="Typo.body2" Color="Color.Secondary">Days Available</MudText>
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex align-center gap-4">
+            <MudText Typo="Typo.body1" Class="font-weight-medium">As of</MudText>
+            <MudDatePicker @bind-Date="_asOfDate" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: auto; margin-top: 0;" />
+        </div>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Text" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
     </MudPaper>
 </MudItem>
-<MudItem xs="12" md="4">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl text-center flex-column justify-center align-center">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">Sick Leave</MudText>
-        <MudProgressCircular Color="Color.Success" Value="60" Size="Size.Large" StrokeWidth="8" Style="height:120px; width:120px;" Class="my-4">
-            <MudText Typo="Typo.h5" Class="font-weight-bold">6 / 10</MudText>
-        </MudProgressCircular>
-        <MudText Typo="Typo.body2" Color="Color.Secondary">Days Available</MudText>
+
+<!-- Balances Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+        </div>
+        <MudTable Items="@_balances" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<LeaveBalanceModel,bool>(FilterFunc)" 
+                  OnRowClick="@RowClickEvent" T="LeaveBalanceModel"
+                  CustomHeader="true"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTHeadRow>
+                    <MudTh rowspan="2" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; font-weight: bold;">Employee No.</MudTh>
+                    <MudTh rowspan="2" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; font-weight: bold;">Employee Name</MudTh>
+                    <MudTh rowspan="2" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; font-weight: bold;">Leave Type</MudTh>
+                    <MudTh rowspan="2" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center; font-weight: bold;">Earned</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">A</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">B</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">C</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">D = A - B - C</MudTh>
+                    <MudTh rowspan="2" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center; font-weight: bold;">Details</MudTh>
+                </MudTHeadRow>
+                <MudTHeadRow>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">Credit</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">Used</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">Forfeited</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; text-align: center; font-weight: bold;">Balance</MudTh>
+                </MudTHeadRow>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Employee No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.EmployeeNo</MudTd>
+                <MudTd DataLabel="Employee Name" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.EmployeeName</MudTd>
+                <MudTd DataLabel="Leave Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.LeaveType</MudTd>
+                <MudTd DataLabel="Earned" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.Earned</MudTd>
+                <MudTd DataLabel="Credit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.CreditA</MudTd>
+                <MudTd DataLabel="Used" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.UsedB</MudTd>
+                <MudTd DataLabel="Forfeited" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ForfeitedC</MudTd>
+                <MudTd DataLabel="Balance" Style="font-size: 0.75rem; text-align: center; vertical-align: middle; font-weight: bold;">@context.BalanceD</MudTd>
+                <MudTd DataLabel="Details" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudLink Href="#" Typo="Typo.body2" Color="Color.Primary" OnClick="() => SelectBalance(context)">View</MudLink>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
-<MudItem xs="12" md="4">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl text-center flex-column justify-center align-center">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">Emergency Leave</MudText>
-        <MudProgressCircular Color="Color.Warning" Value="100" Size="Size.Large" StrokeWidth="8" Style="height:120px; width:120px;" Class="my-4">
-            <MudText Typo="Typo.h5" Class="font-weight-bold">5 / 5</MudText>
-        </MudProgressCircular>
-        <MudText Typo="Typo.body2" Color="Color.Secondary">Days Available</MudText>
-    </MudPaper>
-</MudItem>
+
+<!-- Details Section -->
+@if (_selectedBalance != null)
+{
+    <MudItem xs="12" Class="mt-4">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-medium mb-1">Name: @(_selectedBalance.EmployeeName)</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">Cover Date January 1, @DateTime.Now.Year to December 31, @DateTime.Now.Year</MudText>
+
+            <!-- Leave Earned Table -->
+            <div class="d-flex justify-space-between align-center mb-2">
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Leave Earned & Adjustments</MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small">Export</MudButton>
+            </div>
+            <MudTable Items="@(_selectedBalance.EarnedHistory)" Dense="true" Hover="true" Bordered="true" Striped="false"
+                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden mb-6" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                <HeaderContent>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Leave Type</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Acquired Date</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Forfeited Date</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Leave Hrs</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Transaction No." Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.TransactionNo</MudTd>
+                    <MudTd DataLabel="Leave Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.LeaveType</MudTd>
+                    <MudTd DataLabel="Acquired Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.AcquiredDate</MudTd>
+                    <MudTd DataLabel="Forfeited Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.ForfeitedDate</MudTd>
+                    <MudTd DataLabel="Leave Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.LeaveHrs</MudTd>
+                    <MudTd DataLabel="Remarks" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Remarks</MudTd>
+                </RowTemplate>
+                <FooterContent>
+                    <MudTd colspan="4" Style="background-color: #f8f9fa; border-top: 1px solid var(--mud-palette-lines-default);"></MudTd>
+                    <MudTd Style="text-align: center; font-weight: bold; font-size: 0.75rem; background-color: #f8f9fa; border-top: 1px solid var(--mud-palette-lines-default);">Sum=0.00</MudTd>
+                    <MudTd Style="background-color: #f8f9fa; border-top: 1px solid var(--mud-palette-lines-default);"></MudTd>
+                </FooterContent>
+                <NoRecordsContent>
+                    <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                        No data to display
+                    </MudText>
+                </NoRecordsContent>
+            </MudTable>
+
+            <!-- Leave Used Table -->
+            <div class="d-flex justify-space-between align-center mb-2">
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Leave Used</MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small">Export</MudButton>
+            </div>
+            <MudTable Items="@(_selectedBalance.UsedHistory)" Dense="true" Hover="true" Bordered="true" Striped="false"
+                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                <HeaderContent>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Leave Application No.</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">DTR Date</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Day</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Day Type</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Shift</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Leave Type</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Paid Hrs</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Status</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Leave Application No." Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.LeaveApplicationNo</MudTd>
+                    <MudTd DataLabel="DTR Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DtrDate</MudTd>
+                    <MudTd DataLabel="Day" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Day</MudTd>
+                    <MudTd DataLabel="Day Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DayType</MudTd>
+                    <MudTd DataLabel="Shift" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Shift</MudTd>
+                    <MudTd DataLabel="Leave Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.LeaveType</MudTd>
+                    <MudTd DataLabel="Paid Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.PaidHrs</MudTd>
+                    <MudTd DataLabel="Status" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Status</MudTd>
+                </RowTemplate>
+                <FooterContent>
+                    <MudTd colspan="6" Style="background-color: #f8f9fa; border-top: 1px solid var(--mud-palette-lines-default);"></MudTd>
+                    <MudTd Style="text-align: center; font-weight: bold; font-size: 0.75rem; background-color: #f8f9fa; border-top: 1px solid var(--mud-palette-lines-default);">Paid Hrs=0</MudTd>
+                    <MudTd Style="font-weight: bold; font-size: 0.75rem; background-color: #f8f9fa; border-top: 1px solid var(--mud-palette-lines-default);">Cancelled Count=0</MudTd>
+                </FooterContent>
+                <NoRecordsContent>
+                    <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                        No data to display
+                    </MudText>
+                </NoRecordsContent>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+}
+else
+{
+    <MudItem xs="12" Class="mt-4">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+            <MudText Typo="Typo.subtitle1" Class="font-weight-medium mb-1">Name: </MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">Cover Date January 1, @DateTime.Now.Year to December 31, @DateTime.Now.Year</MudText>
+            
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Leave Earned & Adjustments</MudText>
+            <MudTable Items="new List<LeaveEarnedModel>()" Dense="true" Bordered="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden mb-6" Breakpoint="Breakpoint.None">
+                <HeaderContent>
+                    <MudTh>Transaction No.</MudTh>
+                    <MudTh>Leave Type</MudTh>
+                    <MudTh>Acquired Date</MudTh>
+                    <MudTh>Forfeited Date</MudTh>
+                    <MudTh>Leave Hrs</MudTh>
+                    <MudTh>Remarks</MudTh>
+                </HeaderContent>
+                <NoRecordsContent>
+                    <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">No data to display</MudText>
+                </NoRecordsContent>
+            </MudTable>
+
+            <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Leave Used</MudText>
+            <MudTable Items="new List<LeaveUsedModel>()" Dense="true" Bordered="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" Breakpoint="Breakpoint.None">
+                <HeaderContent>
+                    <MudTh>Leave Application No.</MudTh>
+                    <MudTh>DTR Date</MudTh>
+                    <MudTh>Day</MudTh>
+                    <MudTh>Day Type</MudTh>
+                    <MudTh>Shift</MudTh>
+                    <MudTh>Leave Type</MudTh>
+                    <MudTh>Paid Hrs</MudTh>
+                    <MudTh>Status</MudTh>
+                </HeaderContent>
+                <NoRecordsContent>
+                    <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">No data to display</MudText>
+                </NoRecordsContent>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+}
 
 @code {
+    private DateTime? _asOfDate = DateTime.Today;
+    private string _searchString = "";
+    private LeaveBalanceModel? _selectedBalance;
+
+    private List<LeaveBalanceModel> _balances = new()
+    {
+        new()
+        {
+            EmployeeNo = "EMP-001",
+            EmployeeName = "Juan Dela Cruz",
+            LeaveType = "Vacation Leave",
+            Earned = "12.00",
+            CreditA = "12.00",
+            UsedB = "2.00",
+            ForfeitedC = "0.00",
+            BalanceD = "10.00",
+            EarnedHistory = new()
+            {
+                new() { TransactionNo = "ADJ-001", LeaveType = "Vacation Leave", AcquiredDate = "01/01/2026", LeaveHrs = "12.00", Remarks = "Annual allocation" }
+            },
+            UsedHistory = new()
+            {
+                new() { LeaveApplicationNo = "APP-101", DtrDate = "02/14/2026", Day = "Friday", DayType = "Regular", Shift = "SH-01", LeaveType = "Vacation Leave", PaidHrs = "8.00", Status = "Approved" },
+                new() { LeaveApplicationNo = "APP-105", DtrDate = "03/20/2026", Day = "Friday", DayType = "Regular", Shift = "SH-01", LeaveType = "Vacation Leave", PaidHrs = "8.00", Status = "Approved" }
+            }
+        },
+        new()
+        {
+            EmployeeNo = "EMP-001",
+            EmployeeName = "Juan Dela Cruz",
+            LeaveType = "Sick Leave",
+            Earned = "10.00",
+            CreditA = "10.00",
+            UsedB = "0.00",
+            ForfeitedC = "0.00",
+            BalanceD = "10.00",
+            EarnedHistory = new()
+            {
+                new() { TransactionNo = "ADJ-002", LeaveType = "Sick Leave", AcquiredDate = "01/01/2026", LeaveHrs = "10.00", Remarks = "Annual allocation" }
+            },
+            UsedHistory = new()
+        }
+    };
+
+    private void RowClickEvent(TableRowClickEventArgs<LeaveBalanceModel> args)
+    {
+        _selectedBalance = args.Item;
+    }
+
+    private void SelectBalance(LeaveBalanceModel item)
+    {
+        _selectedBalance = item;
+    }
+
+    private bool FilterFunc(LeaveBalanceModel item)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (item.EmployeeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (item.EmployeeNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (item.LeaveType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
 }
