@@ -54,3 +54,12 @@
         transform: translateY(0);
     }
 }
+
+.scroll-to-top-btn {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-to-top-btn:hover {
+    opacity: 1;
+}
