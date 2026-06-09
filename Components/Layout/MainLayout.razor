@@ -17,7 +17,7 @@
         {
             <div class="mobile-nav-overlay" @onclick="CloseDrawer"></div>
             <div class="mobile-nav-panel">
-                <div class="d-flex align-center pa-3 border-b">
+                <div class="d-flex align-center pa-3 border-b" style="position: sticky; top: 0; z-index: 10; background-color: var(--mud-palette-surface);">
                     <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Small" Class="mr-2"/>
                     <MudText Typo="Typo.subtitle1" Color="Color.Primary" Class="font-weight-bold">EduPanel</MudText>
                 </div>
@@ -34,7 +34,7 @@
     else
     {
         <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
-            <div class="d-flex align-center pa-4" style="height: 48px;">
+            <div class="d-flex align-center pa-4" style="height: 48px; position: sticky; top: 0; z-index: 10; background-color: var(--mud-palette-surface);">
                 <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Medium" Class="mr-2"/>
                 @if (_drawerOpen)
                 {
