@@ -26,9 +26,9 @@
                             <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">
                                 Date <span class="text-error">*</span>
                             </MudText>
-                            <div class="d-flex gap-3">
-                                <MudDatePicker @bind-Date="_fromDate" Placeholder="From Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
-                                <MudDatePicker @bind-Date="_toDate" Placeholder="To Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                            <div class="d-flex flex-column flex-sm-row gap-3">
+                                <MudTextField T="DateTime?" @bind-Value="_fromDate" Format="yyyy-MM-dd" Label="From Date" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
+                                <MudTextField T="DateTime?" @bind-Value="_toDate" Format="yyyy-MM-dd" Label="To Date" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="flex-grow-1" />
                             </div>
                             <MudLink Href="#" Typo="Typo.caption" Color="Color.Primary" Class="d-flex align-center mt-2">
                                 Current Schedule: View your assigned schedule &rarr;
