@@ -30,7 +30,7 @@
         </div>
         <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
                   Filter="new Func<ChangeDayOffModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
-                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true">
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
             <HeaderContent>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>

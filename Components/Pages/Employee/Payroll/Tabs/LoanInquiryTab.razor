@@ -3,16 +3,15 @@
 <!-- Filter / Status Bar -->
 <MudItem xs="12">
     <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl">
-        <div class="d-flex flex-wrap align-center gap-4">
+        <div class="d-flex flex-column flex-md-row align-md-center justify-space-between gap-4 w-100">
             <MudSelect T="string" Label="Loan Status" Variant="Variant.Outlined" Margin="Margin.Dense"
-                       Style="max-width: 200px;" @bind-Value="_selectedStatus" AnchorOrigin="Origin.BottomCenter">
+                       Style="width: 100%; max-width: 250px;" @bind-Value="_selectedStatus" AnchorOrigin="Origin.BottomCenter">
                 @foreach (var status in _statuses)
                 {
                     <MudSelectItem Value="@status">@status</MudSelectItem>
                 }
             </MudSelect>
-            <MudSpacer />
-            <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Class="rounded-lg">
+            <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Class="rounded-lg align-self-center align-self-md-auto">
                 <MudButton StartIcon="@Icons.Material.Filled.Print">Print</MudButton>
                 <MudButton StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
             </MudButtonGroup>
@@ -53,16 +52,17 @@
 <!-- Active Loans Table -->
 <MudItem xs="12">
     <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
-        <MudTable Items="@_loans" Dense="true" Hover="true" Bordered="true" Striped="false" 
-                  Filter="new Func<LoanRecord,bool>(FilterLoanRecord)" @bind-SelectedItem="_selectedLoan"
-                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <ToolBarContent>
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <div class="d-flex align-center">
                 <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Color="Color.Primary" Size="Size.Small" Class="mr-2" />
                 <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Loan Records</MudText>
                 <MudChip T="string" Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled" Class="ml-4">@_loans.Count loans</MudChip>
-                <MudSpacer />
-                <MudTextField @bind-Value="_searchLoan" Placeholder="Search loans..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 280px;"></MudTextField>
-            </ToolBarContent>
+            </div>
+            <MudTextField @bind-Value="_searchLoan" Placeholder="Search loans..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+        </div>
+        <MudTable Items="@_loans" Dense="true" Hover="true" Bordered="true" Striped="false" 
+                  Filter="new Func<LoanRecord,bool>(FilterLoanRecord)" @bind-SelectedItem="_selectedLoan"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
             <HeaderContent>
                 <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Loan No.</MudTh>
                 <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Loan Type</MudTh>
@@ -188,16 +188,17 @@
     <!-- Payment History -->
     <MudItem xs="12" md="8">
         <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
-            <MudTable Items="@_paymentHistory" Dense="true" Hover="true" Bordered="true" Striped="false"
-                      Filter="new Func<PaymentRecord,bool>(FilterPaymentRecord)"
-                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-                <ToolBarContent>
+            <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+                <div class="d-flex align-center">
                     <MudIcon Icon="@Icons.Material.Filled.Receipt" Color="Color.Success" Size="Size.Small" Class="mr-2" />
                     <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Payment History</MudText>
                     <MudText Typo="Typo.caption" Class="ml-4" Style="color: var(--mud-palette-text-secondary);">Loan No. @_selectedLoan.LoanNo</MudText>
-                    <MudSpacer />
-                    <MudTextField @bind-Value="_searchPayment" Placeholder="Search payments..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 250px;"></MudTextField>
-                </ToolBarContent>
+                </div>
+                <MudTextField @bind-Value="_searchPayment" Placeholder="Search payments..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+            </div>
+            <MudTable Items="@_paymentHistory" Dense="true" Hover="true" Bordered="true" Striped="false"
+                      Filter="new Func<PaymentRecord,bool>(FilterPaymentRecord)"
+                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
                 <HeaderContent>
                     <MudTh Style="font-size: 0.8125rem; text-align: center; vertical-align: middle;">#</MudTh>
                     <MudTh Style="font-size: 0.8125rem; vertical-align: middle;">Payroll No.</MudTh>
