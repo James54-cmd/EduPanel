@@ -1,0 +1,180 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Tabs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex align-center gap-4">
+            <MudText Typo="Typo.body1" Class="font-weight-medium">Year</MudText>
+            <MudTextField @bind-Value="_selectedYear" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 150px; margin-top: 0; background-color: white;" />
+        </div>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Text" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
+    </MudPaper>
+</MudItem>
+
+<!-- Main Table -->
+<MudItem xs="12" Class="mb-6">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row align-start w-100 mb-4">
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
+        <MudTable Items="@_balances" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<BenefitBalanceModel,bool>(FilterFunc)" OnRowClick="RowClicked" T="BenefitBalanceModel"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Employee No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Employee Name</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Benefit Type</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Earned</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Used</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Balance</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Details</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Employee No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.EmployeeNo</MudTd>
+                <MudTd DataLabel="Employee Name" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.EmployeeName</MudTd>
+                <MudTd DataLabel="Benefit Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.BenefitType</MudTd>
+                <MudTd DataLabel="Earned" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@context.Earned</MudTd>
+                <MudTd DataLabel="Used" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@context.Used</MudTd>
+                <MudTd DataLabel="Balance" Class="font-weight-bold" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@context.Balance</MudTd>
+                <MudTd DataLabel="Details" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Search" Size="Size.Small" Color="Color.Primary" />
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+<!-- Details Section (Visible only when a row is selected) -->
+@if (_selectedBalance != null)
+{
+    <MudItem xs="12">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl bg-mud-palette-background-grey">
+            <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Name: <span class="mud-text-secondary font-weight-regular ml-2">@_selectedBalance.EmployeeName</span></MudText>
+            <MudText Typo="Typo.body2" Class="mb-6">For the year @_selectedYear</MudText>
+
+            <!-- Earned Table -->
+            <div class="mb-8">
+                <div class="d-flex justify-space-between align-center mb-3">
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Benefit Earned, Credits & Adjustments</MudText>
+                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2">Export</MudLink>
+                </div>
+                <MudTable Items="@_selectedBalance.EarnedDetails" Dense="true" Hover="true" Bordered="true" Striped="false"
+                          Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                    <HeaderContent>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Acquired Date</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Benefit Type</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Amount</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="earnedContext">
+                        <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@earnedContext.TransactionNo</MudTd>
+                        <MudTd DataLabel="Acquired Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@earnedContext.AcquiredDate</MudTd>
+                        <MudTd DataLabel="Benefit Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@earnedContext.BenefitType</MudTd>
+                        <MudTd DataLabel="Amount" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@earnedContext.Amount</MudTd>
+                        <MudTd DataLabel="Remarks" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@earnedContext.Remarks</MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                            No data to display
+                        </MudText>
+                    </NoRecordsContent>
+                </MudTable>
+            </div>
+
+            <!-- Used Table -->
+            <div>
+                <div class="d-flex justify-space-between align-center mb-3">
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Benefit Used</MudText>
+                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2">Export</MudLink>
+                </div>
+                <MudTable Items="@_selectedBalance.UsedDetails" Dense="true" Hover="true" Bordered="true" Striped="false"
+                          Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                    <HeaderContent>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Filed</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Benefit Type</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Amount</MudTh>
+                        <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="usedContext">
+                        <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@usedContext.TransactionNo</MudTd>
+                        <MudTd DataLabel="Date Filed" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@usedContext.DateFiled</MudTd>
+                        <MudTd DataLabel="Benefit Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@usedContext.BenefitType</MudTd>
+                        <MudTd DataLabel="Amount" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@usedContext.Amount</MudTd>
+                        <MudTd DataLabel="Remarks" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@usedContext.Remarks</MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                            No data to display
+                        </MudText>
+                    </NoRecordsContent>
+                </MudTable>
+            </div>
+        </MudPaper>
+    </MudItem>
+}
+
+@code {
+    private string _searchString = "";
+    private string _selectedYear = "2026";
+    private BenefitBalanceModel? _selectedBalance;
+
+    private List<BenefitBalanceModel> _balances = new()
+    {
+        // Example dummy data just so the grid isn't totally empty if a user types something, but screenshot shows "No data"
+        // Let's keep it empty to match the exact state in the screenshot if preferred, or supply dummy data for testing the click interaction.
+        new()
+        {
+            EmployeeNo = "EMP-1001",
+            EmployeeName = "John Doe",
+            BenefitType = "Rice Subsidy",
+            Earned = "10000.00",
+            Used = "5000.00",
+            Balance = "5000.00",
+            EarnedDetails = new()
+            {
+                new() { TransactionNo = "TRN-901", AcquiredDate = "01/01/2026", BenefitType = "Rice Subsidy", Amount = "10000.00", Remarks = "Annual Grant" }
+            },
+            UsedDetails = new()
+            {
+                new() { TransactionNo = "TRN-405", DateFiled = "03/15/2026", BenefitType = "Rice Subsidy", Amount = "5000.00", Remarks = "Q1 Claim" }
+            }
+        }
+    };
+
+    private void RowClicked(TableRowClickEventArgs<BenefitBalanceModel> args)
+    {
+        _selectedBalance = args.Item;
+        StateHasChanged();
+    }
+
+    private bool FilterFunc(BenefitBalanceModel bal)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (bal.EmployeeName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (bal.EmployeeNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (bal.BenefitType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}
