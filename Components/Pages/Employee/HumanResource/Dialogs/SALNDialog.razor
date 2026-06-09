@@ -1,5 +1,9 @@
 @namespace EduPanel.Components.Pages.Employee.HumanResource.Dialogs
 @using EduPanel.Components.Pages.Employee.HumanResource.Models
+@using MudBlazor.Services
+@implements IAsyncDisposable
+@implements IBrowserViewportObserver
+@inject IBrowserViewportService BrowserViewportService
 @inject ISnackbar Snackbar
 
 <style>
@@ -7,7 +11,7 @@
         overflow: hidden !important;
         padding-bottom: 0 !important;
     }
-    .saln-dialog .mud-tabs .mud-tab {
+    .saln-dialog .mud-tabs-vertical .mud-tab {
         justify-content: flex-end !important;
         text-align: right !important;
     }
@@ -22,7 +26,7 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_form" Class="pa-2 h-100">
-            <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-2 w-100" Style="height: calc(100vh - 180px);" TabPanelsClass="pa-6 w-100 overflow-y-auto">
+            <MudTabs Outlined="true" Position="@_tabPosition" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-2 w-100" Style="height: calc(100vh - 180px);" TabPanelsClass="pa-6 w-100 overflow-y-auto">
                 <MudTabPanel Text="SALN Summary">
                     <div class="d-flex flex-column gap-6 pb-4">
                         
@@ -198,9 +202,25 @@
     [Parameter] public string DialogDescription { get; set; } = "Fill out your SALN declaration form.";
     [Parameter] public SALNModel Request { get; set; } = new();
 
-    private MudForm _form = default!;
+    private MudForm? _form;
     private DateTime? _dateAccomplished;
     private DateTime? _issuedOn;
+
+    private Position _tabPosition = Position.Left;
+
+    public Guid Id { get; } = Guid.NewGuid();
+    public ResizeOptions ResizeOptions { get; } = new();
+
+    public async Task NotifyBrowserViewportChangeAsync(BrowserViewportEventArgs browserViewportEventArgs)
+    {
+        var isMobile = browserViewportEventArgs.Breakpoint <= Breakpoint.Sm;
+        var newPos = isMobile ? Position.Top : Position.Left;
+        if (_tabPosition != newPos)
+        {
+            _tabPosition = newPos;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
 
     protected override void OnInitialized()
     {
@@ -210,11 +230,19 @@
         if (string.IsNullOrEmpty(Request.Position)) Request.Position = "-- Select --";
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await BrowserViewportService.SubscribeAsync(this, fireImmediately: true);
+        }
+    }
+
     private void Cancel() => MudDialog.Cancel();
 
     private async Task Submit()
     {
-        await _form.ValidateAsync();
+        await _form!.Validate();
         if (!_form.IsValid || Request.Position == "-- Select --")
         {
             Snackbar.Add("Please fill in all required fields.", Severity.Warning);
@@ -224,6 +252,12 @@
         if (_dateAccomplished.HasValue) Request.DateAccomplished = _dateAccomplished.Value.ToString("MM/dd/yyyy");
         if (_issuedOn.HasValue) Request.IssuedOn = _issuedOn.Value.ToString("MM/dd/yyyy");
 
+        Snackbar.Add("SALN successfully filed.", Severity.Success);
         MudDialog.Close(DialogResult.Ok(Request));
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await BrowserViewportService.UnsubscribeAsync(this);
     }
 }
