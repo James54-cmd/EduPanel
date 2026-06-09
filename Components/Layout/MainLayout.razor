@@ -87,12 +87,12 @@
     {
         var wasMobile = _isMobileOrTablet;
 
-        _isMobileOrTablet = breakpoint <= Breakpoint.Sm;
+        _isMobileOrTablet = breakpoint <= Breakpoint.Md;
 
         if (_isMobileOrTablet && !wasMobile)
-            _drawerOpen = false;   // shrunk to mobile → close drawer
+            _drawerOpen = false;
         else if (!_isMobileOrTablet && wasMobile)
-            _drawerOpen = true;    // expanded to desktop → open drawer
+            _drawerOpen = true;
 
         await InvokeAsync(StateHasChanged);
     }
