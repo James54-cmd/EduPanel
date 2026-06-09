@@ -4,12 +4,12 @@
 <MudNavMenu Margin="Margin.Dense" Bordered="true">
     @if (IsEmployeeView)
     {
-        <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" @bind-Expanded="_profileExpanded" HideExpandIcon="false" Class="@ProfileGroupClass">
+        <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Profile")" ExpandedChanged="@((e) => _expandedGroup = e ? "Profile" : "")" HideExpandIcon="false" Class="@ProfileGroupClass">
             <MudNavLink Href="/employee/profile" Match="NavLinkMatch.All">Employee Profile</MudNavLink>
             <MudNavLink Href="/employee/personal-data-update" Match="NavLinkMatch.All">Personal Data Update</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Attendance" Icon="@Icons.Material.Filled.AccessTime" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" @bind-Expanded="_attendanceExpanded" HideExpandIcon="false" Class="@AttendanceGroupClass">
+        <MudNavGroup Title="Attendance" Icon="@Icons.Material.Filled.AccessTime" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Attendance")" ExpandedChanged="@((e) => _expandedGroup = e ? "Attendance" : "")" HideExpandIcon="false" Class="@AttendanceGroupClass">
             <MudNavLink Href="/employee/attendance/inquiry" Match="NavLinkMatch.All">Attendance Inquiry</MudNavLink>
             <MudNavLink Href="/employee/attendance/schedule-calendar" Match="NavLinkMatch.All">My Schedule Calendar</MudNavLink>
             <MudNavLink Href="/employee/attendance/change-shift" Match="NavLinkMatch.All">Change Shift</MudNavLink>
@@ -22,7 +22,7 @@
             <MudNavLink Href="/employee/attendance/dtr" Match="NavLinkMatch.All">DTR</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Payroll" Icon="@Icons.Material.Filled.AttachMoney" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" @bind-Expanded="_payrollExpanded" HideExpandIcon="false" Class="@PayrollGroupClass">
+        <MudNavGroup Title="Payroll" Icon="@Icons.Material.Filled.AttachMoney" IconSize="Size.Small" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Payroll")" ExpandedChanged="@((e) => _expandedGroup = e ? "Payroll" : "")" HideExpandIcon="false" Class="@PayrollGroupClass">
             <MudNavLink Href="/employee/payroll/payroll-inquiry" Match="NavLinkMatch.All">Payroll Inquiry</MudNavLink>
             <MudNavLink Href="/employee/payroll/loan-inquiry" Match="NavLinkMatch.All">Loan Inquiry</MudNavLink>
             <MudNavLink Href="/employee/payroll/contribution-inquiry" Match="NavLinkMatch.All">Contribution Inquiry</MudNavLink>
@@ -39,10 +39,8 @@
 </MudNavMenu>
 
 @code {
-    // Expanded state for sidebar groups (driven by URL, user can still toggle)
-    private bool _profileExpanded;
-    private bool _attendanceExpanded;
-    private bool _payrollExpanded;
+    // Single state variable for the currently expanded group
+    private string _expandedGroup = "";
 
     private bool IsEmployeeView => NavManager.Uri.Contains("/employee", StringComparison.OrdinalIgnoreCase);
 
@@ -74,9 +72,9 @@
     /// </summary>
     private void SyncExpandedState()
     {
-        _profileExpanded = IsProfileActive;
-        _attendanceExpanded = IsAttendanceActive;
-        _payrollExpanded = IsPayrollActive;
+        if (IsProfileActive) _expandedGroup = "Profile";
+        else if (IsAttendanceActive) _expandedGroup = "Attendance";
+        else if (IsPayrollActive) _expandedGroup = "Payroll";
     }
 
     public void Dispose()
