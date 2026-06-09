@@ -1,90 +1,201 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@using EduPanel.Components.Pages.Employee.Attendance.Dialogs
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
-<MudItem xs="12" md="5">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">New Request</MudText>
-        <MudForm>
-            <MudDatePicker Label="Original Day Off" @bind-Date="_originalDayOff" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
-            <MudDatePicker Label="Proposed New Day Off" @bind-Date="_proposedDayOff" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
-            <MudTextField T="string" Label="Reason" @bind-Value="_dayOffReason" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitDayOffChange">Submit Request</MudButton>
-        </MudForm>
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex align-center justify-space-between">
+        <MudText Typo="Typo.h6" Class="font-weight-bold">Day Off Change Requests</MudText>
+        <div class="d-flex gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
     </MudPaper>
 </MudItem>
-<MudItem xs="12" md="7">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Request History</MudText>
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Date Requested</th>
-                    <th>Original Day Off</th>
-                    <th>Proposed Day Off</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var req in DayOffRequests)
-                {
-                    <tr>
-                        <td>@req.DateRequested.ToString("MM/dd/yyyy")</td>
-                        <td>@req.OriginalDayOff.ToString("MM/dd/yyyy")</td>
-                        <td>@req.ProposedDayOff.ToString("MM/dd/yyyy")</td>
-                        <td>
-                            <MudChip T="string" Color="@GetRequestStatusColor(req.Status)" Size="Size.Small" Variant="Variant.Filled">@req.Status</MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+
+<!-- Request History Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<ChangeDayOffModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true">
+            <ToolBarContent>
+                <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="max-width: 200px;" Class="mr-4">
+                    <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                    <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                    <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                    <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
+                </MudSelect>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 280px;"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">From</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">To</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Day Off 1</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Day Off 2</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Day Off 3</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approval<br/>Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date<br/>Applied</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" Disabled="@(context.ApprovalStatus != "For Approval")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="From" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DateFrom</MudTd>
+                <MudTd DataLabel="To" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DateTo</MudTd>
+                <MudTd DataLabel="Day Off 1" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DayOff1</MudTd>
+                <MudTd DataLabel="Day Off 2" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DayOff2</MudTd>
+                <MudTd DataLabel="Day Off 3" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DayOff3</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Reason</MudTd>
+                <MudTd DataLabel="Approval Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Approved By" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedBy</MudTd>
+                <MudTd DataLabel="Approved Date" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDate</MudTd>
+                <MudTd DataLabel="Date Applied" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DateApplied</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
-    private DateTime? _originalDayOff = DateTime.Today;
-    private DateTime? _proposedDayOff = DateTime.Today.AddDays(1);
-    private string _dayOffReason = "";
+    private string _searchString = "";
+    private string _statusFilter = "All";
+    private HashSet<ChangeDayOffModel> _selectedRequests = new();
 
-    private Color GetRequestStatusColor(string status) => status switch
+    private List<ChangeDayOffModel> _requests = new()
+    {
+        new()
+        {
+            TransactionNo = "TRN-00120",
+            DateFrom = "06/15/2026",
+            DateTo = "06/21/2026",
+            DayOff1 = "Monday",
+            DayOff2 = "Tuesday",
+            DayOff3 = "",
+            Reason = "Need Monday off for family gathering.",
+            ApprovalStatus = "For Approval",
+            DateApplied = "06/08/2026"
+        },
+        new()
+        {
+            TransactionNo = "TRN-00095",
+            DateFrom = "05/04/2026",
+            DateTo = "05/10/2026",
+            DayOff1 = "Friday",
+            DayOff2 = "",
+            DayOff3 = "",
+            Reason = "Friday off requested.",
+            ApprovalStatus = "Approved",
+            ApprovedBy = "M. Manager",
+            ApprovedDate = "05/03/2026",
+            DateApplied = "05/01/2026"
+        }
+    };
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<ChangeDayOffDialog>
+        {
+            { x => x.DialogTitle, "New Day Off Request" },
+            { x => x.DialogDescription, "Submit a new day off change request for approval." },
+            { x => x.Request, new ChangeDayOffModel { TransactionNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<ChangeDayOffDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (ChangeDayOffModel)result.Data!;
+            req.TransactionNo = $"TRN-{new Random().Next(1000, 9999)}";
+            req.DateApplied = DateTime.Now.ToString("MM/dd/yyyy");
+            _requests.Insert(0, req);
+            Snackbar.Add("Request created successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(ChangeDayOffModel req)
+    {
+        var clonedReq = new ChangeDayOffModel
+        {
+            TransactionNo = req.TransactionNo,
+            DateFrom = req.DateFrom,
+            DateTo = req.DateTo,
+            DayOff1 = req.DayOff1,
+            DayOff2 = req.DayOff2,
+            DayOff3 = req.DayOff3,
+            Reason = req.Reason,
+            ApprovalStatus = req.ApprovalStatus,
+            ApprovedBy = req.ApprovedBy,
+            ApprovedDate = req.ApprovedDate,
+            DateApplied = req.DateApplied
+        };
+
+        var parameters = new DialogParameters<ChangeDayOffDialog>
+        {
+            { x => x.DialogTitle, "Edit Day Off Request" },
+            { x => x.DialogDescription, "Make changes to your day off schedule here. Click save when you're done." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<ChangeDayOffDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (ChangeDayOffModel)result.Data!;
+            var index = _requests.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            if (index != -1)
+            {
+                _requests[index] = updatedReq;
+                Snackbar.Add("Request updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(ChangeDayOffModel req)
+    {
+        if (_statusFilter != "All" && req.ApprovalStatus != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
     {
         "Approved" => Color.Success,
-        "Pending" => Color.Warning,
-        "Rejected" => Color.Error,
-        "Cancelled" => Color.Default,
+        "For Approval" => Color.Warning,
+        "Disapproved" => Color.Error,
         _ => Color.Default
     };
-
-    private class DayOffRequest
-    {
-        public DateTime DateRequested { get; set; }
-        public DateTime OriginalDayOff { get; set; }
-        public DateTime ProposedDayOff { get; set; }
-        public string Status { get; set; } = "";
-    }
-
-    private List<DayOffRequest> DayOffRequests = new()
-    {
-        new() { DateRequested = DateTime.Today.AddDays(-5), OriginalDayOff = DateTime.Today.AddDays(6), ProposedDayOff = DateTime.Today.AddDays(7), Status = "Approved" }
-    };
-
-    private void SubmitDayOffChange()
-    {
-        if (_originalDayOff == null || _proposedDayOff == null || string.IsNullOrWhiteSpace(_dayOffReason))
-        {
-            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
-            return;
-        }
-
-        DayOffRequests.Insert(0, new()
-        {
-            DateRequested = DateTime.Today,
-            OriginalDayOff = _originalDayOff.Value,
-            ProposedDayOff = _proposedDayOff.Value,
-            Status = "Pending"
-        });
-
-        _dayOffReason = "";
-        Snackbar.Add("Day off swap request submitted successfully!", Severity.Success);
-    }
 }
