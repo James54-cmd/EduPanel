@@ -1,0 +1,96 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <div class="px-2 pt-2">
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" Class="pa-2">
+            <div class="d-flex flex-column gap-4 mt-2 px-4 pb-4">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Transaction No.</MudText>
+                    <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Program Name <span class="text-error">*</span></MudText>
+                    <MudTextField T="string" @bind-Value="Request.ProgramName" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+
+                <div class="d-flex flex-column flex-sm-row gap-4">
+                    <MudItem xs="12" sm="6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Start Date <span class="text-error">*</span></MudText>
+                        <MudTextField T="DateTime?" @bind-Value="_startDate" Format="MM/dd/yyyy" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">End Date <span class="text-error">*</span></MudText>
+                        <MudTextField T="DateTime?" @bind-Value="_endDate" Format="MM/dd/yyyy" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+                </div>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Hour(s) <span class="text-error">*</span></MudText>
+                    <MudTextField T="string" @bind-Value="Request.Hours" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Evaluation Form</MudText>
+                    <MudFileUpload T="IBrowserFile" Accept=".pdf,.jpg,.png">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Upload Form
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudItem>
+            </div>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-end">
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string DialogTitle { get; set; } = "ER Activity";
+    [Parameter] public string DialogDescription { get; set; } = "Fill out the details below for the ER activity.";
+    [Parameter] public ERActivitiesModel Request { get; set; } = new();
+
+    private MudForm _form = default!;
+    private DateTime? _startDate;
+    private DateTime? _endDate;
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.TryParse(Request.StartDate, out var sd)) _startDate = sd;
+        if (DateTime.TryParse(Request.EndDate, out var ed)) _endDate = ed;
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        await _form.ValidateAsync();
+        if (!_form.IsValid)
+        {
+            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
+            return;
+        }
+
+        if (_startDate.HasValue) Request.StartDate = _startDate.Value.ToString("MM/dd/yyyy");
+        if (_endDate.HasValue) Request.EndDate = _endDate.Value.ToString("MM/dd/yyyy");
+
+        MudDialog.Close(DialogResult.Ok(Request));
+    }
+}

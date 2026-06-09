@@ -1,0 +1,163 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Tabs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@using EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-end gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+        </div>
+    </MudPaper>
+</MudItem>
+
+<!-- Main Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 100%; max-width: 250px;">
+                <MudSelectItem Value="@("ALL")">ALL</MudSelectItem>
+                <MudSelectItem Value="@("Upcoming")">Upcoming</MudSelectItem>
+                <MudSelectItem Value="@("Completed")">Completed</MudSelectItem>
+                <MudSelectItem Value="@("Cancelled")">Cancelled</MudSelectItem>
+            </MudSelect>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
+        <MudTable Items="@_activities" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<ERActivitiesModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedActivities"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Program Name</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Start Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">End Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Hour(s)</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Evaluation Form</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" Disabled="@(context.Status != "Upcoming")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Program Name" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.ProgramName</MudTd>
+                <MudTd DataLabel="Start Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.StartDate</MudTd>
+                <MudTd DataLabel="End Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.EndDate</MudTd>
+                <MudTd DataLabel="Hour(s)" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Hours</MudTd>
+                <MudTd DataLabel="Evaluation Form" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">
+                    @if (!string.IsNullOrEmpty(context.EvaluationForm))
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.AttachFile" Size="Size.Small" Color="Color.Primary" />
+                    }
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private string _searchString = "";
+    private string _statusFilter = "Upcoming";
+    private HashSet<ERActivitiesModel> _selectedActivities = new();
+
+    private List<ERActivitiesModel> _activities = new()
+    {
+        new()
+        {
+            TransactionNo = "ERA-0010",
+            ProgramName = "Annual Team Building",
+            StartDate = "07/15/2026",
+            EndDate = "07/16/2026",
+            Hours = "16",
+            EvaluationForm = "",
+            Status = "Upcoming"
+        }
+    };
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<ERActivitiesDialog>
+        {
+            { x => x.DialogTitle, "ER Activity" },
+            { x => x.DialogDescription, "Fill out the details below to add an ER activity." },
+            { x => x.Request, new ERActivitiesModel { TransactionNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<ERActivitiesDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (ERActivitiesModel)result.Data!;
+            req.TransactionNo = $"ERA-{new Random().Next(1000, 9999)}";
+            req.Status = "Upcoming";
+            _activities.Insert(0, req);
+            Snackbar.Add("ER Activity created successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(ERActivitiesModel req)
+    {
+        var clonedReq = new ERActivitiesModel
+        {
+            TransactionNo = req.TransactionNo,
+            ProgramName = req.ProgramName,
+            StartDate = req.StartDate,
+            EndDate = req.EndDate,
+            Hours = req.Hours,
+            EvaluationForm = req.EvaluationForm,
+            Status = req.Status
+        };
+
+        var parameters = new DialogParameters<ERActivitiesDialog>
+        {
+            { x => x.DialogTitle, "Edit ER Activity" },
+            { x => x.DialogDescription, "Make changes to your ER activity." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<ERActivitiesDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (ERActivitiesModel)result.Data!;
+            var index = _activities.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            if (index != -1)
+            {
+                _activities[index] = updatedReq;
+                Snackbar.Add("ER Activity updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(ERActivitiesModel req)
+    {
+        if (_statusFilter != "ALL" && req.Status != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.ProgramName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}
