@@ -28,10 +28,10 @@
 
     private Type CurrentTabType => PageSlug.ToLowerInvariant() switch
     {
-        "payslip" => typeof(PayslipTab),
-        "loans" => typeof(LoanTab),
-        "tax" => typeof(TaxTab),
-        _ => typeof(PayslipTab)
+        "payroll-inquiry" => typeof(PayrollInquiryTab),
+        "loan-inquiry" => typeof(LoanInquiryTab),
+        "contribution-inquiry" => typeof(ContributionInquiryTab),
+        _ => typeof(PayrollInquiryTab)
     };
 
     private class PageDetails
@@ -43,9 +43,9 @@
 
     private PageDetails Details => PageSlug.ToLowerInvariant() switch
     {
-        "payslip" => new() { Title = "My Payslips", Description = "View and download your electronic payslips.", Icon = Icons.Material.Filled.Receipt },
-        "loans" => new() { Title = "Loan Management", Description = "Manage your loan applications and view current deductions.", Icon = Icons.Material.Filled.AccountBalance },
-        "tax" => new() { Title = "Tax & Statutory", Description = "View your tax contributions and other statutory deductions.", Icon = Icons.Material.Filled.AccountBalanceWallet },
+        "payroll-inquiry" => new() { Title = "Payroll Inquiry", Description = "View and manage your payroll details.", Icon = Icons.Material.Filled.Receipt },
+        "loan-inquiry" => new() { Title = "Loan Inquiry", Description = "Manage your loan inquiries and deductions.", Icon = Icons.Material.Filled.AccountBalance },
+        "contribution-inquiry" => new() { Title = "Contribution Inquiry", Description = "View your contribution inquiries.", Icon = Icons.Material.Filled.AccountBalanceWallet },
         _ => new() { Title = "Payroll Portal", Description = "Manage your payroll and compensation details.", Icon = Icons.Material.Filled.AttachMoney }
     };
 }

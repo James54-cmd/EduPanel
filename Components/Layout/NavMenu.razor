@@ -84,9 +84,9 @@
                         <MudText Typo="Typo.overline" Class="px-4 pb-1" Style="color: var(--mud-palette-text-secondary);">Payroll</MudText>
                         <MudDivider Class="mb-1" />
                         <MudNavMenu Margin="Margin.Dense">
-                            <MudNavLink Href="/employee/payroll/payslip" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">My Payslips</MudNavLink>
-                            <MudNavLink Href="/employee/payroll/loans" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Loan Management</MudNavLink>
-                            <MudNavLink Href="/employee/payroll/tax" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Tax & Statutory</MudNavLink>
+                            <MudNavLink Href="/employee/payroll/payroll-inquiry" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Payroll Inquiry</MudNavLink>
+                            <MudNavLink Href="/employee/payroll/loan-inquiry" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Loan Inquiry</MudNavLink>
+                            <MudNavLink Href="/employee/payroll/contribution-inquiry" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Contribution Inquiry</MudNavLink>
                         </MudNavMenu>
                     </MudPaper>
                 </MudPopover>
@@ -114,9 +114,9 @@
             </MudNavGroup>
 
             <MudNavGroup Title="Payroll" Icon="@Icons.Material.Filled.AttachMoney" @bind-Expanded="_payrollExpanded" HideExpandIcon="false" Class="@PayrollGroupClass">
-                <MudNavLink Href="/employee/payroll/payslip" Match="NavLinkMatch.All">My Payslips</MudNavLink>
-                <MudNavLink Href="/employee/payroll/loans" Match="NavLinkMatch.All">Loan Management</MudNavLink>
-                <MudNavLink Href="/employee/payroll/tax" Match="NavLinkMatch.All">Tax & Statutory</MudNavLink>
+                <MudNavLink Href="/employee/payroll/payroll-inquiry" Match="NavLinkMatch.All">Payroll Inquiry</MudNavLink>
+                <MudNavLink Href="/employee/payroll/loan-inquiry" Match="NavLinkMatch.All">Loan Inquiry</MudNavLink>
+                <MudNavLink Href="/employee/payroll/contribution-inquiry" Match="NavLinkMatch.All">Contribution Inquiry</MudNavLink>
             </MudNavGroup>
         }
     }
