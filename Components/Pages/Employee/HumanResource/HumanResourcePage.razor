@@ -1,0 +1,53 @@
+@page "/employee/human-resource/{PageSlug}"
+@namespace EduPanel.Components.Pages.Employee.HumanResource
+@using EduPanel.Components.Pages.Employee.HumanResource.Tabs
+
+<div class="pa-4">
+    <!-- Header Section -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl mb-6 header-card">
+        <div class="d-flex align-center gap-4">
+            <div class="icon-wrapper">
+                <MudIcon Icon="@Details.Icon" Size="Size.Large" Color="Color.Primary" />
+            </div>
+            <div>
+                <MudText Typo="Typo.h4" Class="font-weight-bold mb-1" Style="letter-spacing: -0.5px;">@Details.Title</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">@Details.Description</MudText>
+            </div>
+        </div>
+    </MudPaper>
+
+    <MudGrid>
+        <DynamicComponent Type="@CurrentTabType" />
+    </MudGrid>
+</div>
+
+@code {
+    [Parameter]
+    public string PageSlug { get; set; } = "";
+
+    private Type CurrentTabType => typeof(UnderDevelopmentTab);
+
+    private class PageDetails
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Icon { get; set; } = "";
+    }
+
+    private PageDetails Details => PageSlug.ToLowerInvariant() switch
+    {
+        "benefit-balance" => new() { Title = "Benefit Balance", Description = "View your remaining benefit balances.", Icon = Icons.Material.Filled.AccountBalanceWallet },
+        "benefit-enrollment" => new() { Title = "Benefit Enrollment", Description = "Enroll in company benefits.", Icon = Icons.Material.Filled.HowToReg },
+        "benefit-application" => new() { Title = "Benefit Application", Description = "Apply for benefits.", Icon = Icons.Material.Filled.AssignmentTurnedIn },
+        "employee-request" => new() { Title = "Employee Request", Description = "Submit requests to HR.", Icon = Icons.Material.Filled.RequestPage },
+        "er-activities" => new() { Title = "ER Activities", Description = "Employee relations activities.", Icon = Icons.Material.Filled.Event },
+        "saln-form" => new() { Title = "SALN Form", Description = "Statement of Assets, Liabilities, and Net Worth.", Icon = Icons.Material.Filled.Description },
+        "clearance" => new() { Title = "Clearance", Description = "Employee clearance process.", Icon = Icons.Material.Filled.CheckCircleOutline },
+        "employee-evaluation" => new() { Title = "Employee Evaluation", Description = "Performance evaluations.", Icon = Icons.Material.Filled.Assessment },
+        "career-opportunities" => new() { Title = "Career Opportunities", Description = "Internal job postings.", Icon = Icons.Material.Filled.WorkOutline },
+        "incident-reporting" => new() { Title = "Incident Reporting", Description = "Report workplace incidents.", Icon = Icons.Material.Filled.ReportProblem },
+        "notice-to-explain" => new() { Title = "Notice to Explain", Description = "NTE forms and responses.", Icon = Icons.Material.Filled.WarningAmber },
+        "my-applications" => new() { Title = "My Application/s", Description = "Track your internal applications.", Icon = Icons.Material.Filled.FolderShared },
+        _ => new() { Title = "Human Resource", Description = "Manage your HR tasks and documents.", Icon = Icons.Material.Filled.PeopleOutline }
+    };
+}

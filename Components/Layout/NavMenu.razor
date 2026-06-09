@@ -27,6 +27,21 @@
             <MudNavLink Href="/employee/payroll/loan-inquiry" Match="NavLinkMatch.All">Loan Inquiry</MudNavLink>
             <MudNavLink Href="/employee/payroll/contribution-inquiry" Match="NavLinkMatch.All">Contribution Inquiry</MudNavLink>
         </MudNavGroup>
+        
+        <MudNavGroup Title="Human Resource" Icon="@Icons.Material.Filled.People" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "HumanResource")" ExpandedChanged="@((e) => _expandedGroup = e ? "HumanResource" : "")" HideExpandIcon="false" Class="@HumanResourceGroupClass">
+            <MudNavLink Href="/employee/human-resource/benefit-balance" Match="NavLinkMatch.All">Benefit Balance</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/benefit-enrollment" Match="NavLinkMatch.All">Benefit Enrollment</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/benefit-application" Match="NavLinkMatch.All">Benefit Application</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/employee-request" Match="NavLinkMatch.All">Employee Request</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/er-activities" Match="NavLinkMatch.All">ER Activities</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/saln-form" Match="NavLinkMatch.All">SALN Form</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/clearance" Match="NavLinkMatch.All">Clearance</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/employee-evaluation" Match="NavLinkMatch.All">Employee Evaluation</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/career-opportunities" Match="NavLinkMatch.All">Career Opportunities</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/incident-reporting" Match="NavLinkMatch.All">Incident Reporting</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/notice-to-explain" Match="NavLinkMatch.All">Notice to Explain</MudNavLink>
+            <MudNavLink Href="/employee/human-resource/my-applications" Match="NavLinkMatch.All">My Application/s</MudNavLink>
+        </MudNavGroup>
     }
     else
     {
@@ -49,10 +64,13 @@
 
     private bool IsAttendanceActive => NavManager.Uri.Contains("/employee/attendance", StringComparison.OrdinalIgnoreCase);
 
+    private bool IsHumanResourceActive => NavManager.Uri.Contains("/employee/human-resource", StringComparison.OrdinalIgnoreCase);
+
     private bool IsPayrollActive => NavManager.Uri.Contains("/employee/payroll", StringComparison.OrdinalIgnoreCase);
 
     private string ProfileGroupClass => IsProfileActive ? "nav-group-active" : "";
     private string AttendanceGroupClass => IsAttendanceActive ? "nav-group-active" : "";
+    private string HumanResourceGroupClass => IsHumanResourceActive ? "nav-group-active" : "";
     private string PayrollGroupClass => IsPayrollActive ? "nav-group-active" : "";
 
     protected override void OnInitialized()
@@ -74,6 +92,7 @@
     {
         if (IsProfileActive) _expandedGroup = "Profile";
         else if (IsAttendanceActive) _expandedGroup = "Attendance";
+        else if (IsHumanResourceActive) _expandedGroup = "HumanResource";
         else if (IsPayrollActive) _expandedGroup = "Payroll";
     }
 
