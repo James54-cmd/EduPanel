@@ -10,6 +10,9 @@
             <MudButton Variant="Variant.Filled" Color="Color.Success" Class="px-6 font-weight-bold">IN</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Error" Class="px-6 font-weight-bold">OUT</MudButton>
         </div>
+        <div class="d-flex align-center">
+            <MudDateRangePicker @bind-DateRange="_dateRange" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: auto; background-color: white;" />
+        </div>
     </MudPaper>
 </MudItem>
 
@@ -55,7 +58,7 @@
 
 @code {
     private string _searchString = "";
-    private string _keyword = "";
+    private DateRange _dateRange = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today);
 
     private List<DTRModel> _logs = new()
     {
