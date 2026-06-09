@@ -1,96 +1,201 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
+@using EduPanel.Components.Pages.Employee.Attendance.Models
+@using EduPanel.Components.Pages.Employee.Attendance.Dialogs
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
-<MudItem xs="12" md="5">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">File Overtime (OT)</MudText>
-        <MudForm>
-            <MudDatePicker Label="OT Date" @bind-Date="_otDate" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Class="mb-3" />
-            <div class="d-flex gap-2 mb-3">
-                <MudTimePicker Label="Start Time" @bind-Time="_otStart" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 50%;" />
-                <MudTimePicker Label="End Time" @bind-Time="_otEnd" Required="true" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 50%;" />
-            </div>
-            <MudTextField T="string" Label="OT Purpose / Project Name" @bind-Value="_otPurpose" Required="true" Lines="3" Variant="Variant.Outlined" Class="mb-4" />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="SubmitOvertimeRequest">Submit Application</MudButton>
-        </MudForm>
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <MudText Typo="Typo.h6" Class="font-weight-bold text-center text-md-left">Overtime Application</MudText>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+        </div>
     </MudPaper>
 </MudItem>
-<MudItem xs="12" md="7">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl h-100">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Overtime History</MudText>
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>OT Date</th>
-                    <th>Time Range</th>
-                    <th>Hours</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var ot in OvertimeRequests)
-                {
-                    <tr>
-                        <td>@ot.Date.ToString("MM/dd/yyyy")</td>
-                        <td>@ot.Start.ToString(@"hh\:mm") - @ot.End.ToString(@"hh\:mm")</td>
-                        <td>@ot.Hours.ToString("0.0") hrs</td>
-                        <td>
-                            <MudChip T="string" Color="@GetRequestStatusColor(ot.Status)" Size="Size.Small" Variant="Variant.Filled">@ot.Status</MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+
+<!-- Request History Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 100%; max-width: 250px;">
+                <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
+                <MudSelectItem Value="@("For Approval")">For Approval</MudSelectItem>
+                <MudSelectItem Value="@("Approved")">Approved</MudSelectItem>
+                <MudSelectItem Value="@("Disapproved")">Disapproved</MudSelectItem>
+            </MudSelect>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 300px;"></MudTextField>
+        </div>
+        <MudTable Items="@_requests" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<OvertimeModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedRequests"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">In</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Out</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">For CTO</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Filed Hrs</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reason</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approval Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved Date</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Applied</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" Disabled="@(context.ApprovalStatus != "For Approval")" />
+                </MudTd>
+                <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.TransactionNo</MudTd>
+                <MudTd DataLabel="Date" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Date</MudTd>
+                <MudTd DataLabel="In" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.In</MudTd>
+                <MudTd DataLabel="Out" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.Out</MudTd>
+                <MudTd DataLabel="For CTO" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">
+                    <MudIcon Icon="@(context.ForCto ? Icons.Material.Filled.Check : Icons.Material.Filled.Close)" Color="@(context.ForCto ? Color.Success : Color.Default)" Size="Size.Small" />
+                </MudTd>
+                <MudTd DataLabel="Filed Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.FiledHrs</MudTd>
+                <MudTd DataLabel="Reason" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Reason</MudTd>
+                <MudTd DataLabel="Approval Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Approved By" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDisapprovedBy</MudTd>
+                <MudTd DataLabel="Approved Date" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ApprovedDisapprovedDate</MudTd>
+                <MudTd DataLabel="Date Applied" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.DateApplied</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Small" Color="Color.Default" Class="mr-1" />
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
-    private DateTime? _otDate = DateTime.Today;
-    private TimeSpan? _otStart = new TimeSpan(17, 0, 0);
-    private TimeSpan? _otEnd = new TimeSpan(19, 0, 0);
-    private string _otPurpose = "";
+    private string _searchString = "";
+    private string _statusFilter = "All";
+    private HashSet<OvertimeModel> _selectedRequests = new();
 
-    private Color GetRequestStatusColor(string status) => status switch
+    private List<OvertimeModel> _requests = new()
+    {
+        new()
+        {
+            TransactionNo = "TRN-00210",
+            Date = "06/08/2026",
+            In = "18:00",
+            Out = "20:00",
+            ForCto = false,
+            FiledHrs = "2.00",
+            Reason = "Finishing urgent project deadlines.",
+            ApprovalStatus = "For Approval",
+            DateApplied = "06/09/2026"
+        },
+        new()
+        {
+            TransactionNo = "TRN-00105",
+            Date = "05/20/2026",
+            In = "17:30",
+            Out = "21:30",
+            ForCto = true,
+            FiledHrs = "4.00",
+            Reason = "Server migration weekend support.",
+            ApprovalStatus = "Approved",
+            ApprovedDisapprovedBy = "M. Manager",
+            ApprovedDisapprovedDate = "05/21/2026",
+            DateApplied = "05/20/2026"
+        }
+    };
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<OvertimeDialog>
+        {
+            { x => x.DialogTitle, "New Overtime Request" },
+            { x => x.DialogDescription, "File a new overtime request here." },
+            { x => x.Request, new OvertimeModel { TransactionNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<OvertimeDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (OvertimeModel)result.Data!;
+            req.TransactionNo = $"TRN-{new Random().Next(1000, 9999)}";
+            req.DateApplied = DateTime.Now.ToString("MM/dd/yyyy");
+            _requests.Insert(0, req);
+            Snackbar.Add("Overtime request created successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(OvertimeModel req)
+    {
+        var clonedReq = new OvertimeModel
+        {
+            TransactionNo = req.TransactionNo,
+            Date = req.Date,
+            In = req.In,
+            Out = req.Out,
+            ForCto = req.ForCto,
+            FiledHrs = req.FiledHrs,
+            Reason = req.Reason,
+            ApprovalStatus = req.ApprovalStatus,
+            ApprovedDisapprovedBy = req.ApprovedDisapprovedBy,
+            ApprovedDisapprovedDate = req.ApprovedDisapprovedDate,
+            DateApplied = req.DateApplied
+        };
+
+        var parameters = new DialogParameters<OvertimeDialog>
+        {
+            { x => x.DialogTitle, "Edit Overtime Request" },
+            { x => x.DialogDescription, "Make changes to your overtime request here." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<OvertimeDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (OvertimeModel)result.Data!;
+            var index = _requests.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            if (index != -1)
+            {
+                _requests[index] = updatedReq;
+                Snackbar.Add("Overtime request updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(OvertimeModel req)
+    {
+        if (_statusFilter != "All" && req.ApprovalStatus != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.TransactionNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.Reason.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
     {
         "Approved" => Color.Success,
-        "Pending" => Color.Warning,
-        "Rejected" => Color.Error,
-        "Cancelled" => Color.Default,
+        "For Approval" => Color.Warning,
+        "Disapproved" => Color.Error,
         _ => Color.Default
     };
-
-    public class OvertimeRequestModel
-    {
-        public DateTime Date { get; set; }
-        public TimeSpan Start { get; set; }
-        public TimeSpan End { get; set; }
-        public double Hours => (End - Start).TotalHours;
-        public string Status { get; set; } = "";
-    }
-
-    private List<OvertimeRequestModel> OvertimeRequests = new()
-    {
-        new() { Date = DateTime.Today.AddDays(-3), Start = new TimeSpan(17, 0, 0), End = new TimeSpan(18, 30, 0), Status = "Approved" },
-        new() { Date = DateTime.Today.AddDays(1), Start = new TimeSpan(17, 0, 0), End = new TimeSpan(19, 0, 0), Status = "Pending" }
-    };
-
-    private void SubmitOvertimeRequest()
-    {
-        if (_otDate == null || _otStart == null || _otEnd == null || string.IsNullOrWhiteSpace(_otPurpose))
-        {
-            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
-            return;
-        }
-
-        OvertimeRequests.Insert(0, new()
-        {
-            Date = _otDate.Value,
-            Start = _otStart.Value,
-            End = _otEnd.Value,
-            Status = "Pending"
-        });
-
-        _otPurpose = "";
-        Snackbar.Add("Overtime application submitted successfully!", Severity.Success);
-    }
 }
