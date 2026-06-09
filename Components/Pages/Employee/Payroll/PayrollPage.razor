@@ -1,0 +1,51 @@
+@page "/employee/payroll/{PageSlug}"
+@namespace EduPanel.Components.Pages.Employee.Payroll
+@using EduPanel.Components.Pages.Employee.Payroll.Tabs
+@inject ISnackbar Snackbar
+
+<div class="pa-4">
+    <!-- Header Section -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl mb-6 header-card">
+        <div class="d-flex align-center gap-4">
+            <div class="icon-wrapper">
+                <MudIcon Icon="@Details.Icon" Size="Size.Large" Color="Color.Primary" />
+            </div>
+            <div>
+                <MudText Typo="Typo.h4" Class="font-weight-bold mb-1" Style="letter-spacing: -0.5px;">@Details.Title</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">@Details.Description</MudText>
+            </div>
+        </div>
+    </MudPaper>
+
+    <MudGrid>
+        <DynamicComponent Type="@CurrentTabType" />
+    </MudGrid>
+</div>
+
+@code {
+    [Parameter]
+    public string PageSlug { get; set; } = "";
+
+    private Type CurrentTabType => PageSlug.ToLowerInvariant() switch
+    {
+        "payslip" => typeof(PayslipTab),
+        "loans" => typeof(LoanTab),
+        "tax" => typeof(TaxTab),
+        _ => typeof(PayslipTab)
+    };
+
+    private class PageDetails
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Icon { get; set; } = "";
+    }
+
+    private PageDetails Details => PageSlug.ToLowerInvariant() switch
+    {
+        "payslip" => new() { Title = "My Payslips", Description = "View and download your electronic payslips.", Icon = Icons.Material.Filled.Receipt },
+        "loans" => new() { Title = "Loan Management", Description = "Manage your loan applications and view current deductions.", Icon = Icons.Material.Filled.AccountBalance },
+        "tax" => new() { Title = "Tax & Statutory", Description = "View your tax contributions and other statutory deductions.", Icon = Icons.Material.Filled.AccountBalanceWallet },
+        _ => new() { Title = "Payroll Portal", Description = "Manage your payroll and compensation details.", Icon = Icons.Material.Filled.AttachMoney }
+    };
+}

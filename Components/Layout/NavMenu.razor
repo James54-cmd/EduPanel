@@ -66,6 +66,31 @@
                     </MudPaper>
                 </MudPopover>
             </div>
+
+            <div class="nav-profile-group mt-2">
+                <MudNavLink Icon="@Icons.Material.Filled.AttachMoney"
+                            IconColor="@(IsPayrollActive ? Color.Primary : Color.Default)"
+                            OnClick="TogglePayrollMenu"
+                            Match="NavLinkMatch.Prefix"
+                            Class="@PayrollNavClass">
+                    Payroll
+                </MudNavLink>
+
+                <MudPopover Open="@_payrollMenuOpen"
+                            AnchorOrigin="Origin.CenterRight"
+                            TransformOrigin="Origin.CenterLeft"
+                            Class="nav-flyout-popover">
+                    <MudPaper Elevation="8" Class="py-2" Style="min-width: 220px; max-height: 400px; overflow-y: auto;">
+                        <MudText Typo="Typo.overline" Class="px-4 pb-1" Style="color: var(--mud-palette-text-secondary);">Payroll</MudText>
+                        <MudDivider Class="mb-1" />
+                        <MudNavMenu Margin="Margin.Dense">
+                            <MudNavLink Href="/employee/payroll/payslip" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">My Payslips</MudNavLink>
+                            <MudNavLink Href="/employee/payroll/loans" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Loan Management</MudNavLink>
+                            <MudNavLink Href="/employee/payroll/tax" Match="NavLinkMatch.All" OnClick="ClosePayrollMenu">Tax & Statutory</MudNavLink>
+                        </MudNavMenu>
+                    </MudPaper>
+                </MudPopover>
+            </div>
         }
         else
         {
@@ -87,6 +112,12 @@
                 <MudNavLink Href="/employee/attendance/overtime-application" Match="NavLinkMatch.All">Overtime Application</MudNavLink>
                 <MudNavLink Href="/employee/attendance/dtr" Match="NavLinkMatch.All">DTR</MudNavLink>
             </MudNavGroup>
+
+            <MudNavGroup Title="Payroll" Icon="@Icons.Material.Filled.AttachMoney" @bind-Expanded="_payrollExpanded" HideExpandIcon="false" Class="@PayrollGroupClass">
+                <MudNavLink Href="/employee/payroll/payslip" Match="NavLinkMatch.All">My Payslips</MudNavLink>
+                <MudNavLink Href="/employee/payroll/loans" Match="NavLinkMatch.All">Loan Management</MudNavLink>
+                <MudNavLink Href="/employee/payroll/tax" Match="NavLinkMatch.All">Tax & Statutory</MudNavLink>
+            </MudNavGroup>
         }
     }
     else
@@ -99,7 +130,7 @@
     }
 </MudNavMenu>
 
-@if (_profileMenuOpen || _attendanceMenuOpen)
+@if (_profileMenuOpen || _attendanceMenuOpen || _payrollMenuOpen)
 {
     <div class="nav-flyout-backdrop" @onclick="CloseAllMenus"></div>
 }
@@ -110,10 +141,12 @@
 
     private bool _profileMenuOpen;
     private bool _attendanceMenuOpen;
+    private bool _payrollMenuOpen;
 
     // Expanded state for sidebar groups (driven by URL, user can still toggle)
     private bool _profileExpanded;
     private bool _attendanceExpanded;
+    private bool _payrollExpanded;
 
     private bool IsEmployeeView => NavManager.Uri.Contains("/employee", StringComparison.OrdinalIgnoreCase);
 
@@ -122,11 +155,16 @@
 
     private bool IsAttendanceActive => NavManager.Uri.Contains("/employee/attendance", StringComparison.OrdinalIgnoreCase);
 
+    private bool IsPayrollActive => NavManager.Uri.Contains("/employee/payroll", StringComparison.OrdinalIgnoreCase);
+
     private string ProfileNavClass => (_profileMenuOpen || IsProfileActive) ? "nav-profile-active" : "";
     private string ProfileGroupClass => IsProfileActive ? "nav-group-active" : "";
 
     private string AttendanceNavClass => (_attendanceMenuOpen || IsAttendanceActive) ? "nav-profile-active" : "";
     private string AttendanceGroupClass => IsAttendanceActive ? "nav-group-active" : "";
+
+    private string PayrollNavClass => (_payrollMenuOpen || IsPayrollActive) ? "nav-profile-active" : "";
+    private string PayrollGroupClass => IsPayrollActive ? "nav-group-active" : "";
 
     private void ToggleProfileMenu()
     {
@@ -134,6 +172,7 @@
         if (_profileMenuOpen)
         {
             _attendanceMenuOpen = false;
+            _payrollMenuOpen = false;
         }
     }
 
@@ -148,6 +187,7 @@
         if (_attendanceMenuOpen)
         {
             _profileMenuOpen = false;
+            _payrollMenuOpen = false;
         }
     }
 
@@ -156,10 +196,26 @@
         _attendanceMenuOpen = false;
     }
 
+    private void TogglePayrollMenu()
+    {
+        _payrollMenuOpen = !_payrollMenuOpen;
+        if (_payrollMenuOpen)
+        {
+            _profileMenuOpen = false;
+            _attendanceMenuOpen = false;
+        }
+    }
+
+    private void ClosePayrollMenu()
+    {
+        _payrollMenuOpen = false;
+    }
+
     private void CloseAllMenus()
     {
         _profileMenuOpen = false;
         _attendanceMenuOpen = false;
+        _payrollMenuOpen = false;
     }
 
     protected override void OnParametersSet()
@@ -169,6 +225,7 @@
         {
             _profileMenuOpen = false;
             _attendanceMenuOpen = false;
+            _payrollMenuOpen = false;
         }
     }
 
@@ -182,6 +239,7 @@
     {
         _profileMenuOpen = false;
         _attendanceMenuOpen = false;
+        _payrollMenuOpen = false;
         SyncExpandedState();
         InvokeAsync(StateHasChanged);
     }
@@ -193,6 +251,7 @@
     {
         _profileExpanded = IsProfileActive;
         _attendanceExpanded = IsAttendanceActive;
+        _payrollExpanded = IsPayrollActive;
     }
 
     public void Dispose()
