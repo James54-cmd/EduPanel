@@ -1,98 +1,280 @@
 @namespace EduPanel.Components.Pages.Employee.Attendance.Tabs
 
-<MudItem xs="12">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl">
-        <div class="d-flex flex-wrap gap-4 align-center justify-space-between mb-4">
-            <div class="d-flex gap-2">
-                <MudDateRangePicker Label="Select Date Range" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 260px;" />
-                <MudSelect T="string" Label="Status" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 140px;" @bind-Value="_statusFilter">
-                    <MudSelectItem Value="@("All")">All Statuses</MudSelectItem>
-                    <MudSelectItem Value="@("Present")">Present</MudSelectItem>
-                    <MudSelectItem Value="@("Late")">Late</MudSelectItem>
-                    <MudSelectItem Value="@("Absent")">Absent</MudSelectItem>
-                </MudSelect>
-            </div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Search">Filter Logs</MudButton>
-        </div>
-
-        <MudSimpleTable Hover="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Scheduled Shift</th>
-                    <th>First In</th>
-                    <th>Last Out</th>
-                    <th>Late (min)</th>
-                    <th>Undertime (min)</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var log in MockAttendanceLogs.Where(l => _statusFilter == "All" || l.Status == _statusFilter))
-                {
-                    <tr>
-                        <td>@log.Date.ToString("MMMM dd, yyyy")</td>
-                        <td>@log.Shift</td>
-                        <td>@(log.FirstIn?.ToString("hh:mm tt") ?? "--:--")</td>
-                        <td>@(log.LastOut?.ToString("hh:mm tt") ?? "--:--")</td>
-                        <td>
-                            @if (log.LateMinutes > 0)
-                            {
-                                <span class="text-error font-weight-bold">@log.LateMinutes min</span>
-                            }
-                            else
-                            {
-                                <span class="text-secondary">0</span>
-                            }
-                        </td>
-                        <td>
-                            @if (log.UndertimeMinutes > 0)
-                            {
-                                <span class="text-warning font-weight-bold">@log.UndertimeMinutes min</span>
-                            }
-                            else
-                            {
-                                <span class="text-secondary">0</span>
-                            }
-                        </td>
-                        <td>
-                            <MudChip T="string" Color="@GetStatusColor(log.Status)" Size="Size.Small" Variant="Variant.Filled" Class="font-weight-bold">@log.Status</MudChip>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </MudSimpleTable>
+<!-- DTR Summary Table (Master) -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <MudTable Items="@_summaries" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<DtrSummary,bool>(FilterSummary)" @bind-SelectedItem="_selectedSummary"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true">
+            <ToolBarContent>
+                <MudIcon Icon="@Icons.Material.Filled.Summarize" Color="Color.Primary" Size="Size.Small" Class="mr-2" />
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">DTR Summary</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchSummary" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 280px;"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Employee No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Employee Name</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">DTR Cut-off</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Req.<br/>Hrs</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Hrs<br/>Work</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Paid<br/>Leave</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT8</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">NP</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">NP8</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Absent</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Late</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Undertime</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Actual<br/>Late</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Actual<br/>Undertime</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Details</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Work<br/>Allocation</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Employee No." Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.EmployeeNo</MudTd>
+                <MudTd DataLabel="Employee Name" Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.EmployeeName</MudTd>
+                <MudTd DataLabel="DTR Cut-off" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.DtrCutOff</MudTd>
+                <MudTd DataLabel="Req. Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ReqHrs.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Hrs Work" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.HrsWork.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Paid Leave" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.PaidLeave.ToString("0.##")</MudTd>
+                <MudTd DataLabel="OT" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.OT.ToString("0.##")</MudTd>
+                <MudTd DataLabel="OT8" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.OT8.ToString("0.##")</MudTd>
+                <MudTd DataLabel="NP" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.NP.ToString("0.##")</MudTd>
+                <MudTd DataLabel="NP8" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.NP8.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Absent" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.Absent.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Late" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.Late.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Undertime" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.Undertime.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Actual Late" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ActualLate.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Actual Undertime" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.ActualUndertime.ToString("0.##")</MudTd>
+                <MudTd DataLabel="Details" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.List" Size="Size.Small" Color="Color.Primary" />
+                </MudTd>
+                <MudTd DataLabel="Work Allocation" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" Color="Color.Default" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
     </MudPaper>
 </MudItem>
 
+<!-- DTR Details Table (Shown when a summary is selected) -->
+@if (_selectedSummary != null)
+{
+    <MudItem xs="12">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+            <div class="d-flex align-center justify-space-between mb-4">
+                <MudText Typo="Typo.subtitle1" Class="font-weight-medium">@_selectedSummary.EmployeeName</MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+            </div>
+
+            <MudTable Items="@_details" Dense="true" Hover="true" Bordered="true" Striped="false"
+                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true">
+                <HeaderContent>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Date</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Day</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Shift Code</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">D-Type</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Req.<br/>Hrs</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">In1</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Out1</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">In2</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Out2</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT<br/>In1</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT<br/>Out1</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT<br/>In2</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT<br/>Out2</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Work<br/>Hrs</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">OT8</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">NP</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">NP8</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Absent</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Late</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Undertime</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Actual<br/>Late</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Actual<br/>Undertime</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Charged to</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Leave<br/>Hrs</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Date" Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.Date</MudTd>
+                    <MudTd DataLabel="Day" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.Day</MudTd>
+                    <MudTd DataLabel="Shift Code" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.ShiftCode</MudTd>
+                    <MudTd DataLabel="D-Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.DType</MudTd>
+                    <MudTd DataLabel="Req. Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.ReqHrs > 0 ? context.ReqHrs.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="In1" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.In1</MudTd>
+                    <MudTd DataLabel="Out1" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.Out1</MudTd>
+                    <MudTd DataLabel="In2" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.In2</MudTd>
+                    <MudTd DataLabel="Out2" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.Out2</MudTd>
+                    <MudTd DataLabel="OT In1" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.OTIn1</MudTd>
+                    <MudTd DataLabel="OT Out1" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.OTOut1</MudTd>
+                    <MudTd DataLabel="OT In2" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.OTIn2</MudTd>
+                    <MudTd DataLabel="OT Out2" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@context.OTOut2</MudTd>
+                    <MudTd DataLabel="Work Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.WorkHrs > 0 ? context.WorkHrs.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="OT" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.OT > 0 ? context.OT.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="OT8" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.OT8 > 0 ? context.OT8.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="NP" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.NP > 0 ? context.NP.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="NP8" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.NP8 > 0 ? context.NP8.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="Absent" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.Absent > 0 ? context.Absent.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="Late" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.Late > 0 ? context.Late.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="Undertime" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.Undertime > 0 ? context.Undertime.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="Actual Late" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.ActualLate > 0 ? context.ActualLate.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="Actual Undertime" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.ActualUndertime > 0 ? context.ActualUndertime.ToString("0.##") : "")</MudTd>
+                    <MudTd DataLabel="Charged to" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.ChargedTo</MudTd>
+                    <MudTd DataLabel="Leave Hrs" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">@(context.LeaveHrs > 0 ? context.LeaveHrs.ToString("0.##") : "")</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+}
+
 @code {
-    private string _statusFilter = "All";
-
-    private Color GetStatusColor(string status) => status switch
+    private string _searchSummary = "";
+    
+    private DtrSummary? _selectedSummaryValue;
+    private DtrSummary? _selectedSummary
     {
-        "Present" => Color.Success,
-        "Late" => Color.Error,
-        "Absent" => Color.Warning,
-        _ => Color.Default
-    };
-
-    private class AttendanceLog
-    {
-        public DateTime Date { get; set; }
-        public string Shift { get; set; } = "";
-        public DateTime? FirstIn { get; set; }
-        public DateTime? LastOut { get; set; }
-        public int LateMinutes { get; set; }
-        public int UndertimeMinutes { get; set; }
-        public string Status { get; set; } = "";
+        get => _selectedSummaryValue;
+        set
+        {
+            if (_selectedSummaryValue != value)
+            {
+                _selectedSummaryValue = value;
+                if (value != null)
+                {
+                    GenerateDetailsFor(value);
+                }
+            }
+        }
     }
 
-    private List<AttendanceLog> MockAttendanceLogs = new()
+    private List<DtrDetail> _details = new();
+
+    // ── Data Models ──
+    private class DtrSummary
     {
-        new() { Date = DateTime.Today.AddDays(-1), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-1).AddHours(7).AddMinutes(52), LastOut = DateTime.Today.AddDays(-1).AddHours(17).AddMinutes(5), LateMinutes = 0, UndertimeMinutes = 0, Status = "Present" },
-        new() { Date = DateTime.Today.AddDays(-2), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-2).AddHours(8).AddMinutes(12), LastOut = DateTime.Today.AddDays(-2).AddHours(17).AddMinutes(0), LateMinutes = 12, UndertimeMinutes = 0, Status = "Late" },
-        new() { Date = DateTime.Today.AddDays(-3), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-3).AddHours(7).AddMinutes(55), LastOut = DateTime.Today.AddDays(-3).AddHours(16).AddMinutes(45), LateMinutes = 0, UndertimeMinutes = 15, Status = "Present" },
-        new() { Date = DateTime.Today.AddDays(-4), Shift = "08:00 AM - 05:00 PM", FirstIn = null, LastOut = null, LateMinutes = 0, UndertimeMinutes = 0, Status = "Absent" },
-        new() { Date = DateTime.Today.AddDays(-5), Shift = "08:00 AM - 05:00 PM", FirstIn = DateTime.Today.AddDays(-5).AddHours(7).AddMinutes(58), LastOut = DateTime.Today.AddDays(-5).AddHours(17).AddMinutes(10), LateMinutes = 0, UndertimeMinutes = 0, Status = "Present" }
+        public string EmployeeNo { get; set; } = "";
+        public string EmployeeName { get; set; } = "";
+        public string DtrCutOff { get; set; } = "";
+        public decimal ReqHrs { get; set; }
+        public decimal HrsWork { get; set; }
+        public decimal PaidLeave { get; set; }
+        public decimal OT { get; set; }
+        public decimal OT8 { get; set; }
+        public decimal NP { get; set; }
+        public decimal NP8 { get; set; }
+        public decimal Absent { get; set; }
+        public decimal Late { get; set; }
+        public decimal Undertime { get; set; }
+        public decimal ActualLate { get; set; }
+        public decimal ActualUndertime { get; set; }
+    }
+
+    private class DtrDetail
+    {
+        public string Date { get; set; } = "";
+        public string Day { get; set; } = "";
+        public string ShiftCode { get; set; } = "";
+        public string DType { get; set; } = "";
+        public decimal ReqHrs { get; set; }
+        public string In1 { get; set; } = "";
+        public string Out1 { get; set; } = "";
+        public string In2 { get; set; } = "";
+        public string Out2 { get; set; } = "";
+        public string OTIn1 { get; set; } = "";
+        public string OTOut1 { get; set; } = "";
+        public string OTIn2 { get; set; } = "";
+        public string OTOut2 { get; set; } = "";
+        public decimal WorkHrs { get; set; }
+        public decimal OT { get; set; }
+        public decimal OT8 { get; set; }
+        public decimal NP { get; set; }
+        public decimal NP8 { get; set; }
+        public decimal Absent { get; set; }
+        public decimal Late { get; set; }
+        public decimal Undertime { get; set; }
+        public decimal ActualLate { get; set; }
+        public decimal ActualUndertime { get; set; }
+        public string ChargedTo { get; set; } = "";
+        public decimal LeaveHrs { get; set; }
+    }
+
+    // ── Sample Data ──
+    private readonly List<DtrSummary> _summaries = new()
+    {
+        new()
+        {
+            EmployeeNo = "142",
+            EmployeeName = "Damaso, James Fanuel N.",
+            DtrCutOff = "05/23/2026 - 06/08/2026",
+            ReqHrs = 0,
+            HrsWork = 0,
+            PaidLeave = 0,
+            OT = 0,
+            OT8 = 0,
+            NP = 0,
+            NP8 = 0,
+            Absent = 0,
+            Late = 0,
+            Undertime = 0,
+            ActualLate = 0,
+            ActualUndertime = 0
+        }
     };
+
+    protected override void OnInitialized()
+    {
+        _selectedSummary = _summaries.FirstOrDefault();
+    }
+
+    private void GenerateDetailsFor(DtrSummary summary)
+    {
+        _details.Clear();
+        var startDate = new DateTime(2026, 5, 23);
+        var endDate = new DateTime(2026, 6, 8);
+
+        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        {
+            _details.Add(new DtrDetail
+            {
+                Date = date.ToString("MM/dd/yyyy"),
+                Day = date.ToString("ddd"),
+                ShiftCode = "",
+                DType = "RWD",
+                ReqHrs = 0,
+                In1 = "",
+                Out1 = "",
+                In2 = "",
+                Out2 = "",
+                OTIn1 = "",
+                OTOut1 = "",
+                OTIn2 = "",
+                OTOut2 = "",
+                WorkHrs = 0,
+                OT = 0,
+                OT8 = 0,
+                NP = 0,
+                NP8 = 0,
+                Absent = 0,
+                Late = 0,
+                Undertime = 0,
+                ActualLate = 0,
+                ActualUndertime = 0,
+                ChargedTo = "",
+                LeaveHrs = 0
+            });
+        }
+    }
+
+    private bool FilterSummary(DtrSummary summary)
+    {
+        if (string.IsNullOrWhiteSpace(_searchSummary)) return true;
+        if (summary.EmployeeName.Contains(_searchSummary, StringComparison.OrdinalIgnoreCase)) return true;
+        if (summary.EmployeeNo.Contains(_searchSummary, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
 }
