@@ -159,3 +159,19 @@
     border-radius: var(--mud-default-borderradius);
     color: var(--mud-palette-primary) !important;
 }
+
+/* ── Make the chevron/expand icon smaller ── */
+::deep .mud-nav-group-expand-icon {
+    font-size: 1.25rem;
+}
+
+::deep .mud-nav-link-text,
+::deep .mud-nav-group-text {
+    opacity: 1;
+    transition: opacity .15s ease;
+}
+
+.mini-sidebar ::deep .mud-nav-link-text,
+.mini-sidebar ::deep .mud-nav-group-text {
+    opacity: 0;
+}
