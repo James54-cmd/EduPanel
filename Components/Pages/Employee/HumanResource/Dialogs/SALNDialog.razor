@@ -1,0 +1,210 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <div class="px-2 pt-2">
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" Class="pa-2">
+            <MudTabs Elevation="1" Rounded="true" PanelClass="pa-6 mt-2" Class="w-100">
+                <MudTabPanel Text="SALN Summary">
+                    <MudGrid>
+                        <!-- Left Column: Declarant's Basic Info & Spouse -->
+                        <MudItem xs="12" md="6">
+                            <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4">DECLARANT'S INFORMATION</MudText>
+                            
+                            <div class="d-flex flex-column gap-4 mb-6">
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Transaction No.</MudText>
+                                    <MudTextField T="string" Value="@Request.TransactionNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Type of Filing</MudText>
+                                    <MudRadioGroup @bind-Value="Request.FilingType">
+                                        <MudRadio Value="@("Jointly Filed")" Color="Color.Primary">Jointly Filed</MudRadio>
+                                        <MudRadio Value="@("Separately Filed")" Color="Color.Primary">Separately Filed</MudRadio>
+                                        <MudRadio Value="@("Not Applicable")" Color="Color.Primary">Not Applicable</MudRadio>
+                                    </MudRadioGroup>
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Family Name <span class="text-error">*</span></MudText>
+                                    <MudTextField T="string" @bind-Value="Request.FamilyName" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">First Name <span class="text-error">*</span></MudText>
+                                    <MudTextField T="string" @bind-Value="Request.FirstName" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Middle Name</MudText>
+                                    <MudTextField T="string" @bind-Value="Request.MiddleName" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Address <span class="text-error">*</span></MudText>
+                                    <MudTextField T="string" @bind-Value="Request.Address" Required="true" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+                            </div>
+
+                            <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4 mt-8">SPOUSE'S INFORMATION</MudText>
+                            <div class="d-flex flex-column gap-4">
+                                <MudItem xs="12">
+                                    <MudRadioGroup @bind-Value="Request.MaritalStatus">
+                                        <MudRadio Value="@("I am married")" Color="Color.Primary">I am married.</MudRadio>
+                                        <MudRadio Value="@("I am not married")" Color="Color.Primary">I am not married.</MudRadio>
+                                    </MudRadioGroup>
+                                </MudItem>
+                                
+                                @if (Request.MaritalStatus == "I am married")
+                                {
+                                    <MudItem xs="12">
+                                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Family Name</MudText>
+                                        <MudTextField T="string" @bind-Value="Request.SpouseFamilyName" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">First Name</MudText>
+                                        <MudTextField T="string" @bind-Value="Request.SpouseFirstName" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Middle Name</MudText>
+                                        <MudTextField T="string" @bind-Value="Request.SpouseMiddleName" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Position</MudText>
+                                        <MudTextField T="string" @bind-Value="Request.SpousePosition" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    </MudItem>
+                                }
+                            </div>
+                        </MudItem>
+
+                        <!-- Right Column: Additional Declarant Info -->
+                        <MudItem xs="12" md="6">
+                            <div class="d-flex flex-column gap-4 mt-md-11">
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Applicable Year</MudText>
+                                    <MudTextField T="string" @bind-Value="Request.ApplicableYear" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+                                
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Position <span class="text-error">*</span></MudText>
+                                    <MudSelect T="string" @bind-Value="Request.Position" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                        <MudSelectItem Value="@("-- Select --")">-- Select --</MudSelectItem>
+                                        <MudSelectItem Value="@("Software Engineer")">Software Engineer</MudSelectItem>
+                                        <MudSelectItem Value="@("Manager")">Manager</MudSelectItem>
+                                    </MudSelect>
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Agency / Office</MudText>
+                                    <MudTextField T="string" @bind-Value="Request.AgencyOffice" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Office Address</MudText>
+                                    <MudTextField T="string" @bind-Value="Request.OfficeAddress" Lines="2" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Date Accomplished <span class="text-error">*</span></MudText>
+                                    <MudTextField T="DateTime?" @bind-Value="_dateAccomplished" Format="MM/dd/yyyy" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Tax Identification No. <span class="text-error">*</span></MudText>
+                                    <MudTextField T="string" @bind-Value="Request.TaxIdNo" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <MudItem xs="12">
+                                    <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Comm. Tax Cert. No. <span class="text-error">*</span></MudText>
+                                    <MudTextField T="string" @bind-Value="Request.CommTaxCertNo" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+
+                                <div class="d-flex flex-column flex-sm-row gap-4">
+                                    <MudItem xs="12" sm="6">
+                                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Issued At <span class="text-error">*</span></MudText>
+                                        <MudTextField T="string" @bind-Value="Request.IssuedAt" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    </MudItem>
+                                    <MudItem xs="12" sm="6">
+                                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Issued On <span class="text-error">*</span></MudText>
+                                        <MudTextField T="DateTime?" @bind-Value="_issuedOn" Format="MM/dd/yyyy" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    </MudItem>
+                                </div>
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudTabPanel>
+
+                <!-- Placeholders for other tabs to complete the SALN form -->
+                <MudTabPanel Text="Unmarried Children Below 18">
+                    <MudText Typo="Typo.h6" Class="mb-4">Children Information</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Real Properties">
+                    <MudText Typo="Typo.h6" Class="mb-4">Real Properties</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Personal And Other Properties">
+                    <MudText Typo="Typo.h6" Class="mb-4">Personal Properties</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Liabilities">
+                    <MudText Typo="Typo.h6" Class="mb-4">Liabilities</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Business Interest & Financial Connections">
+                    <MudText Typo="Typo.h6" Class="mb-4">Business Interests</MudText>
+                </MudTabPanel>
+                <MudTabPanel Text="Relatives In Government Service">
+                    <MudText Typo="Typo.h6" Class="mb-4">Relatives in Government</MudText>
+                </MudTabPanel>
+            </MudTabs>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-end">
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string DialogTitle { get; set; } = "Statement of Assets, Liabilities, and Net Worth";
+    [Parameter] public string DialogDescription { get; set; } = "Fill out your SALN declaration form.";
+    [Parameter] public SALNModel Request { get; set; } = new();
+
+    private MudForm _form = default!;
+    private DateTime? _dateAccomplished;
+    private DateTime? _issuedOn;
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.TryParse(Request.DateAccomplished, out var da)) _dateAccomplished = da;
+        if (DateTime.TryParse(Request.IssuedOn, out var io)) _issuedOn = io;
+        
+        if (string.IsNullOrEmpty(Request.Position)) Request.Position = "-- Select --";
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        await _form.ValidateAsync();
+        if (!_form.IsValid || Request.Position == "-- Select --")
+        {
+            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
+            return;
+        }
+
+        if (_dateAccomplished.HasValue) Request.DateAccomplished = _dateAccomplished.Value.ToString("MM/dd/yyyy");
+        if (_issuedOn.HasValue) Request.IssuedOn = _issuedOn.Value.ToString("MM/dd/yyyy");
+
+        MudDialog.Close(DialogResult.Ok(Request));
+    }
+}
