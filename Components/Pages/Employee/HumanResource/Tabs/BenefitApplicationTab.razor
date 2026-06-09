@@ -28,8 +28,8 @@
             <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
         </div>
         
-        <MudTable Items="@_enrollments" Dense="true" Hover="true" Bordered="true" Striped="false"
-                  Filter="new Func<BenefitEnrollmentModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedEnrollments"
+        <MudTable Items="@_applications" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<BenefitApplicationModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedApplications"
                   Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
             <HeaderContent>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
@@ -37,7 +37,6 @@
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Filed</MudTh>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Benefit Type</MudTh>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Amount</MudTh>
-                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Attachment</MudTh>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Status</MudTh>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved By</MudTh>
                 <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Approved /<br/>Disapproved Date</MudTh>
@@ -50,12 +49,6 @@
                 <MudTd DataLabel="Date Filed" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@context.DateFiled</MudTd>
                 <MudTd DataLabel="Benefit Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.BenefitType</MudTd>
                 <MudTd DataLabel="Amount" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@context.Amount</MudTd>
-                <MudTd DataLabel="Attachment" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">
-                    @if (!string.IsNullOrEmpty(context.Attachment))
-                    {
-                        <MudIcon Icon="@Icons.Material.Filled.AttachFile" Size="Size.Small" Color="Color.Primary" />
-                    }
-                </MudTd>
                 <MudTd DataLabel="Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
                     <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
                 </MudTd>
@@ -77,66 +70,52 @@
 @code {
     private string _searchString = "";
     private string _statusFilter = "IN PROCESS";
-    private HashSet<BenefitEnrollmentModel> _selectedEnrollments = new();
+    private HashSet<BenefitApplicationModel> _selectedApplications = new();
 
-    private List<BenefitEnrollmentModel> _enrollments = new()
+    private List<BenefitApplicationModel> _applications = new()
     {
-        // Example dummy data just so the grid isn't totally empty if a user types something, but screenshot shows "No data to display"
-        // It's helpful to see it populated during design.
         new()
         {
-            TransactionNo = "BEN-0021",
+            TransactionNo = "BAPP-0044",
             DateFiled = "06/09/2026",
-            BenefitType = "Health Insurance",
-            Amount = "0.00",
-            Attachment = "health_form.pdf",
-            Remarks = "Adding my spouse as dependent.",
+            BenefitType = "Rice Subsidy",
+            Amount = "1500.00",
+            Attachment = "receipt.pdf",
+            Remarks = "Monthly claim.",
             ApprovalStatus = "IN PROCESS"
-        },
-        new()
-        {
-            TransactionNo = "BEN-0010",
-            DateFiled = "01/15/2026",
-            BenefitType = "Life Insurance",
-            Amount = "0.00",
-            Attachment = "",
-            Remarks = "Initial enrollment.",
-            ApprovalStatus = "POSTED",
-            ApprovedBy = "M. Manager",
-            ApprovedDate = "01/20/2026"
         }
     };
 
     private async Task OpenNewRequestDialog()
     {
-        var parameters = new DialogParameters<BenefitEnrollmentDialog>
+        var parameters = new DialogParameters<BenefitApplicationDialog>
         {
-            { x => x.DialogTitle, "Benefit Enrollment" },
-            { x => x.DialogDescription, "Fill out the details below to enroll in a benefit." },
-            { x => x.Request, new BenefitEnrollmentModel { TransactionNo = "Autonumber" } }
+            { x => x.DialogTitle, "Benefit Application" },
+            { x => x.DialogDescription, "Fill out the details below to apply for a benefit." },
+            { x => x.Request, new BenefitApplicationModel { TransactionNo = "Autonumber" } }
         };
 
-        var dialog = await DialogService.ShowAsync<BenefitEnrollmentDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var dialog = await DialogService.ShowAsync<BenefitApplicationDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
         var result = await dialog.Result;
 
         if (result != null && !result.Canceled)
         {
-            var req = (BenefitEnrollmentModel)result.Data!;
-            req.TransactionNo = $"BEN-{new Random().Next(1000, 9999)}";
+            var req = (BenefitApplicationModel)result.Data!;
+            req.TransactionNo = $"BAPP-{new Random().Next(1000, 9999)}";
             if (string.IsNullOrEmpty(req.DateFiled))
             {
                 req.DateFiled = DateTime.Now.ToString("MM/dd/yyyy");
             }
             req.ApprovalStatus = "IN PROCESS";
-            _enrollments.Insert(0, req);
-            Snackbar.Add("Enrollment request created successfully.", Severity.Success);
+            _applications.Insert(0, req);
+            Snackbar.Add("Application request created successfully.", Severity.Success);
             StateHasChanged();
         }
     }
 
-    private async Task EditRequest(BenefitEnrollmentModel req)
+    private async Task EditRequest(BenefitApplicationModel req)
     {
-        var clonedReq = new BenefitEnrollmentModel
+        var clonedReq = new BenefitApplicationModel
         {
             TransactionNo = req.TransactionNo,
             DateFiled = req.DateFiled,
@@ -149,30 +128,30 @@
             ApprovedDate = req.ApprovedDate
         };
 
-        var parameters = new DialogParameters<BenefitEnrollmentDialog>
+        var parameters = new DialogParameters<BenefitApplicationDialog>
         {
-            { x => x.DialogTitle, "Edit Benefit Enrollment" },
-            { x => x.DialogDescription, "Make changes to your benefit enrollment request." },
+            { x => x.DialogTitle, "Edit Benefit Application" },
+            { x => x.DialogDescription, "Make changes to your benefit application request." },
             { x => x.Request, clonedReq }
         };
 
-        var dialog = await DialogService.ShowAsync<BenefitEnrollmentDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
+        var dialog = await DialogService.ShowAsync<BenefitApplicationDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseButton = false, BackdropClick = false });
         var result = await dialog.Result;
 
         if (result != null && !result.Canceled)
         {
-            var updatedReq = (BenefitEnrollmentModel)result.Data!;
-            var index = _enrollments.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
+            var updatedReq = (BenefitApplicationModel)result.Data!;
+            var index = _applications.FindIndex(r => r.TransactionNo == updatedReq.TransactionNo);
             if (index != -1)
             {
-                _enrollments[index] = updatedReq;
-                Snackbar.Add("Enrollment request updated successfully.", Severity.Success);
+                _applications[index] = updatedReq;
+                Snackbar.Add("Application request updated successfully.", Severity.Success);
                 StateHasChanged();
             }
         }
     }
 
-    private bool FilterFunc(BenefitEnrollmentModel req)
+    private bool FilterFunc(BenefitApplicationModel req)
     {
         if (_statusFilter != "ALL" && req.ApprovalStatus != _statusFilter)
             return false;

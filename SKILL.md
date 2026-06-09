@@ -129,6 +129,7 @@ To keep features maintainable and modular, avoid dumping all models or dialogs i
   - Always invoke dialog components programmatically via `IDialogService.ShowAsync<T>()`.
   - Structure dialog components cleanly using `<TitleContent>`, `<DialogContent>`, and `<DialogActions>` to mimic clear, Shadcn-like pop-up aesthetics.
   - Use `[CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;` to control the dialog state.
+  - **Layout Aesthetics**: Use a vertical stacked form layout (`d-flex flex-column`) inside the `DialogContent` rather than a horizontally squished `MudGrid`. This looks significantly cleaner and scales far better within constrained dialog bounds. Avoid using `MaxWidth.Large` unless strictly required for massive tables; prefer `MaxWidth.Medium` or `MaxWidth.Small` to keep the UI feeling tight and focused. If using nested `MudTabs` inside a dialog, favor top tabs (`Elevation="1"`) over side navigation ribbons to maximize usable horizontal space.
 
 ---
 
@@ -142,3 +143,25 @@ EduPanel uses MudBlazor's responsive utility classes to ensure layouts gracefull
   - For groups of buttons or inputs, apply `flex-wrap justify-center` so they can wrap to the next line on narrow screens instead of overflowing horizontally.
 - **Text Alignment**: Use responsive text alignment (`text-center text-md-left`) when switching from stacked headers (mobile) to row-based headers (desktop).
 - **Full Width Elements**: Use `w-100` on internal toolbar wrappers so inputs span cleanly across mobile screens.
+
+---
+
+## 🧭 Dynamic Routing & Modular Architecture
+
+For heavily nested modules (like Attendance or Human Resources), avoid creating a hardcoded `NavGroup` mapping directly to distinct URL-routed pages. Instead:
+
+- **Use a Single Router Page**: Implement a central router layout (e.g., `HumanResourcePage.razor`) mapped via `@page "/employee/human-resource/{PageSlug?}"`.
+- **DynamicComponent Rendering**: Use `Blazor's` `<DynamicComponent>` to swap out tabs based on the slug. 
+- **Tab Directory**: Store all corresponding views inside a `Tabs` directory (e.g., `BenefitEnrollmentTab.razor`, `BenefitBalanceTab.razor`).
+- **Benefits**: This prevents having to copy-paste identical outer layout wrappers, keeps URLs clean, and drastically reduces navigation/re-rendering latency.
+
+---
+
+## 🖱️ Interactive UI & Row-Click Expansion
+
+When dealing with complex data that requires a parent-child relationship (e.g., tracking a user's `BenefitBalance` and breaking it down into sub-tables of what they `Earned` vs what they `Used`):
+
+- Do not attempt to force all details directly into the columns of the main table.
+- Implement an interactive **RowClick** event handler on the parent `MudTable` (`OnRowClick="OnRowClick"`).
+- Capture the clicked item into a state variable (e.g., `_selectedBalance`).
+- Conditionally render a beautifully padded `<MudPaper>` *below* the main table containing the related sub-tables or specific details. This approach creates a smooth, intuitive master-detail workflow without cluttered modals.
