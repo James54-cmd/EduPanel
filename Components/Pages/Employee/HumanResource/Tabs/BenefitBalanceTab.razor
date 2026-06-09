@@ -10,7 +10,7 @@
             <MudTextField @bind-Value="_selectedYear" Variant="Variant.Outlined" Margin="Margin.Dense" Style="width: 150px; margin-top: 0; background-color: white;" />
         </div>
         <div class="d-flex flex-wrap justify-center gap-2">
-            <MudButton Variant="Variant.Text" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
         </div>
     </MudPaper>
 </MudItem>
@@ -70,7 +70,7 @@
             <div class="mb-8">
                 <div class="d-flex justify-space-between align-center mb-3">
                     <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Benefit Earned, Credits & Adjustments</MudText>
-                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2">Export</MudLink>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download"Size="Size.Small">Export</MudButton>
                 </div>
                 <MudTable Items="@_selectedBalance.EarnedDetails" Dense="true" Hover="true" Bordered="true" Striped="false"
                           Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
@@ -100,7 +100,7 @@
             <div>
                 <div class="d-flex justify-space-between align-center mb-3">
                     <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Benefit Used</MudText>
-                    <MudLink Href="#" Color="Color.Primary" Typo="Typo.body2">Export</MudLink>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download" Size="Size.Small">Export</MudButton>
                 </div>
                 <MudTable Items="@_selectedBalance.UsedDetails" Dense="true" Hover="true" Bordered="true" Striped="false"
                           Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
