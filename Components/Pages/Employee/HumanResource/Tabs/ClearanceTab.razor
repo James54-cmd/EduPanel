@@ -1,0 +1,172 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Tabs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<!-- Main Table -->
+<MudItem xs="12" Class="mb-6">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row align-start w-100 mb-4">
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
+        <MudTable Items="@_clearances" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<ClearanceModel,bool>(FilterFunc)" OnRowClick="RowClicked" T="ClearanceModel"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Reference No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Title</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Department / Office</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Order</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Encoded</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Aging (Day/s)</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Signatory</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Cleared</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Cleared</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Cleared By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Modified By</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Last Modified</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">View Accountability</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="clearance">
+                <MudTd DataLabel="Reference No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@clearance.ReferenceNo</MudTd>
+                <MudTd DataLabel="Title" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@clearance.Title</MudTd>
+                <MudTd DataLabel="Department / Office" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@clearance.DepartmentOffice</MudTd>
+                <MudTd DataLabel="Order" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@clearance.Order</MudTd>
+                <MudTd DataLabel="Date Encoded" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@clearance.DateEncoded</MudTd>
+                <MudTd DataLabel="Aging" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@clearance.AgingDays</MudTd>
+                <MudTd DataLabel="Signatory" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@clearance.Signatory</MudTd>
+                <MudTd DataLabel="Cleared" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@clearance.Cleared</MudTd>
+                <MudTd DataLabel="Date Cleared" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@clearance.DateCleared</MudTd>
+                <MudTd DataLabel="Cleared By" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@clearance.ClearedBy</MudTd>
+                <MudTd DataLabel="Modified By" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@clearance.ModifiedBy</MudTd>
+                <MudTd DataLabel="Date Last Modified" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@clearance.DateLastModified</MudTd>
+                <MudTd DataLabel="View Accountability" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.ListAlt" Size="Size.Small" Color="Color.Primary" />
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <div class="pa-2 d-flex align-center bg-mud-palette-background-grey border-t border-solid mud-border-lines-default">
+                    <MudButton StartIcon="@Icons.Material.Filled.FilterAlt" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="text-none">Create Filter</MudButton>
+                    <MudSpacer />
+                    <MudTablePager HidePageNumber="true" HidePagination="true" />
+                </div>
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+<!-- Details Section (Visible only when a row is selected) -->
+@if (_selectedClearance != null)
+{
+    <MudItem xs="12">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl bg-mud-palette-background-grey">
+            <div class="mb-4 d-flex align-center gap-2">
+                <MudText Typo="Typo.body1" Class="font-weight-medium">Accountability :</MudText>
+            </div>
+
+            <!-- Accountability Table -->
+            <MudTable Items="@_selectedClearance.Accountabilities" Dense="true" Hover="true" Bordered="true" Striped="false"
+                      Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                <HeaderContent>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Transaction No.</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Department Head</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">In-Charge</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Item Accountability</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">Item Amount</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date Returned</MudTh>
+                    <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Cleared</MudTh>
+                </HeaderContent>
+                <RowTemplate Context="acc">
+                    <MudTd DataLabel="Transaction No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@acc.TransactionNo</MudTd>
+                    <MudTd DataLabel="Department Head" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@acc.DepartmentHead</MudTd>
+                    <MudTd DataLabel="In-Charge" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@acc.InCharge</MudTd>
+                    <MudTd DataLabel="Item Accountability" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@acc.ItemAccountability</MudTd>
+                    <MudTd DataLabel="Item Amount" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: right;">@acc.ItemAmount</MudTd>
+                    <MudTd DataLabel="Remarks" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@acc.Remarks</MudTd>
+                    <MudTd DataLabel="Date Returned" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@acc.DateReturned</MudTd>
+                    <MudTd DataLabel="Cleared" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@acc.Cleared</MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                        No data to display
+                    </MudText>
+                </NoRecordsContent>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+}
+
+@code {
+    private string _searchString = "";
+    private string _selectedStatus = "All";
+    private ClearanceModel? _selectedClearance;
+
+    private List<ClearanceModel> _clearances = new()
+    {
+        // Added dummy data to demonstrate the row click functionality beautifully
+        new()
+        {
+            ReferenceNo = "CLR-2026-001",
+            Title = "Annual Inventory Clearance",
+            DepartmentOffice = "IT Department",
+            Order = "1",
+            DateEncoded = "06/01/2026",
+            AgingDays = 8,
+            Signatory = "Jane Smith",
+            Cleared = "No",
+            DateCleared = "",
+            ClearedBy = "",
+            ModifiedBy = "System",
+            DateLastModified = "06/01/2026",
+            Accountabilities = new()
+            {
+                new()
+                {
+                    TransactionNo = "TRN-8801",
+                    DepartmentHead = "Alice Johnson",
+                    InCharge = "Bob Williams",
+                    ItemAccountability = "MacBook Pro 14",
+                    ItemAmount = "2500.00",
+                    Remarks = "Issued 2024",
+                    DateReturned = "",
+                    Cleared = "No"
+                }
+            }
+        }
+    };
+
+    private void RowClicked(TableRowClickEventArgs<ClearanceModel> args)
+    {
+        // Toggle if clicked again
+        if (_selectedClearance == args.Item)
+        {
+            _selectedClearance = null;
+        }
+        else
+        {
+            _selectedClearance = args.Item;
+        }
+        StateHasChanged();
+    }
+
+    private bool FilterFunc(ClearanceModel clr)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (clr.ReferenceNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (clr.Title.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (clr.DepartmentOffice.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}
