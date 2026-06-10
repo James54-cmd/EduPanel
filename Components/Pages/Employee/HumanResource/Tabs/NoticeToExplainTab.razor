@@ -2,23 +2,22 @@
 @using EduPanel.Components.Pages.Employee.HumanResource.Models
 @inject ISnackbar Snackbar
 
-<!-- Top Action Bar -->
-<MudItem xs="12" Class="mb-4">
-    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
-        <div class="d-flex align-center gap-4" Style="width: 100%; max-width: 250px;">
-            <MudSelect T="string" @bind-Value="_statusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="background-color: white;">
-                <MudSelectItem Value="@("Open")">Open</MudSelectItem>
-                <MudSelectItem Value="@("Closed")">Closed</MudSelectItem>
-                <MudSelectItem Value="@("All")">All</MudSelectItem>
-            </MudSelect>
-        </div>
-    </MudPaper>
-</MudItem>
-
 <!-- Main Table -->
 <MudItem xs="12">
     <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row w-100 mb-4 gap-4 align-center justify-space-between">
+            <div style="width: 100%; max-width: 250px;">
+                <MudSelect T="string" @bind-Value="_statusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="background-color: white;">
+                    <MudSelectItem Value="@("Open")">Open</MudSelectItem>
+                    <MudSelectItem Value="@("Closed")">Closed</MudSelectItem>
+                    <MudSelectItem Value="@("All")">All</MudSelectItem>
+                </MudSelect>
+            </div>
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
         <MudTable Items="@_notices" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<NoticeToExplainModel,bool>(FilterFunc)"
                   CustomHeader="true" Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden">
             <HeaderContent>
                 <MudTHeadRow>
@@ -46,12 +45,47 @@
                     No data to display
                 </MudText>
             </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
         </MudTable>
     </MudPaper>
 </MudItem>
 
 @code {
     private string _statusFilter = "Open";
+    private string _searchString = "";
 
-    private List<NoticeToExplainModel> _notices = new();
+    private List<NoticeToExplainModel> _notices = new()
+    {
+        new()
+        {
+            ReportNo = "NTE-2026-001",
+            DateIssued = "06/05/2026",
+            DaPolicyType = "Attendance",
+            DaPolicy = "Unexcused Absence"
+        },
+        new()
+        {
+            ReportNo = "NTE-2026-002",
+            DateIssued = "06/08/2026",
+            DaPolicyType = "Conduct",
+            DaPolicy = "Insubordination"
+        }
+    };
+
+    private bool FilterFunc(NoticeToExplainModel req)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.ReportNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.DaPolicyType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.DaPolicy.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
 }
