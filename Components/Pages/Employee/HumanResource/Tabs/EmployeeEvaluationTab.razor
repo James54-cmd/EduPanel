@@ -1,0 +1,258 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Tabs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex align-center gap-4">
+            <MudSelect T="string" @bind-Value="_statusFilter" Margin="Margin.Dense" Variant="Variant.Outlined" Style="width: 200px; background-color: white; margin-top: 0;">
+                <MudSelectItem Value="@("ON-GOING")">ON-GOING</MudSelectItem>
+                <MudSelectItem Value="@("POSTED")">POSTED</MudSelectItem>
+                <MudSelectItem Value="@("ALL")">ALL</MudSelectItem>
+            </MudSelect>
+        </div>
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download" OnClick="ExportData">Export</MudButton>
+        </div>
+    </MudPaper>
+</MudItem>
+
+<!-- Main Table -->
+<MudItem xs="12" Class="mb-6">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row align-start w-100 mb-4">
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
+        <MudTable Items="@_evaluations" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<EmployeeEvaluationModel,bool>(FilterFunc)" OnRowClick="RowClicked" T="EmployeeEvaluationModel"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Review No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Title</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">From</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">To</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Evaluation Type</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Remarks</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Status</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Evaluation Form</MudTh>
+            </HeaderContent>
+            <RowTemplate Context="eval">
+                <MudTd DataLabel="Review No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@eval.ReviewNo</MudTd>
+                <MudTd DataLabel="Title" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@eval.Title</MudTd>
+                <MudTd DataLabel="From" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@eval.FromDate</MudTd>
+                <MudTd DataLabel="To" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@eval.ToDate</MudTd>
+                <MudTd DataLabel="Evaluation Type" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@eval.EvaluationType</MudTd>
+                <MudTd DataLabel="Remarks" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@eval.Remarks</MudTd>
+                <MudTd DataLabel="Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(eval.Status)" Size="Size.Small" Variant="Variant.Filled">@eval.Status</MudChip>
+                </MudTd>
+                <MudTd DataLabel="Evaluation Form" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    @if (!string.IsNullOrEmpty(eval.EvaluationForm))
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.AttachFile" Size="Size.Small" Color="Color.Primary" OnClick="() => ViewForm(eval)" />
+                    }
+                    else
+                    {
+                        <MudText Style="font-size: 0.75rem; color: var(--mud-palette-text-secondary);">--</MudText>
+                    }
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+<!-- Details Section (Visible only when a row is selected) -->
+@if (_selectedEvaluation != null)
+{
+    <MudItem xs="12">
+        <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl bg-mud-palette-background-grey">
+            <div class="mb-4 d-flex align-center justify-space-between flex-wrap gap-4">
+                <div>
+                    <MudText Typo="Typo.h6" Class="font-weight-bold mb-1">Evaluation Details : <span class="mud-text-secondary font-weight-regular ml-1">@_selectedEvaluation.Title</span></MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Review Period: @_selectedEvaluation.FromDate - @_selectedEvaluation.ToDate | Type: @_selectedEvaluation.EvaluationType</MudText>
+                </div>
+                <MudChip T="string" Color="@GetStatusColor(_selectedEvaluation.Status)" Size="Size.Medium" Variant="Variant.Filled">@_selectedEvaluation.Status</MudChip>
+            </div>
+
+            <MudGrid>
+                <!-- Ratings Table -->
+                <MudItem xs="12" md="8">
+                    <div class="mb-4 d-flex justify-space-between align-center">
+                        <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Competencies & Ratings</MudText>
+                    </div>
+                    <MudTable Items="@_selectedEvaluation.Ratings" Dense="true" Hover="true" Bordered="true" Striped="false"
+                              Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                        <HeaderContent>
+                            <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Category</MudTh>
+                            <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center; width: 100px;">Rating</MudTh>
+                            <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Comments / Examples</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="rating">
+                            <MudTd DataLabel="Category" Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@rating.Category</MudTd>
+                            <MudTd DataLabel="Rating" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;" Class="font-weight-bold">
+                                @rating.Score / @rating.MaxScore
+                            </MudTd>
+                            <MudTd DataLabel="Comments" Style="font-size: 0.75rem; vertical-align: middle;">@rating.Comments</MudTd>
+                        </RowTemplate>
+                        <NoRecordsContent>
+                            <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                                No ratings recorded
+                            </MudText>
+                        </NoRecordsContent>
+                    </MudTable>
+                </MudItem>
+
+                <!-- Signatories -->
+                <MudItem xs="12" md="4">
+                    <div class="mb-4">
+                        <MudText Typo="Typo.subtitle1" Class="font-weight-bold" Color="Color.Primary">Signatories</MudText>
+                    </div>
+                    <MudTable Items="@_selectedEvaluation.Signatories" Dense="true" Hover="true" Bordered="true" Striped="false"
+                              Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden bg-white" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+                        <HeaderContent>
+                            <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Signatory / Role</MudTh>
+                            <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Status</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="sig">
+                            <MudTd DataLabel="Role" Style="font-size: 0.75rem; vertical-align: middle;">
+                                <div class="d-flex flex-column">
+                                    <span class="font-weight-medium">@sig.Name</span>
+                                    <span class="mud-text-secondary style-italic" style="font-size: 0.7rem;">@sig.Role</span>
+                                </div>
+                            </MudTd>
+                            <MudTd DataLabel="Status" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">
+                                @if (sig.Status == "Signed")
+                                {
+                                    <div class="d-flex flex-column align-center">
+                                        <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Text" Icon="@Icons.Material.Filled.Check">Signed</MudChip>
+                                        <span class="mud-text-secondary" style="font-size: 0.65rem;">@sig.DateSigned</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <MudChip T="string" Color="Color.Warning" Size="Size.Small" Variant="Variant.Text" Icon="@Icons.Material.Filled.AccessTime">Pending</MudChip>
+                                }
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+}
+
+@code {
+    private string _searchString = "";
+    private string _statusFilter = "ON-GOING";
+    private EmployeeEvaluationModel? _selectedEvaluation;
+
+    private List<EmployeeEvaluationModel> _evaluations = new()
+    {
+        new()
+        {
+            ReviewNo = "REV-2026-004",
+            Title = "Annual Performance Review 2025",
+            FromDate = "01/01/2025",
+            ToDate = "12/31/2025",
+            EvaluationType = "Annual Review",
+            Remarks = "Excellent overall performance with strong technical contribution.",
+            Status = "POSTED",
+            EvaluationForm = "PR_2025_JohnDoe.pdf",
+            Ratings = new()
+            {
+                new() { Category = "Job Knowledge & Technical Skill", Score = 4.8, Comments = "Demonstrated deep understanding of system architecture." },
+                new() { Category = "Quality & Quantity of Work", Score = 4.7, Comments = "Delivered all key projects ahead of schedule with zero major bugs." },
+                new() { Category = "Communication & Collaboration", Score = 4.5, Comments = "Collaborated effectively with cross-functional product teams." },
+                new() { Category = "Initiative & Leadership", Score = 4.6, Comments = "Mentored junior engineers and proposed optimization strategies." }
+            },
+            Signatories = new()
+            {
+                new() { Role = "Employee", Name = "John Doe", DateSigned = "01/15/2026", Status = "Signed" },
+                new() { Role = "Immediate Supervisor", Name = "Jane Smith", DateSigned = "01/16/2026", Status = "Signed" },
+                new() { Role = "Department Head", Name = "Robert Johnson", DateSigned = "01/18/2026", Status = "Signed" }
+            }
+        },
+        new()
+        {
+            ReviewNo = "REV-2026-005",
+            Title = "Mid-Year Performance Review 2026",
+            FromDate = "01/01/2026",
+            ToDate = "06/30/2026",
+            EvaluationType = "Mid-Year Review",
+            Remarks = "Currently under evaluation for the first half of 2026.",
+            Status = "ON-GOING",
+            EvaluationForm = "",
+            Ratings = new()
+            {
+                new() { Category = "Job Knowledge & Technical Skill", Score = 4.5, Comments = "Good progress on current deliverables." },
+                new() { Category = "Quality & Quantity of Work", Score = 4.2, Comments = "Consistent output." },
+                new() { Category = "Communication & Collaboration", Score = 4.4, Comments = "Active participant in team syncs." }
+            },
+            Signatories = new()
+            {
+                new() { Role = "Employee", Name = "John Doe", DateSigned = "", Status = "Pending" },
+                new() { Role = "Immediate Supervisor", Name = "Jane Smith", DateSigned = "", Status = "Pending" }
+            }
+        }
+    };
+
+    private void RowClicked(TableRowClickEventArgs<EmployeeEvaluationModel> args)
+    {
+        if (_selectedEvaluation == args.Item)
+        {
+            _selectedEvaluation = null;
+        }
+        else
+        {
+            _selectedEvaluation = args.Item;
+        }
+        StateHasChanged();
+    }
+
+    private bool FilterFunc(EmployeeEvaluationModel eval)
+    {
+        if (_statusFilter != "ALL" && eval.Status != _statusFilter)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (eval.ReviewNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (eval.Title.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (eval.EvaluationType.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (eval.Remarks.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
+    {
+        "POSTED" => Color.Success,
+        "ON-GOING" => Color.Warning,
+        _ => Color.Default
+    };
+
+    private void ExportData()
+    {
+        Snackbar.Add("Exporting evaluation records...", Severity.Info);
+    }
+
+    private void ViewForm(EmployeeEvaluationModel eval)
+    {
+        Snackbar.Add($"Opening evaluation form: {eval.EvaluationForm}", Severity.Info);
+    }
+}
