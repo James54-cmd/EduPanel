@@ -1,0 +1,173 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <div class="px-4 pt-4 pb-2 border-b border-solid mud-border-lines-default">
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" Class="pa-4" Style="max-height: 75vh; overflow-y: auto;">
+            <div class="d-flex flex-column gap-6">
+                <!-- Header Info -->
+                <MudGrid>
+                    <MudItem xs="12" sm="6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Case No.</MudText>
+                        <MudTextField T="string" Value="@Request.CaseNo" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Date Filed</MudText>
+                        <MudTextField T="string" Value="@_currentDateFiled" ReadOnly="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+                </MudGrid>
+
+                <MudDivider />
+
+                <!-- Employees Section -->
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4 text-uppercase">NAME OF EMPLOYEE/S</MudText>
+                    
+                    <div class="d-flex align-end gap-4 mb-4">
+                        <MudAutocomplete T="IncidentEmployeeModel" Label="Search Employee" @bind-Value="_selectedSearchEmployee"
+                                         SearchFunc="@SearchEmployee" ToStringFunc="@(e => e==null ? null : $"{e.Name} - {e.Department}")"
+                                         Variant="Variant.Outlined" Margin="Margin.Dense" ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true"
+                                         Style="flex-grow: 1;" />
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddEmployee" StartIcon="@Icons.Material.Filled.Add">Add</MudButton>
+                    </div>
+
+                    <MudTable Items="@Request.InvolvedEmployees" Dense="true" Hover="true" Bordered="true" Elevation="0" Class="border border-solid mud-border-lines-default">
+                        <HeaderContent>
+                            <MudTh Style="font-size: 0.75rem; vertical-align: middle;">Name of Employee</MudTh>
+                            <MudTh Style="font-size: 0.75rem; vertical-align: middle;">Department</MudTh>
+                            <MudTh Style="font-size: 0.75rem; vertical-align: middle; text-align: center;">Action</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="emp">
+                            <MudTd DataLabel="Name of Employee" Style="font-size: 0.75rem; vertical-align: middle;">@emp.Name</MudTd>
+                            <MudTd DataLabel="Department" Style="font-size: 0.75rem; vertical-align: middle;">@emp.Department</MudTd>
+                            <MudTd DataLabel="Action" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                                <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="@(() => RemoveEmployee(emp))">Remove</MudButton>
+                            </MudTd>
+                        </RowTemplate>
+                        <NoRecordsContent>
+                            <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                                No data to display
+                            </MudText>
+                        </NoRecordsContent>
+                    </MudTable>
+                </div>
+
+                <MudDivider />
+
+                <!-- Incident Information -->
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4 text-uppercase">INCIDENT INFORMATION</MudText>
+
+                    <MudItem xs="12" sm="6" Class="mb-4">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Date of incident <span class="text-error">*</span></MudText>
+                        <MudDatePicker @bind-Date="Request.DateOfIncident" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+
+                    <MudItem xs="12" Class="mb-4">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">What is the incident <span class="text-error">*</span></MudText>
+                        <MudTextField T="string" @bind-Value="Request.IncidentDescription" Required="true" Lines="5" Variant="Variant.Outlined" Margin="Margin.Dense" Placeholder="Provide a detailed description of the incident..." />
+                    </MudItem>
+
+                    <MudItem xs="12" Class="mb-4">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">Location of incident</MudText>
+                        <MudTextField T="string" @bind-Value="Request.LocationOfIncident" Lines="2" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2 font-weight-medium">How did the incident happen <span class="text-error">*</span></MudText>
+                        <MudTextField T="string" @bind-Value="Request.HowItHappened" Required="true" Lines="5" Variant="Variant.Outlined" Margin="Margin.Dense" Placeholder="Explain the sequence of events..." />
+                    </MudItem>
+                </div>
+            </div>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-start border-t border-solid mud-border-lines-default mt-4 pt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public string DialogTitle { get; set; } = "Incident Report";
+    [Parameter] public string DialogDescription { get; set; } = "Fill out the details below to report an incident.";
+    [Parameter] public IncidentReportModel Request { get; set; } = new();
+
+    private MudForm _form = default!;
+    private string _currentDateFiled = DateTime.Now.ToString("MM/dd/yyyy");
+    private IncidentEmployeeModel? _selectedSearchEmployee;
+
+    // Dummy database of employees for autocomplete
+    private List<IncidentEmployeeModel> _employeeDatabase = new()
+    {
+        new() { Name = "John Doe", Department = "IT Department" },
+        new() { Name = "Jane Smith", Department = "Human Resources" },
+        new() { Name = "Alice Johnson", Department = "Finance" },
+        new() { Name = "Bob Williams", Department = "Operations" },
+        new() { Name = "Charlie Brown", Department = "IT Department" }
+    };
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(Request.DateFiled))
+        {
+            Request.DateFiled = _currentDateFiled;
+        }
+        else
+        {
+            _currentDateFiled = Request.DateFiled;
+        }
+    }
+
+    private async Task<IEnumerable<IncidentEmployeeModel>> SearchEmployee(string value, CancellationToken token)
+    {
+        await Task.Delay(5, token);
+        if (string.IsNullOrEmpty(value))
+            return _employeeDatabase;
+
+        return _employeeDatabase.Where(e => e.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) || 
+                                            e.Department.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private void AddEmployee()
+    {
+        if (_selectedSearchEmployee != null && !Request.InvolvedEmployees.Any(e => e.Name == _selectedSearchEmployee.Name))
+        {
+            Request.InvolvedEmployees.Add(new IncidentEmployeeModel 
+            { 
+                Name = _selectedSearchEmployee.Name, 
+                Department = _selectedSearchEmployee.Department 
+            });
+            _selectedSearchEmployee = null;
+        }
+    }
+
+    private void RemoveEmployee(IncidentEmployeeModel emp)
+    {
+        Request.InvolvedEmployees.Remove(emp);
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        await _form.ValidateAsync();
+        if (!_form.IsValid)
+        {
+            Snackbar.Add("Please fill in all required fields.", Severity.Warning);
+            return;
+        }
+
+        MudDialog.Close(DialogResult.Ok(Request));
+    }
+}

@@ -1,0 +1,187 @@
+@namespace EduPanel.Components.Pages.Employee.HumanResource.Tabs
+@using EduPanel.Components.Pages.Employee.HumanResource.Models
+@using EduPanel.Components.Pages.Employee.HumanResource.Dialogs
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<!-- Top Action Bar -->
+<MudItem xs="12" Class="mb-4">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
+        <div class="d-flex align-center gap-4">
+            <MudText Typo="Typo.body1" Class="font-weight-medium">Draft</MudText>
+        </div>
+        <div class="d-flex flex-wrap justify-center align-center gap-2">
+            <MudButton Variant="Variant.Text" Color="Color.Default" Class="text-decoration-underline">For Review</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Default">Delete</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Default">Export</MudButton>
+        </div>
+    </MudPaper>
+</MudItem>
+
+<!-- Main Table -->
+<MudItem xs="12">
+    <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
+        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+            <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
+        </div>
+        
+        <MudTable Items="@_incidents" Dense="true" Hover="true" Bordered="true" Striped="false"
+                  Filter="new Func<IncidentReportModel,bool>(FilterFunc)" MultiSelection="true" @bind-SelectedItems="_selectedIncidents"
+                  Elevation="0" Class="rounded-lg border border-solid mud-border-lines-default overflow-hidden" HorizontalScrollbar="true" Breakpoint="Breakpoint.None">
+            <HeaderContent>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Edit</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Case No.</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Date of Incident</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">Incident</MudTh>
+                <MudTh Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">Status</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Edit" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="() => EditRequest(context)" />
+                </MudTd>
+                <MudTd DataLabel="Case No." Class="font-weight-medium" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; color: var(--mud-palette-primary);">@context.CaseNo</MudTd>
+                <MudTd DataLabel="Date of Incident" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle; text-align: center;">@(context.DateOfIncident?.ToString("MM/dd/yyyy"))</MudTd>
+                <MudTd DataLabel="Incident" Style="font-size: 0.75rem; white-space: nowrap; vertical-align: middle;">@context.IncidentDescription</MudTd>
+                <MudTd DataLabel="Status" Style="font-size: 0.75rem; text-align: center; vertical-align: middle;">
+                    <MudChip T="string" Color="@GetStatusColor(context.ApprovalStatus)" Size="Size.Small" Variant="Variant.Filled">@context.ApprovalStatus</MudChip>
+                </MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText Style="text-align: center; color: var(--mud-palette-text-secondary); padding: 1.5rem;">
+                    No data to display
+                </MudText>
+            </NoRecordsContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+</MudItem>
+
+@code {
+    private string _searchString = "";
+    private HashSet<IncidentReportModel> _selectedIncidents = new();
+
+    private List<IncidentReportModel> _incidents = new()
+    {
+        // Adding sample data as requested
+        new()
+        {
+            CaseNo = "INC-2026-001",
+            DateFiled = "05/10/2026",
+            DateOfIncident = new DateTime(2026, 5, 9),
+            IncidentDescription = "Server Room AC Failure",
+            LocationOfIncident = "Main Server Room, 3rd Floor",
+            HowItHappened = "The primary AC unit stopped cooling, causing temperatures to rise rapidly.",
+            ApprovalStatus = "For Review",
+            InvolvedEmployees = new()
+            {
+                new() { Name = "John Doe", Department = "IT Department" }
+            }
+        },
+        new()
+        {
+            CaseNo = "INC-2026-002",
+            DateFiled = "06/01/2026",
+            DateOfIncident = new DateTime(2026, 6, 1),
+            IncidentDescription = "Slip and Fall in Lobby",
+            LocationOfIncident = "Front Entrance Lobby",
+            HowItHappened = "Floor was wet from rain; employee slipped while walking to the elevator.",
+            ApprovalStatus = "Draft",
+            InvolvedEmployees = new()
+            {
+                new() { Name = "Jane Smith", Department = "Human Resources" }
+            }
+        }
+    };
+
+    private async Task OpenNewRequestDialog()
+    {
+        var parameters = new DialogParameters<IncidentReportDialog>
+        {
+            { x => x.DialogTitle, "New Incident Report" },
+            { x => x.DialogDescription, "Please provide comprehensive details about the incident." },
+            { x => x.Request, new IncidentReportModel { CaseNo = "Autonumber" } }
+        };
+
+        var dialog = await DialogService.ShowAsync<IncidentReportDialog>("", parameters, new DialogOptions { FullScreen = true, CloseButton = true, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var req = (IncidentReportModel)result.Data!;
+            req.CaseNo = $"INC-{DateTime.Now.Year}-00{_incidents.Count + 1}";
+            _incidents.Insert(0, req);
+            Snackbar.Add("Incident report saved successfully.", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditRequest(IncidentReportModel req)
+    {
+        // Deep copy employees list to avoid mutating original state if cancelled
+        var clonedEmployees = new List<IncidentEmployeeModel>();
+        foreach (var emp in req.InvolvedEmployees)
+        {
+            clonedEmployees.Add(new IncidentEmployeeModel { Name = emp.Name, Department = emp.Department });
+        }
+
+        var clonedReq = new IncidentReportModel
+        {
+            CaseNo = req.CaseNo,
+            DateFiled = req.DateFiled,
+            DateOfIncident = req.DateOfIncident,
+            IncidentDescription = req.IncidentDescription,
+            LocationOfIncident = req.LocationOfIncident,
+            HowItHappened = req.HowItHappened,
+            ApprovalStatus = req.ApprovalStatus,
+            InvolvedEmployees = clonedEmployees
+        };
+
+        var parameters = new DialogParameters<IncidentReportDialog>
+        {
+            { x => x.DialogTitle, "Edit Incident Report" },
+            { x => x.DialogDescription, "Make changes to the incident report." },
+            { x => x.Request, clonedReq }
+        };
+
+        var dialog = await DialogService.ShowAsync<IncidentReportDialog>("", parameters, new DialogOptions { FullScreen = true, CloseButton = true, BackdropClick = false });
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            var updatedReq = (IncidentReportModel)result.Data!;
+            var index = _incidents.FindIndex(r => r.CaseNo == updatedReq.CaseNo);
+            if (index != -1)
+            {
+                _incidents[index] = updatedReq;
+                Snackbar.Add("Incident report updated successfully.", Severity.Success);
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool FilterFunc(IncidentReportModel req)
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (req.CaseNo.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.IncidentDescription.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (req.ApprovalStatus.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+
+    private Color GetStatusColor(string status) => status switch
+    {
+        "For Review" => Color.Info,
+        "Draft" => Color.Default,
+        "Closed" => Color.Success,
+        _ => Color.Default
+    };
+}
