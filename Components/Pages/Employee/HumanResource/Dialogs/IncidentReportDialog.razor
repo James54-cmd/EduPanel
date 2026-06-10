@@ -10,7 +10,7 @@
         </div>
     </TitleContent>
     <DialogContent>
-        <MudForm @ref="_form" Class="pa-4" Style="max-height: 75vh; overflow-y: auto;">
+        <MudForm @ref="_form" Class="pa-4">
             <div class="d-flex flex-column gap-6">
                 <!-- Header Info -->
                 <MudGrid>
@@ -90,8 +90,8 @@
     </DialogContent>
     <DialogActions>
         <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-start">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
             <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
         </div>
     </DialogActions>
 </MudDialog>
