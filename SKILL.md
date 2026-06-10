@@ -71,8 +71,12 @@ EduPanel implements a clean, premium Shadcn-like Slate aesthetic:
 
 - **Typography**: Replaced default fonts with **Figtree** loaded from Google Fonts in [App.razor](file:///c:/Users/JamesFanuelNDamaso/Documents/GitHub/EduPanel/Components/App.razor) and bound to `DefaultTypography`.
 - **Colors**: Optimized `PaletteLight` with custom Hex codes:
-  - **Primary**: `#18181b` (Zinc-900 / clean dark slate)
-  - **Secondary**: `#71717a` (Zinc-500)
+  - **Primary**: `#1B4F8A` (Navy Blue)
+  - **Secondary**: `#2E7D9E` (Steel Blue)
+  - **Tertiary** (Accent): `#F5A623` (Warm Amber)
+  - **Info** (Soft Accent): `#FFF0D0` (Pale Amber)
+  - **Background**: `#F4F6F9` (Cool White)
+  - **Surface**: `#FFFFFF` (White)
   - **Divider**: `#e4e4e7` (Zinc-200 / subtle borders)
   - **Success**: `#10b981` (Emerald-500)
   - **Warning**: `#f59e0b` (Amber-500)
@@ -99,8 +103,8 @@ To keep avatars visually consistent and premium across the app, gradient styles 
 
 | Class                       | Gradient                         |
 | --------------------------- | -------------------------------- |
-| `avatar-gradient-primary`   | Zinc-900 → Zinc-600 (dark slate) |
-| `avatar-gradient-secondary` | Zinc-500 → Zinc-400 (mid grey)   |
+| `avatar-gradient-primary`   | Navy Blue → Steel Blue           |
+| `avatar-gradient-secondary` | Steel Blue → Light Blue          |
 | `avatar-gradient-success`   | Emerald-600 → Emerald-400        |
 | `avatar-gradient-warning`   | Amber-600 → Amber-400            |
 | `avatar-gradient-error`     | Red-600 → Red-400                |

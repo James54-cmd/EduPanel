@@ -63,12 +63,12 @@ h1:focus {
 /* Usage: replace Color="Color.X" with Class="avatar-gradient-primary" etc.    */
 
 .avatar-gradient-primary .mud-avatar {
-    background: linear-gradient(135deg, #18181b 0%, #52525b 100%) !important;
+    background: linear-gradient(135deg, #1B4F8A 0%, #2E7D9E 100%) !important;
     color: #fff !important;
 }
 
 .avatar-gradient-secondary .mud-avatar {
-    background: linear-gradient(135deg, #71717a 0%, #a1a1aa 100%) !important;
+    background: linear-gradient(135deg, #2E7D9E 0%, #4A90E2 100%) !important;
     color: #fff !important;
 }
 
@@ -151,12 +151,12 @@ h1:focus {
 /* Usage: replace Color="Color.X" with Class="avatar-gradient-primary" etc.    */
 
 .avatar-gradient-primary .mud-avatar {
-    background: linear-gradient(135deg, #18181b 0%, #52525b 100%) !important;
+    background: linear-gradient(135deg, #1B4F8A 0%, #2E7D9E 100%) !important;
     color: #fff !important;
 }
 
 .avatar-gradient-secondary .mud-avatar {
-    background: linear-gradient(135deg, #71717a 0%, #a1a1aa 100%) !important;
+    background: linear-gradient(135deg, #2E7D9E 0%, #4A90E2 100%) !important;
     color: #fff !important;
 }
 
