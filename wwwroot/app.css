@@ -231,9 +231,18 @@ h1:focus {
     box-shadow: inset 4px 0 0 0 var(--mud-palette-primary) !important;
 }
 
+.mud-nav-menu .nav-group-active > .mud-nav-link .mud-nav-link-icon,
+.mud-nav-menu .nav-group-active > .mud-nav-link .mud-nav-link-expand-icon {
+    color: var(--mud-palette-primary) !important;
+}
+
 /* Active highlight for individual MudNavLink */
 .mud-nav-menu .mud-nav-link.active {
     color: var(--mud-palette-primary) !important;
     background-color: var(--mud-palette-primary-hover);
     box-shadow: inset 4px 0 0 0 var(--mud-palette-primary) !important;
+}
+
+.mud-nav-menu .mud-nav-link.active .mud-nav-link-icon {
+    color: var(--mud-palette-primary) !important;
 }
