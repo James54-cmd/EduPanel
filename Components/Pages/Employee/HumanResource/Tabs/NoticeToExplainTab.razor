@@ -7,7 +7,7 @@
     <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
         <div class="d-flex flex-column flex-md-row w-100 mb-4 gap-4 align-center justify-space-between">
             <div style="width: 100%; max-width: 250px;">
-                <MudSelect T="string" @bind-Value="_statusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="background-color: white;">
+                <MudSelect T="string" @bind-Value="_statusFilter" Label="Filter Status" Variant="Variant.Outlined" Margin="Margin.Dense" Style="background-color: white;">
                     <MudSelectItem Value="@("Open")">Open</MudSelectItem>
                     <MudSelectItem Value="@("Closed")">Closed</MudSelectItem>
                     <MudSelectItem Value="@("All")">All</MudSelectItem>
