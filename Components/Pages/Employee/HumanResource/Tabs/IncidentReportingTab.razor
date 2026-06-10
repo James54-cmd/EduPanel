@@ -152,7 +152,7 @@
             { x => x.Request, clonedReq }
         };
 
-        var dialog = await DialogService.ShowAsync<IncidentReportDialog>("", parameters, new DialogOptions { FullScreen = true, CloseButton = true, BackdropClick = false });
+        var dialog = await DialogService.ShowAsync<IncidentReportDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false });
         var result = await dialog.Result;
 
         if (result != null && !result.Canceled)
