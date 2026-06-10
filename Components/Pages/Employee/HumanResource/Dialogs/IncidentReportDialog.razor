@@ -4,7 +4,7 @@
 
 <MudDialog>
     <TitleContent>
-        <div class="px-4 pt-4 pb-2 border-b border-solid mud-border-lines-default">
+        <div class="px-4 pt-4 pb-2">
             <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">@DialogTitle</MudText>
             <MudText Typo="Typo.body2" Class="mud-text-secondary">@DialogDescription</MudText>
         </div>
@@ -30,11 +30,11 @@
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-4 text-uppercase">NAME OF EMPLOYEE/S</MudText>
                     
-                    <div class="d-flex align-end gap-4 mb-4">
-                        <MudAutocomplete T="IncidentEmployeeModel" Label="Search Employee" @bind-Value="_selectedSearchEmployee"
+                    <div class="d-flex align-center gap-4 mb-4">
+                        <MudAutocomplete T="IncidentEmployeeModel" Placeholder="Search Employee" @bind-Value="_selectedSearchEmployee"
                                          SearchFunc="@SearchEmployee" ToStringFunc="@(e => e==null ? null : $"{e.Name} - {e.Department}")"
                                          Variant="Variant.Outlined" Margin="Margin.Dense" ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="true"
-                                         Style="flex-grow: 1;" />
+                                         Class="mt-0" Style="flex-grow: 1;" />
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddEmployee" StartIcon="@Icons.Material.Filled.Add">Add</MudButton>
                     </div>
 
@@ -89,7 +89,7 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-start border-t border-solid mud-border-lines-default mt-4 pt-4">
+        <div class="d-flex w-100 px-4 pb-4 pt-2 gap-2 justify-start">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="Submit" Class="text-none px-6 font-weight-medium">Save</MudButton>
             <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel" Class="text-none px-4 font-weight-medium">Cancel</MudButton>
         </div>

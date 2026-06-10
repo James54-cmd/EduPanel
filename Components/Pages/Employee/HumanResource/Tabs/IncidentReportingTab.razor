@@ -7,14 +7,19 @@
 <!-- Top Action Bar -->
 <MudItem xs="12" Class="mb-4">
     <MudPaper Elevation="0" Outlined="true" Class="pa-4 rounded-xl d-flex flex-column flex-md-row align-center justify-space-between gap-4" Style="position: sticky; top: calc(var(--mud-appbar-height) + 16px); z-index: 100;">
-        <div class="d-flex align-center gap-4">
-            <MudText Typo="Typo.body1" Class="font-weight-medium">Draft</MudText>
+        <div class="d-flex align-center gap-4" Style="width: 100%; max-width: 250px;">
+            <MudSelect T="string" @bind-Value="_statusFilter" Variant="Variant.Outlined" Margin="Margin.Dense" Style="background-color: white;">
+                <MudSelectItem Value="@("ALL")">ALL</MudSelectItem>
+                <MudSelectItem Value="@("Draft")">Draft</MudSelectItem>
+                <MudSelectItem Value="@("For Review")">For Review</MudSelectItem>
+                <MudSelectItem Value="@("Closed")">Closed</MudSelectItem>
+            </MudSelect>
         </div>
         <div class="d-flex flex-wrap justify-center align-center gap-2">
             <MudButton Variant="Variant.Text" Color="Color.Default" Class="text-decoration-underline">For Review</MudButton>
-            <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="OpenNewRequestDialog">Add</MudButton>
-            <MudButton Variant="Variant.Text" Color="Color.Default">Delete</MudButton>
-            <MudButton Variant="Variant.Text" Color="Color.Default">Export</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenNewRequestDialog">Add</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete">Delete</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Download">Export</MudButton>
         </div>
     </MudPaper>
 </MudItem>
@@ -22,7 +27,7 @@
 <!-- Main Table -->
 <MudItem xs="12">
     <MudPaper Elevation="0" Outlined="true" Class="pa-5 rounded-xl">
-        <div class="d-flex flex-column flex-md-row justify-space-between align-md-center align-start w-100 gap-4 mb-4">
+        <div class="d-flex w-100 mb-4">
             <MudTextField @bind-Value="_searchString" Placeholder="Enter text to search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="width: 100%; max-width: 400px;"></MudTextField>
         </div>
         
@@ -61,6 +66,7 @@
 
 @code {
     private string _searchString = "";
+    private string _statusFilter = "ALL";
     private HashSet<IncidentReportModel> _selectedIncidents = new();
 
     private List<IncidentReportModel> _incidents = new()
@@ -105,7 +111,7 @@
             { x => x.Request, new IncidentReportModel { CaseNo = "Autonumber" } }
         };
 
-        var dialog = await DialogService.ShowAsync<IncidentReportDialog>("", parameters, new DialogOptions { FullScreen = true, CloseButton = true, BackdropClick = false });
+        var dialog = await DialogService.ShowAsync<IncidentReportDialog>("", parameters, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false });
         var result = await dialog.Result;
 
         if (result != null && !result.Canceled)
@@ -164,6 +170,9 @@
 
     private bool FilterFunc(IncidentReportModel req)
     {
+        if (_statusFilter != "ALL" && req.ApprovalStatus != _statusFilter)
+            return false;
+
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
 
