@@ -48,8 +48,10 @@
                     Text = "Independence Day",
                     CssClass = "mud-theme-success"
                 });
+                continue;
             }
-            else if (isRestDay)
+
+            if (isRestDay)
             {
                 _events.Add(new CustomCalendarItem
                 {
@@ -58,39 +60,38 @@
                     Text = "Rest Day",
                     CssClass = "mud-theme-secondary"
                 });
+                continue;
             }
-            else
+
+            // Let's randomize a bit for visual appeal. E.g. Late, Overtime, Regular.
+            var random = new Random(day);
+            var randVal = random.Next(1, 10);
+            var shiftText = "Regular Shift";
+            var css = "mud-theme-primary";
+
+            if (randVal == 1)
             {
-                // Let's randomize a bit for visual appeal. E.g. Late, Overtime, Regular.
-                var random = new Random(day);
-                var randVal = random.Next(1, 10);
-                var shiftText = "Regular Shift";
-                var css = "mud-theme-primary";
-
-                if (randVal == 1)
-                {
-                    shiftText = "Absent";
-                    css = "mud-theme-error";
-                }
-                else if (randVal == 2)
-                {
-                    shiftText = "Late In";
-                    css = "mud-theme-warning";
-                }
-                else if (randVal == 3)
-                {
-                    shiftText = "Overtime";
-                    css = "mud-theme-info";
-                }
-
-                _events.Add(new CustomCalendarItem
-                {
-                    Start = date.AddHours(8),
-                    End = date.AddHours(17),
-                    Text = shiftText,
-                    CssClass = css
-                });
+                shiftText = "Absent";
+                css = "mud-theme-error";
             }
+            if (randVal == 2)
+            {
+                shiftText = "Late In";
+                css = "mud-theme-warning";
+            }
+            if (randVal == 3)
+            {
+                shiftText = "Overtime";
+                css = "mud-theme-info";
+            }
+
+            _events.Add(new CustomCalendarItem
+            {
+                Start = date.AddHours(8),
+                End = date.AddHours(17),
+                Text = shiftText,
+                CssClass = css
+            });
         }
     }
 }

@@ -91,9 +91,14 @@
         _isMobileOrTablet = breakpoint <= Breakpoint.Md;
 
         if (_isMobileOrTablet && !wasMobile)
+        {
             _drawerOpen = false;
-        else if (!_isMobileOrTablet && wasMobile)
+        }
+
+        if (!_isMobileOrTablet && wasMobile)
+        {
             _drawerOpen = true;
+        }
 
         await InvokeAsync(StateHasChanged);
     }

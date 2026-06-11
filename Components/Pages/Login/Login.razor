@@ -3,32 +3,30 @@
 @layout LoginLayout
 @using EduPanel.Components.Layout
 
-<div class="login-grid-layout" style="display: grid; grid-template-columns: 1fr; min-height: 100vh; width: 100vw; overflow: hidden; margin: 0; padding: 0; box-sizing: border-box;">
-    <!-- Left Pane -->
-    <div class="d-flex flex-column" style="min-height: 100vh; width: 100%; box-sizing: border-box;">
-        <!-- Top Logo -->
-        <div class="d-flex align-center gap-2 pa-6" style="width: 100%;">
-            <a href="#" class="d-flex align-center gap-2 font-weight-bold" style="color: var(--mud-palette-text-primary); text-decoration: none; font-size: 1.1rem;">
-                <div class="d-flex align-center justify-center rounded bg-primary text-white" style="width: 24px; height: 24px;">
-                    <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Small" Style="font-size: 1rem; color: white;" />
-                </div>
-                <span>EduPanel Inc.</span>
-            </a>
-        </div>
-
-        <!-- Centered LoginForm -->
-        <div class="d-flex flex-grow-1 align-center justify-center pa-6" style="margin-top: -40px; box-sizing: border-box;">
-            <div class="w-100" style="max-width: 320px;">
-                <LoginForm />
-            </div>
-        </div>
-    </div>
-
-    <!-- Right Pane: Video (Visible only on md screens and up) -->
-    <div class="right-pane-bg" style="width: 100%; height: 100vh; overflow: hidden; position: relative; display: none; padding: 24px 0; box-sizing: border-box;">
+<div class="d-flex flex-column align-center justify-center pa-6" style="min-height: 100vh; width: 100vw; position: relative; overflow: hidden; margin: 0; padding: 0; box-sizing: border-box;">
+    <!-- Full Screen Background Video -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden;">
         <video autoplay loop muted playsinline 
-               style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 65px; border-bottom-left-radius: 65px; pointer-events: none;">
+               style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; filter: blur(8px); transform: scale(1.05);">
             <source src="/videos/login-bg.mp4" type="video/mp4" />
         </video>
+        <!-- Muted background gradient overlay -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(27, 79, 138, 0.4) 0%, rgba(46, 125, 158, 0.4) 100%); pointer-events: none;"></div>
+    </div>
+
+    <!-- Centered Content Wrapper -->
+    <div class="d-flex flex-column gap-6" style="width: 100%; max-width: 360px; z-index: 1; position: relative;">
+        
+        <!-- Top Logo Centered -->
+        <a href="#" class="d-flex align-center justify-center gap-2 font-weight-bold" style="color: white; text-decoration: none; font-size: 1.1rem;">
+            <div class="d-flex align-center justify-center rounded bg-white" style="width: 24px; height: 24px;">
+                <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Small" Style="font-size: 1rem; color: var(--mud-palette-primary);" />
+            </div>
+            <span>EduPanel Inc.</span>
+        </a>
+
+        <!-- Centered LoginForm -->
+        <LoginForm />
+
     </div>
 </div>

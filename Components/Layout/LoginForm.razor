@@ -2,86 +2,101 @@
 @inject NavigationManager Nav
 @inject ISnackbar Snackbar
 
-<MudForm @ref="form" Model="@model" Validation="@(modelValidator.ValidateValue)" ValidationDelay="0" Class="w-100">
-    <FieldGroup>
-        <div class="d-flex flex-column align-center gap-1 text-center mb-2">
-            <MudText Typo="Typo.h5" Class="font-weight-bold">Login to your account</MudText>
-            <FieldDescription>
-                Enter your email below to login to your account
+<div class="d-flex flex-column gap-6">
+    <MudCard Elevation="0" Style="border-radius: 32px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+        <MudCardHeader Class="d-flex flex-column align-center text-center pb-0 pt-6">
+            <MudText Typo="Typo.h5" Class="font-weight-bold">Welcome back</MudText>
+            <FieldDescription Class="mt-1">
+                Login with your Apple or Google account
             </FieldDescription>
-        </div>
+        </MudCardHeader>
+        <MudCardContent Class="pa-6">
+            <MudForm @ref="form" Model="@model" Validation="@(modelValidator.ValidateValue)" ValidationDelay="0" Class="w-100">
+                <FieldGroup>
+                    <div class="d-flex gap-3">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Default" FullWidth="true" Class="py-2" Style="border-radius: 12px; text-transform: none; border: 1px solid rgba(0,0,0,0.2); background: transparent;">
+                            <div class="d-flex align-center justify-center gap-2">
+                                <MudIcon Icon="@Icons.Custom.Brands.Apple" Size="Size.Small" />
+                                <span>Apple</span>
+                            </div>
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Default" FullWidth="true" Class="py-2" Style="border-radius: 12px; text-transform: none; border: 1px solid rgba(0,0,0,0.2); background: transparent;">
+                            <div class="d-flex align-center justify-center gap-2">
+                                <MudIcon Icon="@Icons.Custom.Brands.Google" Size="Size.Small" />
+                                <span>Google</span>
+                            </div>
+                        </MudButton>
+                    </div>
 
-        <Field>
-            <FieldLabel HtmlFor="email">Email</FieldLabel>
-            <MudTextField @bind-Value="model.Email"
-                          For="@(() => model.Email)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true"
-                          Placeholder="m@example.com"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          FullWidth="true" />
-        </Field>
+                    <FieldSeparator Style="margin-top: -12px; margin-bottom: -12px;">Or continue with</FieldSeparator>
 
-        <Field>
-            <div class="d-flex align-center justify-space-between w-100">
-                <FieldLabel HtmlFor="password">Password</FieldLabel>
-                <MudLink Href="#" Typo="Typo.body2" Underline="Underline.Hover" Color="Color.Secondary" Style="font-size: 0.85rem;">
-                    Forgot your password?
-                </MudLink>
-            </div>
-            <MudTextField @bind-Value="model.Password"
-                          For="@(() => model.Password)"
-                          Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true"
-                          InputType="InputType.Password"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          FullWidth="true" />
-        </Field>
+                    <Field>
+                        <FieldLabel HtmlFor="email">Email</FieldLabel>
+                        <MudTextField @bind-Value="model.Email"
+                                      For="@(() => model.Email)"
+                                      Validation="@(modelValidator.ValidateValue)"
+                                      Immediate="true"
+                                      Placeholder="m@example.com"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true" />
+                    </Field>
 
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <MudText Color="Color.Error" Typo="Typo.body2" Class="mt-1">
-                @errorMessage
-            </MudText>
-        }
+                    <Field>
+                        <div class="d-flex align-center justify-space-between w-100">
+                            <FieldLabel HtmlFor="password">Password</FieldLabel>
+                            <MudLink Href="#" Typo="Typo.body2" Underline="Underline.Hover" Color="Color.Primary" Class="font-weight-medium" Style="font-size: 0.85rem;">
+                                Forgot your password?
+                            </MudLink>
+                        </div>
+                        <MudTextField @bind-Value="model.Password"
+                                      For="@(() => model.Password)"
+                                      Validation="@(modelValidator.ValidateValue)"
+                                      Immediate="true"
+                                      InputType="InputType.Password"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true" />
+                    </Field>
 
-        <Field>
-            <LoadingButton OnClick="SubmitLogin"
-                           IsLoading="@_loading"
-                           LoadingText="Logging in..."
-                           Color="Color.Primary"
-                           Variant="Variant.Filled"
-                           FullWidth="true"
-                           Class="font-weight-bold">
-                <span>Login</span>
-            </LoadingButton>
-        </Field>
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <MudText Color="Color.Error" Typo="Typo.body2" Class="mt-1">
+                            @errorMessage
+                        </MudText>
+                    }
 
-        <FieldSeparator>Or continue with</FieldSeparator>
+                    <Field>
+                        <LoadingButton OnClick="SubmitLogin"
+                                       IsLoading="@_loading"
+                                       LoadingText="Logging in..."
+                                       Color="Color.Primary"
+                                       Variant="Variant.Filled"
+                                       FullWidth="true"
+                                       Class="font-weight-bold py-2"
+                                       Style="border-radius: 12px;">
+                            <span>Login</span>
+                        </LoadingButton>
+                        
+                        <FieldDescription Class="text-center mt-4">
+                            Don't have an account? 
+                            <MudLink Href="#" Underline="Underline.Hover" Color="Color.Primary" Class="font-weight-medium">
+                                Sign up
+                            </MudLink>
+                        </FieldDescription>
+                    </Field>
+                </FieldGroup>
+            </MudForm>
+        </MudCardContent>
+    </MudCard>
 
-        <Field>
-            <MudButton Variant="Variant.Outlined"
-                       Color="Color.Default"
-                       FullWidth="true"
-                       Class="py-2.5"
-                       Style="text-transform: none; border-color: var(--mud-palette-divider);">
-                <div class="d-flex align-center justify-center gap-2">
-                    <Blazicon Svg="BootstrapIcon.Github" style="width: 16px; height: 16px; fill: currentColor;" />
-                    <span>Login with GitHub</span>
-                </div>
-            </MudButton>
-            
-            <FieldDescription Class="text-center mt-3">
-                Don't have an account? 
-                <MudLink Href="#" Underline="Underline.Hover" Color="Color.Primary" Class="font-weight-medium">
-                    Sign up
-                </MudLink>
-            </FieldDescription>
-        </Field>
-    </FieldGroup>
-</MudForm>
+    <FieldDescription Class="px-6" Style="color: rgba(255,255,255,0.9); text-shadow: 0 1px 4px rgba(0,0,0,0.8); text-align: center; width: 100%;">
+        By clicking continue, you agree to our 
+        <MudLink Href="#" Underline="Underline.Hover" Color="Color.Inherit" Style="font-weight: 600;">Terms of Service</MudLink>
+        and 
+        <MudLink Href="#" Underline="Underline.Hover" Color="Color.Inherit" Style="font-weight: 600;">Privacy Policy</MudLink>.
+    </FieldDescription>
+</div>
 
 @code {
     private MudForm form = null!;

@@ -90,10 +90,10 @@
     /// </summary>
     private void SyncExpandedState()
     {
-        if (IsProfileActive) _expandedGroup = "Profile";
-        else if (IsAttendanceActive) _expandedGroup = "Attendance";
-        else if (IsHumanResourceActive) _expandedGroup = "HumanResource";
-        else if (IsPayrollActive) _expandedGroup = "Payroll";
+        if (IsProfileActive) { _expandedGroup = "Profile"; return; }
+        if (IsAttendanceActive) { _expandedGroup = "Attendance"; return; }
+        if (IsHumanResourceActive) { _expandedGroup = "HumanResource"; return; }
+        if (IsPayrollActive) { _expandedGroup = "Payroll"; return; }
     }
 
     public void Dispose()
