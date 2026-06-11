@@ -35,7 +35,7 @@
     }
     else
     {
-        <MudDrawer Class="@($"edu-mini-drawer {(!_drawerOpen ? "edu-drawer-minimized" : "")}")" @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Docked" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None" MiniWidth="64px">
+        <MudDrawer Class="@($"edu-mini-drawer {(!_drawerOpen ? "edu-drawer-minimized" : "")}")" @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Never" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None" MiniWidth="64px" Style="z-index: 1400;">
             <div class="d-flex align-center pa-4 flex-shrink-0 border-b mud-border-lines-default" style="height: 48px; overflow: hidden; white-space: nowrap;">
                 <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" Size="Size.Medium" Class="mr-2"/>
                 <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold edu-brand-text">EduPanel</MudText>
