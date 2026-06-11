@@ -1,47 +1,76 @@
 @page "/employee/dashboard"
 @namespace EduPanel.Components.Pages.Employee
+@inject ISnackbar Snackbar
+@inject NavigationManager Nav
 
 <div class="saas-dashboard-container">
     <!-- Hero Section -->
-    <div class="hero-section mb-12">
-        <MudText Typo="Typo.h3" Class="font-weight-bold mb-2">Welcome back, James</MudText>
-        <MudText Typo="Typo.h6" Class="text-muted">Manage your daily tasks and view your records efficiently.</MudText>
+    <div class="hero-section mb-8 d-flex justify-space-between align-center flex-wrap gap-4">
+        <div>
+            <MudText Typo="Typo.h3" Class="font-weight-bold mb-2">Welcome back, James</MudText>
+            <MudText Typo="Typo.h6" Class="text-muted">Here is what's happening with your workspace today.</MudText>
+        </div>
     </div>
+
+    <!-- Quick Stats Row (High UX) -->
+    <MudGrid Spacing="4" Class="mb-12">
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl text-white card-gradient-primary relative overflow-hidden h-100 stat-card cursor-pointer" @onclick='() => Nav.NavigateTo("/employee/attendance/leave-balance")'>
+                <MudText Typo="Typo.body1" Class="mb-2" Style="opacity: 0.9;">Available Leave Balance</MudText>
+                <MudText Typo="Typo.h3" Class="font-weight-bold mb-1">14 <span style="font-size: 1.2rem; font-weight: normal;">Days</span></MudText>
+                <MudText Typo="Typo.body2" Style="opacity: 0.8;">2 days expiring this year</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.EventAvailable" Class="absolute top-4 right-4 text-white" Style="opacity: 0.2; font-size: 4rem;" />
+                <div class="card-circle circle-1"></div>
+                <div class="card-circle circle-2"></div>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl text-white card-gradient-secondary relative overflow-hidden h-100 stat-card cursor-pointer" @onclick='() => Nav.NavigateTo("/employee/attendance/schedule-calendar")'>
+                <MudText Typo="Typo.body1" Class="mb-2" Style="opacity: 0.9;">Next Scheduled Shift</MudText>
+                <MudText Typo="Typo.h3" Class="font-weight-bold mb-1">08:00 <span style="font-size: 1.2rem; font-weight: normal;">AM</span></MudText>
+                <MudText Typo="Typo.body2" Style="opacity: 0.8;">Tomorrow (08:00 AM - 04:00 PM)</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="absolute top-4 right-4 text-white" Style="opacity: 0.2; font-size: 4rem;" />
+                <div class="card-circle circle-1"></div>
+                <div class="card-circle circle-2"></div>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl text-white card-gradient-success relative overflow-hidden h-100 stat-card cursor-pointer" @onclick='() => Nav.NavigateTo("/employee/human-resource/my-applications")'>
+                <MudText Typo="Typo.body1" Class="mb-2" Style="opacity: 0.9;">Pending Requests</MudText>
+                <MudText Typo="Typo.h3" Class="font-weight-bold mb-1">2 <span style="font-size: 1.2rem; font-weight: normal;">Items</span></MudText>
+                <MudText Typo="Typo.body2" Style="opacity: 0.8;">1 Leave, 1 Overtime</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.PendingActions" Class="absolute top-4 right-4 text-white" Style="opacity: 0.2; font-size: 4rem;" />
+                <div class="card-circle circle-1"></div>
+                <div class="card-circle circle-2"></div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 
     <!-- Quick Access Section -->
     <div class="quick-access-section mb-12">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Quick Access</MudText>
+        <div class="d-flex align-center justify-space-between mb-4">
+            <MudText Typo="Typo.h6" Class="font-weight-bold">Quick Actions</MudText>
+        </div>
         <div class="d-flex flex-wrap gap-4">
-            <MudButton Href="/employee/attendance/time-declaration" Variant="Variant.Filled" Color="Color.Primary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.AccessTime">Time Declaration</MudButton>
+            <MudButton OnClick='() => ShowPrototypeMessage("Clock In Successful!")' Variant="Variant.Filled" Color="Color.Primary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.AccessTime">Clock In Now</MudButton>
             <MudButton Href="/employee/attendance/leave-ob" Variant="Variant.Filled" Color="Color.Secondary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.EventNote">File Leave / OB</MudButton>
-            <MudButton Href="/employee/payroll/payroll-inquiry" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Receipt">Payroll Inquiry</MudButton>
+            <MudButton Href="/employee/payroll/payroll-inquiry" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Receipt">View Payslip</MudButton>
             <MudButton Href="/employee/attendance/schedule-calendar" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.CalendarMonth">My Schedule</MudButton>
             <MudButton Href="/employee/personal-data-update" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Person">Update Profile</MudButton>
         </div>
     </div>
 
-    <!-- HRIS Modules Grid -->
-    <div class="modules-section mb-12">
-        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">My Modules</MudText>
-        <MudGrid Spacing="4">
-            @foreach (var module in Modules)
-            {
-                <MudItem xs="12" sm="6" md="4" lg="3">
-                    <MudPaper Elevation="0" Class="module-card pa-6 h-100 d-flex flex-column">
-                        <div class="icon-wrapper mb-4" style="background-color: @module.IconBgColor;">
-                            <MudIcon Icon="@module.Icon" Color="@module.IconColor" Size="Size.Medium" />
-                        </div>
-                        <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">@module.Title</MudText>
-                        <MudText Typo="Typo.body2" Class="text-muted mb-6 flex-grow-1">@module.Description</MudText>
-                        <MudButton Href="@module.Route" Variant="Variant.Text" Color="Color.Primary" Class="explore-btn px-0" EndIcon="@Icons.Material.Filled.ArrowForward">Explore</MudButton>
-                    </MudPaper>
-                </MudItem>
-            }
-        </MudGrid>
-    </div>
-
+    <!-- Charts & Checklist Row -->
     <MudGrid Spacing="6" Class="mb-12">
-        <!-- Getting Started (Checklist) -->
+        <MudItem xs="12" md="7">
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl h-100 chart-card" Style="border: 1px solid #f1f5f9; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);">
+                <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Weekly Hours Overview</MudText>
+                <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="300px" />
+            </MudPaper>
+        </MudItem>
+
         <MudItem xs="12" md="5">
             <MudPaper Elevation="0" Class="pa-6 rounded-xl h-100 onboarding-card">
                 <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">Onboarding Tasks</MudText>
@@ -68,50 +97,97 @@
                 </div>
             </MudPaper>
         </MudItem>
-
-        <!-- What's New Section -->
-        <MudItem xs="12" md="7">
-            <MudPaper Elevation="0" Class="pa-6 rounded-xl h-100 release-notes-card">
-                <MudText Typo="Typo.h6" Class="font-weight-bold mb-6">Company Updates</MudText>
-                <div class="d-flex flex-column gap-6">
-                    @foreach (var note in ReleaseNotes)
-                    {
-                        <div class="release-note d-flex align-start">
-                            <div class="badge-wrapper mr-4 mt-1">
-                                <MudChip T="string" Size="Size.Small" Color="@GetBadgeColor(note.Badge)" Class="font-weight-bold rounded-lg text-uppercase px-2">@note.Badge</MudChip>
-                            </div>
-                            <div>
-                                <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-1">@note.Title</MudText>
-                                <MudText Typo="Typo.body2" Class="text-muted">@note.Description</MudText>
-                                <MudText Typo="Typo.caption" Class="text-muted mt-2 d-block">@note.Date</MudText>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </MudPaper>
-        </MudItem>
     </MudGrid>
 
-    <!-- Discover Features (Horizontally Scrollable) -->
+    <!-- HRIS Modules Grid -->
+    <div class="modules-section mb-12">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">My Modules</MudText>
+        <MudGrid Spacing="4">
+            @foreach (var module in Modules)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudPaper Elevation="0" Class="module-card pa-6 h-100 d-flex flex-column" @onclick="@(() => Nav.NavigateTo(module.Route))">
+                        <div class="icon-wrapper mb-4" style="background-color: @module.IconBgColor;">
+                            <MudIcon Icon="@module.Icon" Color="@module.IconColor" Size="Size.Medium" />
+                        </div>
+                        <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">@module.Title</MudText>
+                        <MudText Typo="Typo.body2" Class="text-muted mb-6 flex-grow-1">@module.Description</MudText>
+                        <div class="d-flex align-center text-primary font-weight-bold mt-auto" style="gap: 4px; transition: transform 0.2s;">
+                            <span>Explore Module</span>
+                            <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" />
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </div>
+
+    <!-- What's New Section -->
+    <MudPaper Elevation="0" Class="pa-8 rounded-xl release-notes-card mb-12" Style="background: #ffffff;">
+        <div class="d-flex justify-space-between align-center mb-6">
+            <MudText Typo="Typo.h6" Class="font-weight-bold">Company Updates & Features</MudText>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowForward">View All</MudButton>
+        </div>
+        
+        <MudGrid Spacing="4">
+            @foreach (var note in ReleaseNotes)
+            {
+                <MudItem xs="12" md="4">
+                    <div class="release-note-card pa-5 rounded-xl h-100" style="background: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.3s ease; cursor: pointer;" @onclick='() => ShowPrototypeMessage("Opening Announcement")'>
+                        <MudChip T="string" Size="Size.Small" Color="@GetBadgeColor(note.Badge)" Class="font-weight-bold rounded-lg text-uppercase px-2 mb-4">@note.Badge</MudChip>
+                        <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-2">@note.Title</MudText>
+                        <MudText Typo="Typo.body2" Class="text-muted mb-4 flex-grow-1">@note.Description</MudText>
+                        <div class="d-flex align-center text-muted">
+                            <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-2" />
+                            <MudText Typo="Typo.caption" Class="font-weight-bold">@note.Date</MudText>
+                        </div>
+                    </div>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Discover Features Carousel -->
     <div class="discover-section pb-12">
         <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Discover Your Portal</MudText>
-        <div class="horizontal-scroll-container">
+        <MudCarousel Class="mud-width-full rounded-xl" Style="height: 380px; background: #f8fafc; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="true" TData="object">
             @foreach (var feature in Features)
             {
-                <MudPaper Elevation="0" Class="feature-card pa-6">
-                    <div class="feature-icon mb-4 d-flex align-center justify-center">
-                        <MudIcon Icon="@feature.Icon" Size="Size.Large" Color="Color.Primary" />
+                <MudCarouselItem Transition="Transition.Slide">
+                    <div class="d-flex justify-center align-center h-100 pa-4">
+                        <MudPaper Elevation="0" Class="feature-card pa-8 d-flex flex-column align-center text-center h-100 justify-center" Style="width: 100%; max-width: 600px; background: transparent;">
+                            <div class="feature-icon mb-6 d-flex align-center justify-center" style="width: 80px; height: 80px; border-radius: 24px; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+                                <MudIcon Icon="@feature.Icon" Size="Size.Large" Color="Color.Primary" />
+                            </div>
+                            <MudText Typo="Typo.h5" Class="font-weight-bold mb-4">@feature.Title</MudText>
+                            <MudText Typo="Typo.body1" Class="text-muted mb-8">@feature.Description</MudText>
+                            <MudButton Href="@feature.Route" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="rounded-lg px-8 py-2 text-none font-weight-bold">Learn More</MudButton>
+                        </MudPaper>
                     </div>
-                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-2">@feature.Title</MudText>
-                    <MudText Typo="Typo.body2" Class="text-muted mb-4">@feature.Description</MudText>
-                    <MudButton Href="@feature.Route" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" Class="rounded-lg text-none">Learn More</MudButton>
-                </MudPaper>
+                </MudCarouselItem>
             }
-        </div>
+        </MudCarousel>
     </div>
 </div>
 
 @code {
+    private void ShowPrototypeMessage(string action)
+    {
+        Snackbar.Add($"{action} (Prototype Interaction)", MudBlazor.Severity.Info, config =>
+        {
+            config.Icon = Icons.Material.Filled.Info;
+            config.IconColor = Color.Info;
+            config.IconSize = Size.Medium;
+        });
+    }
+
+    public List<ChartSeries<double>> Series = new List<ChartSeries<double>>()
+    {
+        new ChartSeries<double>() { Name = "Regular Hours", Data = new double[] { 40, 40, 38, 42, 40 } },
+        new ChartSeries<double>() { Name = "Overtime",    Data = new double[] { 2, 0, 0, 4, 1 } },
+    };
+    public string[] XAxisLabels = { "Week 1", "Week 2", "Week 3", "Week 4", "Week 5" };
+
     public class ModuleInfo
     {
         public string Title { get; set; } = "";
@@ -154,6 +230,8 @@
     private void ToggleTask(ChecklistItem task)
     {
         task.IsCompleted = !task.IsCompleted;
+        if(task.IsCompleted)
+            Snackbar.Add($"Task '{task.Title}' marked as completed!", MudBlazor.Severity.Success);
     }
 
     public class ReleaseNote
