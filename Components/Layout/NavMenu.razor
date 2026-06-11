@@ -4,6 +4,8 @@
 <MudNavMenu Margin="Margin.Dense" Bordered="true">
     @if (IsEmployeeView)
     {
+        <MudNavLink Href="/employee/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+
         <MudNavGroup Title="My Profile" Icon="@Icons.Material.Filled.Person" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "Profile")" ExpandedChanged="@((e) => _expandedGroup = e ? "Profile" : "")" HideExpandIcon="false" Class="@ProfileGroupClass">
             <MudNavLink Href="/employee/profile" Match="NavLinkMatch.All">Employee Profile</MudNavLink>
             <MudNavLink Href="/employee/personal-data-update" Match="NavLinkMatch.All">Personal Data Update</MudNavLink>

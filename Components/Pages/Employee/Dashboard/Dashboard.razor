@@ -1,0 +1,160 @@
+@page "/employee/dashboard"
+@namespace EduPanel.Components.Pages.Employee
+
+<div class="dashboard-page">
+    <div class="d-flex align-center justify-space-between mb-6">
+        <div class="d-flex align-center">
+            <div class="d-flex align-center justify-center rounded bg-primary text-white mr-3" style="width: 32px; height: 32px;">
+                <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+            </div>
+            <MudText Typo="Typo.h5" Class="font-weight-bold">My Dashboard</MudText>
+        </div>
+        <MudLink Href="#" Color="Color.Primary" Class="d-flex align-center text-decoration-none">
+            Help & Resources <MudIcon Icon="@Icons.Material.Filled.HelpOutline" Size="Size.Small" Class="ml-1" />
+        </MudLink>
+    </div>
+
+    <MudGrid>
+        <!-- Top Cards -->
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-primary relative overflow-hidden h-100">
+                <MudText Typo="Typo.body1" Class="mb-2">Available Leave Balance</MudText>
+                <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">14 Days</MudText>
+                <MudText Typo="Typo.body2">2 days expiring this year</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.EventAvailable" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
+                <div class="card-circle circle-1"></div>
+                <div class="card-circle circle-2"></div>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-secondary relative overflow-hidden h-100">
+                <MudText Typo="Typo.body1" Class="mb-2">Next Scheduled Shift</MudText>
+                <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">Tomorrow</MudText>
+                <MudText Typo="Typo.body2">08:00 AM - 04:00 PM</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
+                <div class="card-circle circle-1"></div>
+                <div class="card-circle circle-2"></div>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-success relative overflow-hidden h-100">
+                <MudText Typo="Typo.body1" Class="mb-2">Training Progress</MudText>
+                <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">80%</MudText>
+                <MudText Typo="Typo.body2">2 modules remaining</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.ModelTraining" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
+                <div class="card-circle circle-1"></div>
+                <div class="card-circle circle-2"></div>
+            </MudPaper>
+        </MudItem>
+
+        <!-- Charts -->
+        <MudItem xs="12" md="7">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100">
+                <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Attendance Overview</MudText>
+                <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="300px" />
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="5">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100 relative">
+                <div class="d-flex align-center justify-space-between mb-4">
+                    <MudText Typo="Typo.h6" Class="font-weight-bold">Recent Leave Requests</MudText>
+                </div>
+                <div class="d-flex flex-column gap-4">
+                    @foreach (var request in LeaveRequests)
+                    {
+                        <div class="d-flex align-center justify-space-between p-3 rounded" style="background-color: var(--mud-palette-background);">
+                            <div class="d-flex flex-column">
+                                <MudText Typo="Typo.body2" Class="font-weight-bold">@request.Type</MudText>
+                                <MudText Typo="Typo.caption" Color="Color.Secondary">@request.DateRange</MudText>
+                            </div>
+                            <MudChip T="string" Size="Size.Small" Color="@(request.Status == "Approved" ? Color.Success : (request.Status == "Pending" ? Color.Warning : Color.Error))">
+                                @request.Status
+                            </MudChip>
+                        </div>
+                    }
+                </div>
+            </MudPaper>
+        </MudItem>
+
+        <!-- Recent Notices -->
+        <MudItem xs="12" Class="mt-4">
+            <MudPaper Elevation="0" Class="pa-6 rounded-lg">
+                <div class="d-flex align-center justify-space-between mb-4">
+                    <MudText Typo="Typo.h6" Class="font-weight-bold">Recent HR Announcements</MudText>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">View All</MudButton>
+                </div>
+                <MudSimpleTable Style="overflow-x: auto;" Hover="true" Elevation="0" Dense="true" Bordered="true">
+                    <thead>
+                        <tr>
+                            <th>Announcement</th>
+                            <th>Date Posted</th>
+                            <th>Department</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var notice in RecentNotices)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-center">
+                                        <MudIcon Icon="@Icons.Material.Filled.Campaign" Size="Size.Small" Color="Color.Primary" Class="mr-3" />
+                                        <MudText Typo="Typo.body2" Class="font-weight-bold">@notice.Title</MudText>
+                                    </div>
+                                </td>
+                                <td>@notice.Date.ToShortDateString()</td>
+                                <td>@notice.Department</td>
+                                <td>
+                                    <MudChip T="string" Size="Size.Small" Color="@(notice.Priority == "High" ? Color.Error : (notice.Priority == "Medium" ? Color.Warning : Color.Info))">
+                                        @notice.Priority
+                                    </MudChip>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    public List<ChartSeries<double>> Series = new List<ChartSeries<double>>()
+    {
+        new ChartSeries<double>() { Name = "Hours Worked", Data = new double[] { 160, 155, 168, 160, 170, 165, 160, 168 } },
+        new ChartSeries<double>() { Name = "Overtime",    Data = new double[] { 5, 2, 10, 0, 15, 8, 4, 12 } },
+    };
+    public string[] XAxisLabels = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG" };
+
+    public class LeaveRequestModel
+    {
+        public string Type { get; set; } = "";
+        public string DateRange { get; set; } = "";
+        public string Status { get; set; } = "";
+    }
+
+    public List<LeaveRequestModel> LeaveRequests = new List<LeaveRequestModel>
+    {
+        new LeaveRequestModel { Type = "Annual Leave", DateRange = "Aug 15 - Aug 20", Status = "Approved" },
+        new LeaveRequestModel { Type = "Sick Leave", DateRange = "Jul 10 - Jul 11", Status = "Approved" },
+        new LeaveRequestModel { Type = "Personal Leave", DateRange = "Sep 05 - Sep 06", Status = "Pending" }
+    };
+
+    public class NoticeModel
+    {
+        public string Title { get; set; } = "";
+        public DateTime Date { get; set; }
+        public string Department { get; set; } = "";
+        public string Priority { get; set; } = "";
+    }
+
+    public List<NoticeModel> RecentNotices = new List<NoticeModel>
+    {
+        new NoticeModel { Title = "Q3 Townhall Meeting", Date = DateTime.Now.AddDays(-2), Department = "Company-Wide", Priority = "High" },
+        new NoticeModel { Title = "Updated Health and Safety Guidelines", Date = DateTime.Now.AddDays(-5), Department = "HR", Priority = "Medium" },
+        new NoticeModel { Title = "Office Setup Maintenance", Date = DateTime.Now.AddDays(-10), Department = "IT", Priority = "Low" }
+    };
+}
