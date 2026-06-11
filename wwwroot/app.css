@@ -192,8 +192,7 @@ h1:focus {
 /* ── Mini Drawer Global Fixes ── */
 /* When drawer is closed (Mini mode) and NOT hovered, hide text elements */
 .edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-link-text,
-.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-group-text,
-.edu-mini-drawer.edu-drawer-minimized:not(:hover) .edu-brand-text {
+.edu-mini-drawer.edu-drawer-minimized:not(:hover) .mud-nav-group-text {
     display: none !important;
 }
 
@@ -210,11 +209,11 @@ h1:focus {
 
 /* Ensure text doesn't wrap horizontally when the drawer is expanding */
 .edu-mini-drawer .mud-nav-link-text,
-.edu-mini-drawer .mud-nav-group-text,
-.edu-mini-drawer .edu-brand-text {
+.edu-mini-drawer .mud-nav-group-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
 }
 
 /* ── Global Nav Menu Border Highlights ── */
