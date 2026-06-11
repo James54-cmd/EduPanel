@@ -42,6 +42,12 @@
             <MudNavLink Href="/employee/human-resource/notice-to-explain" Match="NavLinkMatch.All">Notice to Explain</MudNavLink>
             <MudNavLink Href="/employee/human-resource/my-applications" Match="NavLinkMatch.All">My Application/s</MudNavLink>
         </MudNavGroup>
+
+        <MudNavGroup Title="Learning Dev't." Icon="@Icons.Material.Filled.School" ExpandIcon="@Icons.Material.Filled.ArrowDropDown" Expanded="@(_expandedGroup == "LearningDevelopment")" ExpandedChanged="@((e) => _expandedGroup = e ? "LearningDevelopment" : "")" HideExpandIcon="false" Class="@LearningDevelopmentGroupClass">
+            <MudNavLink Href="/employee/learning-development/ld-implementation" Match="NavLinkMatch.All">L&D Implementation</MudNavLink>
+            <MudNavLink Href="/employee/learning-development/training-matrix" Match="NavLinkMatch.All">Training Matrix</MudNavLink>
+            <MudNavLink Href="/employee/learning-development/training-request" Match="NavLinkMatch.All">Training Request</MudNavLink>
+        </MudNavGroup>
     }
     else
     {
@@ -68,10 +74,13 @@
 
     private bool IsPayrollActive => NavManager.Uri.Contains("/employee/payroll", StringComparison.OrdinalIgnoreCase);
 
+    private bool IsLearningDevelopmentActive => NavManager.Uri.Contains("/employee/learning-development", StringComparison.OrdinalIgnoreCase);
+
     private string ProfileGroupClass => IsProfileActive ? "nav-group-active" : "";
     private string AttendanceGroupClass => IsAttendanceActive ? "nav-group-active" : "";
     private string HumanResourceGroupClass => IsHumanResourceActive ? "nav-group-active" : "";
     private string PayrollGroupClass => IsPayrollActive ? "nav-group-active" : "";
+    private string LearningDevelopmentGroupClass => IsLearningDevelopmentActive ? "nav-group-active" : "";
 
     protected override void OnInitialized()
     {
@@ -94,6 +103,7 @@
         if (IsAttendanceActive) { _expandedGroup = "Attendance"; return; }
         if (IsHumanResourceActive) { _expandedGroup = "HumanResource"; return; }
         if (IsPayrollActive) { _expandedGroup = "Payroll"; return; }
+        if (IsLearningDevelopmentActive) { _expandedGroup = "LearningDevelopment"; return; }
     }
 
     public void Dispose()

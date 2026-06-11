@@ -1,0 +1,42 @@
+@page "/employee/learning-development/{PageSlug}"
+@namespace EduPanel.Components.Pages.Employee.LearningDevelopment
+@using EduPanel.Components.UI
+
+<div class="pa-4">
+    <!-- Header Section -->
+    <MudPaper Elevation="0" Outlined="true" Class="pa-6 rounded-xl mb-6 header-card">
+        <div class="d-flex align-center gap-4">
+            <div class="icon-wrapper">
+                <MudIcon Icon="@Details.Icon" Size="Size.Large" Color="Color.Primary" />
+            </div>
+            <div>
+                <MudText Typo="Typo.h4" Class="font-weight-bold mb-1" Style="letter-spacing: -0.5px;">@Details.Title</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">@Details.Description</MudText>
+            </div>
+        </div>
+    </MudPaper>
+
+    <MudGrid>
+        <UnderDevelopment />
+    </MudGrid>
+</div>
+
+@code {
+    [Parameter]
+    public string PageSlug { get; set; } = "";
+
+    private class PageDetails
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Icon { get; set; } = "";
+    }
+
+    private PageDetails Details => PageSlug.ToLowerInvariant() switch
+    {
+        "ld-implementation" => new() { Title = "L&D Implementation", Description = "Learning and Development Implementation.", Icon = Icons.Material.Filled.MenuBook },
+        "training-matrix" => new() { Title = "Training Matrix", Description = "View the Training Matrix.", Icon = Icons.Material.Filled.TableChart },
+        "training-request" => new() { Title = "Training Request", Description = "Submit a training request.", Icon = Icons.Material.Filled.Assignment },
+        _ => new() { Title = "Learning Dev't.", Description = "Learning and Development.", Icon = Icons.Material.Filled.School }
+    };
+}
