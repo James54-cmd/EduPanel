@@ -1,160 +1,197 @@
 @page "/employee/dashboard"
 @namespace EduPanel.Components.Pages.Employee
 
-<div class="dashboard-page">
-    <div class="d-flex align-center justify-space-between mb-6">
-        <div class="d-flex align-center">
-            <div class="d-flex align-center justify-center rounded bg-primary text-white mr-3" style="width: 32px; height: 32px;">
-                <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
-            </div>
-            <MudText Typo="Typo.h5" Class="font-weight-bold">My Dashboard</MudText>
-        </div>
-        <MudLink Href="#" Color="Color.Primary" Class="d-flex align-center text-decoration-none">
-            Help & Resources <MudIcon Icon="@Icons.Material.Filled.HelpOutline" Size="Size.Small" Class="ml-1" />
-        </MudLink>
+<div class="saas-dashboard-container">
+    <!-- Hero Section -->
+    <div class="hero-section mb-12">
+        <MudText Typo="Typo.h3" Class="font-weight-bold mb-2">Welcome back, James</MudText>
+        <MudText Typo="Typo.h6" Class="text-muted">Manage your daily tasks and view your records efficiently.</MudText>
     </div>
 
-    <MudGrid>
-        <!-- Top Cards -->
-        <MudItem xs="12" md="4">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-primary relative overflow-hidden h-100">
-                <MudText Typo="Typo.body1" Class="mb-2">Available Leave Balance</MudText>
-                <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">14 Days</MudText>
-                <MudText Typo="Typo.body2">2 days expiring this year</MudText>
-                <MudIcon Icon="@Icons.Material.Filled.EventAvailable" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
-                <div class="card-circle circle-1"></div>
-                <div class="card-circle circle-2"></div>
-            </MudPaper>
-        </MudItem>
+    <!-- Quick Access Section -->
+    <div class="quick-access-section mb-12">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Quick Access</MudText>
+        <div class="d-flex flex-wrap gap-4">
+            <MudButton Href="/employee/attendance/time-declaration" Variant="Variant.Filled" Color="Color.Primary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.AccessTime">Time Declaration</MudButton>
+            <MudButton Href="/employee/attendance/leave-ob" Variant="Variant.Filled" Color="Color.Secondary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.EventNote">File Leave / OB</MudButton>
+            <MudButton Href="/employee/payroll/payroll-inquiry" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Receipt">Payroll Inquiry</MudButton>
+            <MudButton Href="/employee/attendance/schedule-calendar" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.CalendarMonth">My Schedule</MudButton>
+            <MudButton Href="/employee/personal-data-update" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Person">Update Profile</MudButton>
+        </div>
+    </div>
 
-        <MudItem xs="12" md="4">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-secondary relative overflow-hidden h-100">
-                <MudText Typo="Typo.body1" Class="mb-2">Next Scheduled Shift</MudText>
-                <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">Tomorrow</MudText>
-                <MudText Typo="Typo.body2">08:00 AM - 04:00 PM</MudText>
-                <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
-                <div class="card-circle circle-1"></div>
-                <div class="card-circle circle-2"></div>
-            </MudPaper>
-        </MudItem>
+    <!-- HRIS Modules Grid -->
+    <div class="modules-section mb-12">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">My Modules</MudText>
+        <MudGrid Spacing="4">
+            @foreach (var module in Modules)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudPaper Elevation="0" Class="module-card pa-6 h-100 d-flex flex-column">
+                        <div class="icon-wrapper mb-4" style="background-color: @module.IconBgColor;">
+                            <MudIcon Icon="@module.Icon" Color="@module.IconColor" Size="Size.Medium" />
+                        </div>
+                        <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">@module.Title</MudText>
+                        <MudText Typo="Typo.body2" Class="text-muted mb-6 flex-grow-1">@module.Description</MudText>
+                        <MudButton Href="@module.Route" Variant="Variant.Text" Color="Color.Primary" Class="explore-btn px-0" EndIcon="@Icons.Material.Filled.ArrowForward">Explore</MudButton>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </div>
 
-        <MudItem xs="12" md="4">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg text-white card-gradient-success relative overflow-hidden h-100">
-                <MudText Typo="Typo.body1" Class="mb-2">Training Progress</MudText>
-                <MudText Typo="Typo.h4" Class="font-weight-bold mb-6">80%</MudText>
-                <MudText Typo="Typo.body2">2 modules remaining</MudText>
-                <MudIcon Icon="@Icons.Material.Filled.ModelTraining" Class="absolute top-4 right-4 text-white" Style="opacity: 0.5; font-size: 2rem;" />
-                <div class="card-circle circle-1"></div>
-                <div class="card-circle circle-2"></div>
-            </MudPaper>
-        </MudItem>
-
-        <!-- Charts -->
-        <MudItem xs="12" md="7">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100">
-                <MudText Typo="Typo.h6" Class="mb-4 font-weight-bold">Attendance Overview</MudText>
-                <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="300px" />
-            </MudPaper>
-        </MudItem>
-
+    <MudGrid Spacing="6" Class="mb-12">
+        <!-- Getting Started (Checklist) -->
         <MudItem xs="12" md="5">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg h-100 relative">
-                <div class="d-flex align-center justify-space-between mb-4">
-                    <MudText Typo="Typo.h6" Class="font-weight-bold">Recent Leave Requests</MudText>
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl h-100 onboarding-card">
+                <MudText Typo="Typo.h6" Class="font-weight-bold mb-2">Onboarding Tasks</MudText>
+                <MudText Typo="Typo.body2" Class="text-muted mb-6">Complete these steps to set up your profile.</MudText>
+                
+                <div class="d-flex align-center mb-6">
+                    <MudProgressLinear Color="Color.Success" Value="@CompletionPercentage" Class="flex-grow-1 mr-4" Rounded="true" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle2" Class="font-weight-bold">@CompletionPercentage%</MudText>
                 </div>
-                <div class="d-flex flex-column gap-4">
-                    @foreach (var request in LeaveRequests)
+
+                <div class="checklist d-flex flex-column gap-3">
+                    @foreach (var task in Checklist)
                     {
-                        <div class="d-flex align-center justify-space-between p-3 rounded" style="background-color: var(--mud-palette-background);">
-                            <div class="d-flex flex-column">
-                                <MudText Typo="Typo.body2" Class="font-weight-bold">@request.Type</MudText>
-                                <MudText Typo="Typo.caption" Color="Color.Secondary">@request.DateRange</MudText>
+                        <div class="checklist-item d-flex align-center @(task.IsCompleted ? "completed" : "")" @onclick="() => ToggleTask(task)">
+                            <div class="check-circle mr-3 d-flex align-center justify-center">
+                                @if (task.IsCompleted)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Check" Size="Size.Small" Color="Color.Success" />
+                                }
                             </div>
-                            <MudChip T="string" Size="Size.Small" Color="@(request.Status == "Approved" ? Color.Success : (request.Status == "Pending" ? Color.Warning : Color.Error))">
-                                @request.Status
-                            </MudChip>
+                            <MudText Typo="Typo.body2" Class="task-text font-weight-medium">@task.Title</MudText>
                         </div>
                     }
                 </div>
             </MudPaper>
         </MudItem>
 
-        <!-- Recent Notices -->
-        <MudItem xs="12" Class="mt-4">
-            <MudPaper Elevation="0" Class="pa-6 rounded-lg">
-                <div class="d-flex align-center justify-space-between mb-4">
-                    <MudText Typo="Typo.h6" Class="font-weight-bold">Recent HR Announcements</MudText>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary">View All</MudButton>
+        <!-- What's New Section -->
+        <MudItem xs="12" md="7">
+            <MudPaper Elevation="0" Class="pa-6 rounded-xl h-100 release-notes-card">
+                <MudText Typo="Typo.h6" Class="font-weight-bold mb-6">Company Updates</MudText>
+                <div class="d-flex flex-column gap-6">
+                    @foreach (var note in ReleaseNotes)
+                    {
+                        <div class="release-note d-flex align-start">
+                            <div class="badge-wrapper mr-4 mt-1">
+                                <MudChip T="string" Size="Size.Small" Color="@GetBadgeColor(note.Badge)" Class="font-weight-bold rounded-lg text-uppercase px-2">@note.Badge</MudChip>
+                            </div>
+                            <div>
+                                <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-1">@note.Title</MudText>
+                                <MudText Typo="Typo.body2" Class="text-muted">@note.Description</MudText>
+                                <MudText Typo="Typo.caption" Class="text-muted mt-2 d-block">@note.Date</MudText>
+                            </div>
+                        </div>
+                    }
                 </div>
-                <MudSimpleTable Style="overflow-x: auto;" Hover="true" Elevation="0" Dense="true" Bordered="true">
-                    <thead>
-                        <tr>
-                            <th>Announcement</th>
-                            <th>Date Posted</th>
-                            <th>Department</th>
-                            <th>Priority</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var notice in RecentNotices)
-                        {
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-center">
-                                        <MudIcon Icon="@Icons.Material.Filled.Campaign" Size="Size.Small" Color="Color.Primary" Class="mr-3" />
-                                        <MudText Typo="Typo.body2" Class="font-weight-bold">@notice.Title</MudText>
-                                    </div>
-                                </td>
-                                <td>@notice.Date.ToShortDateString()</td>
-                                <td>@notice.Department</td>
-                                <td>
-                                    <MudChip T="string" Size="Size.Small" Color="@(notice.Priority == "High" ? Color.Error : (notice.Priority == "Medium" ? Color.Warning : Color.Info))">
-                                        @notice.Priority
-                                    </MudChip>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </MudSimpleTable>
             </MudPaper>
         </MudItem>
     </MudGrid>
+
+    <!-- Discover Features (Horizontally Scrollable) -->
+    <div class="discover-section pb-12">
+        <MudText Typo="Typo.h6" Class="font-weight-bold mb-4">Discover Your Portal</MudText>
+        <div class="horizontal-scroll-container">
+            @foreach (var feature in Features)
+            {
+                <MudPaper Elevation="0" Class="feature-card pa-6">
+                    <div class="feature-icon mb-4 d-flex align-center justify-center">
+                        <MudIcon Icon="@feature.Icon" Size="Size.Large" Color="Color.Primary" />
+                    </div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-2">@feature.Title</MudText>
+                    <MudText Typo="Typo.body2" Class="text-muted mb-4">@feature.Description</MudText>
+                    <MudButton Href="@feature.Route" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" Class="rounded-lg text-none">Learn More</MudButton>
+                </MudPaper>
+            }
+        </div>
+    </div>
 </div>
 
 @code {
-    public List<ChartSeries<double>> Series = new List<ChartSeries<double>>()
-    {
-        new ChartSeries<double>() { Name = "Hours Worked", Data = new double[] { 160, 155, 168, 160, 170, 165, 160, 168 } },
-        new ChartSeries<double>() { Name = "Overtime",    Data = new double[] { 5, 2, 10, 0, 15, 8, 4, 12 } },
-    };
-    public string[] XAxisLabels = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG" };
-
-    public class LeaveRequestModel
-    {
-        public string Type { get; set; } = "";
-        public string DateRange { get; set; } = "";
-        public string Status { get; set; } = "";
-    }
-
-    public List<LeaveRequestModel> LeaveRequests = new List<LeaveRequestModel>
-    {
-        new LeaveRequestModel { Type = "Annual Leave", DateRange = "Aug 15 - Aug 20", Status = "Approved" },
-        new LeaveRequestModel { Type = "Sick Leave", DateRange = "Jul 10 - Jul 11", Status = "Approved" },
-        new LeaveRequestModel { Type = "Personal Leave", DateRange = "Sep 05 - Sep 06", Status = "Pending" }
-    };
-
-    public class NoticeModel
+    public class ModuleInfo
     {
         public string Title { get; set; } = "";
-        public DateTime Date { get; set; }
-        public string Department { get; set; } = "";
-        public string Priority { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Route { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public Color IconColor { get; set; }
+        public string IconBgColor { get; set; } = "";
     }
 
-    public List<NoticeModel> RecentNotices = new List<NoticeModel>
+    public List<ModuleInfo> Modules = new()
     {
-        new NoticeModel { Title = "Q3 Townhall Meeting", Date = DateTime.Now.AddDays(-2), Department = "Company-Wide", Priority = "High" },
-        new NoticeModel { Title = "Updated Health and Safety Guidelines", Date = DateTime.Now.AddDays(-5), Department = "HR", Priority = "Medium" },
-        new NoticeModel { Title = "Office Setup Maintenance", Date = DateTime.Now.AddDays(-10), Department = "IT", Priority = "Low" }
+        new() { Title = "My Profile", Description = "View and update your personal information and documents.", Route = "/employee/profile", Icon = Icons.Material.Filled.Person, IconColor = Color.Primary, IconBgColor = "rgba(27, 79, 138, 0.1)" },
+        new() { Title = "Attendance", Description = "Check your schedules, DTR, and shift changes.", Route = "/employee/attendance/inquiry", Icon = Icons.Material.Filled.AccessTime, IconColor = Color.Secondary, IconBgColor = "rgba(46, 125, 158, 0.1)" },
+        new() { Title = "Leave & Time Off", Description = "File leave requests, overtimes, and check available balances.", Route = "/employee/attendance/leave-balance", Icon = Icons.Material.Filled.EventAvailable, IconColor = Color.Success, IconBgColor = "rgba(16, 185, 129, 0.1)" },
+        new() { Title = "Payroll & Loans", Description = "View your payroll inquiries, loan details, and contributions.", Route = "/employee/payroll/payroll-inquiry", Icon = Icons.Material.Filled.AttachMoney, IconColor = Color.Warning, IconBgColor = "rgba(245, 158, 11, 0.1)" },
+        new() { Title = "Benefits & Requests", Description = "Manage benefit applications, enrollments, and employee requests.", Route = "/employee/human-resource/benefit-balance", Icon = Icons.Material.Filled.LocalActivity, IconColor = Color.Info, IconBgColor = "rgba(14, 165, 233, 0.1)" },
+        new() { Title = "Evaluations", Description = "View your performance evaluations and career opportunities.", Route = "/employee/human-resource/employee-evaluation", Icon = Icons.Material.Filled.Insights, IconColor = Color.Error, IconBgColor = "rgba(239, 68, 68, 0.1)" },
+        new() { Title = "Learning & Dev't.", Description = "Access training matrices, requests, and implementation.", Route = "/employee/learning-development/training-matrix", Icon = Icons.Material.Filled.School, IconColor = Color.Primary, IconBgColor = "rgba(27, 79, 138, 0.1)" },
+        new() { Title = "HR Forms", Description = "Submit SALN forms, clearance, and incident reports.", Route = "/employee/human-resource/saln-form", Icon = Icons.Material.Filled.Assignment, IconColor = Color.Secondary, IconBgColor = "rgba(46, 125, 158, 0.1)" }
+    };
+
+    public class ChecklistItem
+    {
+        public string Title { get; set; } = "";
+        public bool IsCompleted { get; set; }
+    }
+
+    public List<ChecklistItem> Checklist = new()
+    {
+        new() { Title = "Complete personal profile", IsCompleted = true },
+        new() { Title = "Submit tax requirements", IsCompleted = true },
+        new() { Title = "Review company handbook", IsCompleted = false },
+        new() { Title = "Complete onboarding training", IsCompleted = false },
+        new() { Title = "View upcoming schedule", IsCompleted = false }
+    };
+
+    public int CompletionPercentage => Checklist.Any() ? (int)Math.Round((double)Checklist.Count(c => c.IsCompleted) / Checklist.Count * 100) : 0;
+
+    private void ToggleTask(ChecklistItem task)
+    {
+        task.IsCompleted = !task.IsCompleted;
+    }
+
+    public class ReleaseNote
+    {
+        public string Badge { get; set; } = "";
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Date { get; set; } = "";
+    }
+
+    public List<ReleaseNote> ReleaseNotes = new()
+    {
+        new() { Badge = "Important", Title = "Upcoming Townhall Meeting", Description = "Join us this Friday for the quarterly company updates.", Date = "October 24, 2026" },
+        new() { Badge = "New Feature", Title = "Mobile Payslip Access", Description = "You can now download your payslips directly from your mobile device.", Date = "October 18, 2026" },
+        new() { Badge = "Reminder", Title = "Annual Health Exam", Description = "Please schedule your annual physical exam by the end of November.", Date = "October 10, 2026" }
+    };
+
+    private Color GetBadgeColor(string badge) => badge switch
+    {
+        "Important" => Color.Error,
+        "New Feature" => Color.Success,
+        "Reminder" => Color.Warning,
+        _ => Color.Info
+    };
+
+    public class FeatureHighlight
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Icon { get; set; } = "";
+        public string Route { get; set; } = "";
+    }
+
+    public List<FeatureHighlight> Features = new()
+    {
+        new() { Title = "Employee Self-Service", Description = "Take control of your data by updating your own records and details easily.", Icon = Icons.Material.Filled.ManageAccounts, Route = "/employee/personal-data-update" },
+        new() { Title = "Instant Leave Requests", Description = "File leaves on the go and track approval statuses in real-time.", Icon = Icons.Material.Filled.FactCheck, Route = "/employee/attendance/leave-ob" },
+        new() { Title = "Transparent Payslips", Description = "Access detailed breakdowns of your earnings and deductions anytime.", Icon = Icons.Material.Filled.RequestQuote, Route = "/employee/payroll/payroll-inquiry" },
+        new() { Title = "Company Directory", Description = "Find and connect with colleagues across different departments effortlessly.", Icon = Icons.Material.Filled.AccountTree, Route = "#" }
     };
 }
