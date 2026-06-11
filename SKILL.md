@@ -169,3 +169,13 @@ When dealing with complex data that requires a parent-child relationship (e.g., 
 - Implement an interactive **RowClick** event handler on the parent `MudTable` (`OnRowClick="OnRowClick"`).
 - Capture the clicked item into a state variable (e.g., `_selectedBalance`).
 - Conditionally render a beautifully padded `<MudPaper>` *below* the main table containing the related sub-tables or specific details. This approach creates a smooth, intuitive master-detail workflow without cluttered modals.
+
+---
+
+## 🛡️ Guard Clauses & Code Flattening
+
+To keep logic clear and maintainable, avoid deep nesting of `if` and `else if` statements. Instead, use **guard clauses** to return early from methods when conditions are not met or when a specific condition has already been fulfilled.
+
+- **Early Returns**: Check for invalid states (e.g., `!form.IsValid`) at the top of methods and return immediately.
+- **Flattened Logic**: Handle successful cases in sequence and return early instead of wrapping everything in an `if/else` block.
+- **State Cleanup**: When using multiple return points, wrap the main logic in a `try...finally` block to ensure that state variables (like `_loading = false;`) are properly reset before the method exits.

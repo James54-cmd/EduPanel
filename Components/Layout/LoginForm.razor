@@ -97,7 +97,14 @@
         errorMessage = "";
 
         Console.WriteLine($"[Login] Form IsValid after validation: {form.IsValid}");
-        if (form.IsValid)
+        
+        if (!form.IsValid)
+        {
+            Console.WriteLine("[Login] Form is invalid. Stopping submission.");
+            return;
+        }
+
+        try
         {
             _loading = true;
             StateHasChanged();
@@ -111,25 +118,24 @@
                 Console.WriteLine("[Login] Credentials matched. Navigating to dashboard...");
                 Snackbar.Add("Login successful!", MudBlazor.Severity.Success);
                 Nav.NavigateTo("/dashboard");
+                return;
             }
-            else if (model.Email == "employee@example.com" && model.Password == "employee123")
+
+            if (model.Email == "employee@example.com" && model.Password == "employee123")
             {
                 Console.WriteLine("[Login] Credentials matched. Navigating to employee profile...");
                 Snackbar.Add("Login successful as Employee!", MudBlazor.Severity.Success);
                 Nav.NavigateTo("/employee/profile");
-            }
-            else
-            {
-                Console.WriteLine("[Login] Credentials failed. Showing error...");
-                errorMessage = "Invalid email or password.";
-                Snackbar.Add("Login failed. Please check your credentials.", MudBlazor.Severity.Error);
+                return;
             }
 
-            _loading = false;
+            Console.WriteLine("[Login] Credentials failed. Showing error...");
+            errorMessage = "Invalid email or password.";
+            Snackbar.Add("Login failed. Please check your credentials.", MudBlazor.Severity.Error);
         }
-        else
+        finally
         {
-            Console.WriteLine("[Login] Form is invalid. Stopping submission.");
+            _loading = false;
         }
     }
 
