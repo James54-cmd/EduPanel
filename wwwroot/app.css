@@ -188,6 +188,39 @@ h1:focus {
 .text-error { color: var(--mud-palette-error) !important; }
 .text-warning { color: var(--mud-palette-warning) !important; }
 .text-secondary { color: var(--mud-palette-text-secondary) !important; }
+.text-muted { color: #64748b !important; }
+.cursor-pointer { cursor: pointer; }
+
+/* ── Positioning utilities (used by gradient stat cards) ── */
+.relative { position: relative !important; }
+.absolute { position: absolute !important; }
+.top-4 { top: 1.5rem !important; }
+.right-4 { right: 1.5rem !important; }
+.overflow-hidden { overflow: hidden !important; }
+.h-100 { height: 100% !important; }
+.text-white { color: white !important; }
+.text-white * { color: white !important; }
+
+/* ── Gradient Stat Cards ──
+   Shared by Admin & Employee dashboards. Use Class="card-gradient-*" on a
+   MudPaper instead of inline gradient styles. */
+.card-gradient-primary   { background: linear-gradient(135deg, #1B4F8A 0%, #2E7D9E 100%) !important; color: white !important; }
+.card-gradient-secondary { background: linear-gradient(135deg, #2E7D9E 0%, #63a4c4 100%) !important; color: white !important; }
+.card-gradient-success   { background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important; color: white !important; }
+.card-gradient-pink      { background: linear-gradient(135deg, #ff8a8e 0%, #ff5272 100%) !important; color: white !important; }
+.card-gradient-blue      { background: linear-gradient(135deg, #5eb8ff 0%, #1a73e8 100%) !important; color: white !important; }
+.card-gradient-green     { background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%) !important; color: white !important; }
+
+.stat-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+}
+
+/* Decorative translucent circles for gradient cards */
+.card-circle { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.18); }
+.circle-1 { width: 150px; height: 150px; bottom: -50px; right: -50px; }
+.circle-2 { width: 100px; height: 100px; bottom: -20px; right: 60px; }
 
 /* ── Mini Drawer Global Fixes ── */
 /* When drawer is closed (Mini mode) and NOT hovered, hide text elements */

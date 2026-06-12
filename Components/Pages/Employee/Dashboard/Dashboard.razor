@@ -4,13 +4,13 @@
 @inject NavigationManager Nav
 
 <div class="saas-dashboard-container">
-    <!-- Hero Section -->
-    <div class="hero-section mb-8 d-flex justify-space-between align-center flex-wrap gap-4">
-        <div>
-            <MudText Typo="Typo.h3" Class="font-weight-bold mb-2">Welcome back, James</MudText>
-            <MudText Typo="Typo.h6" Class="text-muted">Here is what's happening with your workspace today.</MudText>
-        </div>
-    </div>
+    <!-- Shared Welcome Overview: announcements (left) + quick actions hub (right) -->
+    <WelcomeOverview Name="James"
+                     Subtitle="Here is what's happening with your workspace today."
+                     Announcements="Announcements"
+                     Actions="QuickActions"
+                     OnViewAllAnnouncements='() => ShowPrototypeMessage("Opening all announcements")'
+                     OnAnnouncementClick='(a) => ShowPrototypeMessage($"Opening: {a.Title}")' />
 
     <!-- Quick Stats Row (High UX) -->
     <MudGrid Spacing="4" Class="mb-12">
@@ -47,20 +47,6 @@
             </MudPaper>
         </MudItem>
     </MudGrid>
-
-    <!-- Quick Access Section -->
-    <div class="quick-access-section mb-12">
-        <div class="d-flex align-center justify-space-between mb-4">
-            <MudText Typo="Typo.h6" Class="font-weight-bold">Quick Actions</MudText>
-        </div>
-        <div class="d-flex flex-wrap gap-4">
-            <MudButton OnClick='() => ShowPrototypeMessage("Clock In Successful!")' Variant="Variant.Filled" Color="Color.Primary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.AccessTime">Clock In Now</MudButton>
-            <MudButton Href="/employee/attendance/leave-ob" Variant="Variant.Filled" Color="Color.Secondary" Class="quick-access-btn" StartIcon="@Icons.Material.Filled.EventNote">File Leave / OB</MudButton>
-            <MudButton Href="/employee/payroll/payroll-inquiry" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Receipt">View Payslip</MudButton>
-            <MudButton Href="/employee/attendance/schedule-calendar" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.CalendarMonth">My Schedule</MudButton>
-            <MudButton Href="/employee/personal-data-update" Variant="Variant.Outlined" Color="Color.Default" Class="quick-access-btn outlined-btn" StartIcon="@Icons.Material.Filled.Person">Update Profile</MudButton>
-        </div>
-    </div>
 
     <!-- Charts & Checklist Row -->
     <MudGrid Spacing="6" Class="mb-12">
@@ -121,31 +107,6 @@
             }
         </MudGrid>
     </div>
-
-    <!-- What's New Section -->
-    <MudPaper Elevation="0" Class="pa-8 rounded-xl release-notes-card mb-12" Style="background: #ffffff;">
-        <div class="d-flex justify-space-between align-center mb-6">
-            <MudText Typo="Typo.h6" Class="font-weight-bold">Company Updates & Features</MudText>
-            <MudButton Variant="Variant.Text" Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowForward">View All</MudButton>
-        </div>
-        
-        <MudGrid Spacing="4">
-            @foreach (var note in ReleaseNotes)
-            {
-                <MudItem xs="12" md="4">
-                    <div class="release-note-card pa-5 rounded-xl h-100" style="background: #f8fafc; border: 1px solid #e2e8f0; transition: all 0.3s ease; cursor: pointer;" @onclick='() => ShowPrototypeMessage("Opening Announcement")'>
-                        <MudChip T="string" Size="Size.Small" Color="@GetBadgeColor(note.Badge)" Class="font-weight-bold rounded-lg text-uppercase px-2 mb-4">@note.Badge</MudChip>
-                        <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-2">@note.Title</MudText>
-                        <MudText Typo="Typo.body2" Class="text-muted mb-4 flex-grow-1">@note.Description</MudText>
-                        <div class="d-flex align-center text-muted">
-                            <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" Class="mr-2" />
-                            <MudText Typo="Typo.caption" Class="font-weight-bold">@note.Date</MudText>
-                        </div>
-                    </div>
-                </MudItem>
-            }
-        </MudGrid>
-    </MudPaper>
 
     <!-- Discover Features Carousel -->
     <div class="discover-section pb-12">
@@ -234,27 +195,21 @@
             Snackbar.Add($"Task '{task.Title}' marked as completed!", MudBlazor.Severity.Success);
     }
 
-    public class ReleaseNote
-    {
-        public string Badge { get; set; } = "";
-        public string Title { get; set; } = "";
-        public string Description { get; set; } = "";
-        public string Date { get; set; } = "";
-    }
-
-    public List<ReleaseNote> ReleaseNotes = new()
+    public List<AnnouncementItem> Announcements = new()
     {
         new() { Badge = "Important", Title = "Upcoming Townhall Meeting", Description = "Join us this Friday for the quarterly company updates.", Date = "October 24, 2026" },
         new() { Badge = "New Feature", Title = "Mobile Payslip Access", Description = "You can now download your payslips directly from your mobile device.", Date = "October 18, 2026" },
         new() { Badge = "Reminder", Title = "Annual Health Exam", Description = "Please schedule your annual physical exam by the end of November.", Date = "October 10, 2026" }
     };
 
-    private Color GetBadgeColor(string badge) => badge switch
+    public List<QuickAction> QuickActions => new()
     {
-        "Important" => Color.Error,
-        "New Feature" => Color.Success,
-        "Reminder" => Color.Warning,
-        _ => Color.Info
+        new() { Title = "Clock In Now", Description = "Start your shift", Icon = Icons.Material.Filled.AccessTime, Color = Color.Primary, OnClick = () => { ShowPrototypeMessage("Clock In Successful!"); return Task.CompletedTask; } },
+        new() { Title = "File Leave / OB", Description = "Request time off", Icon = Icons.Material.Filled.EventNote, Color = Color.Secondary, Href = "/employee/attendance/leave-ob" },
+        new() { Title = "View Payslip", Description = "Earnings & deductions", Icon = Icons.Material.Filled.Receipt, Color = Color.Success, Href = "/employee/payroll/payroll-inquiry" },
+        new() { Title = "My Schedule", Description = "Upcoming shifts", Icon = Icons.Material.Filled.CalendarMonth, Color = Color.Info, Href = "/employee/attendance/schedule-calendar" },
+        new() { Title = "Update Profile", Description = "Personal details", Icon = Icons.Material.Filled.Person, Color = Color.Warning, Href = "/employee/personal-data-update" },
+        new() { Title = "My Applications", Description = "Track requests", Icon = Icons.Material.Filled.FactCheck, Color = Color.Error, Href = "/employee/human-resource/my-applications" }
     };
 
     public class FeatureHighlight

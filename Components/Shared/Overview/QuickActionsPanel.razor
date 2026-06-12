@@ -1,0 +1,62 @@
+@namespace EduPanel.Components.Shared.Overview
+@using EduPanel.Components.Shared.Overview.Models
+@inject NavigationManager Nav
+
+<MudPaper Elevation="0" Class="quick-actions-panel pa-6 rounded-xl h-100">
+    <div class="d-flex align-center gap-2 mb-4">
+        <MudIcon Icon="@Icons.Material.Filled.Bolt" Color="Color.Primary" />
+        <MudText Typo="Typo.h6" Class="font-weight-bold">Quick Actions</MudText>
+    </div>
+
+    @if (Actions.Count == 0)
+    {
+        <div class="d-flex flex-column align-center justify-center py-8 text-center">
+            <MudIcon Icon="@Icons.Material.Outlined.Bolt" Size="Size.Large" Class="text-muted mb-2" />
+            <MudText Typo="Typo.body2" Class="text-muted">No quick actions available.</MudText>
+        </div>
+    }
+    else
+    {
+        <div class="quick-actions-grid">
+            @foreach (var action in Actions)
+            {
+                <div class="quick-action-card pa-4 rounded-lg d-flex flex-column gap-2" @onclick="() => HandleClick(action)">
+                    <div class="@($"qa-icon qa-icon-{GetColorKey(action.Color)} d-flex align-center justify-center")">
+                        <MudIcon Icon="@action.Icon" Color="@action.Color" />
+                    </div>
+                    <MudText Typo="Typo.subtitle2" Class="font-weight-bold">@action.Title</MudText>
+                    @if (!string.IsNullOrWhiteSpace(action.Description))
+                    {
+                        <MudText Typo="Typo.caption" Class="text-muted">@action.Description</MudText>
+                    }
+                </div>
+            }
+        </div>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public List<QuickAction> Actions { get; set; } = new();
+
+    private async Task HandleClick(QuickAction action)
+    {
+        if (action.OnClick is not null)
+        {
+            await action.OnClick.Invoke();
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(action.Href))
+            Nav.NavigateTo(action.Href);
+    }
+
+    private static string GetColorKey(Color color) => color switch
+    {
+        Color.Secondary => "secondary",
+        Color.Success => "success",
+        Color.Warning => "warning",
+        Color.Info => "info",
+        Color.Error => "error",
+        _ => "primary"
+    };
+}

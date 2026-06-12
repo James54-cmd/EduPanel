@@ -1,18 +1,15 @@
 @page "/dashboard"
 @namespace EduPanel.Components.Pages.Admin
+@inject ISnackbar Snackbar
 
 <div class="dashboard-page">
-    <div class="d-flex align-center justify-space-between mb-6">
-    <div class="d-flex align-center">
-        <div class="d-flex align-center justify-center rounded bg-primary text-white mr-3" style="width: 32px; height: 32px;">
-            <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Small" />
-        </div>
-        <MudText Typo="Typo.h5" Class="font-weight-bold">Dashboard</MudText>
-    </div>
-    <MudLink Href="#" Color="Color.Primary" Class="d-flex align-center text-decoration-none">
-        Overview <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Class="ml-1" />
-    </MudLink>
-</div>
+    <!-- Shared Welcome Overview: announcements (left) + quick actions hub (right) -->
+    <WelcomeOverview Name="Administrator"
+                     Subtitle="Here is what's happening across EduPanel today."
+                     Announcements="Announcements"
+                     Actions="QuickActions"
+                     OnViewAllAnnouncements='() => ShowPrototypeMessage("Opening all announcements")'
+                     OnAnnouncementClick='(a) => ShowPrototypeMessage($"Opening: {a.Title}")' />
 
 <MudGrid>
     <!-- Top Cards -->
@@ -140,6 +137,33 @@
 
 
 @code {
+    private void ShowPrototypeMessage(string action)
+    {
+        Snackbar.Add($"{action} (Prototype Interaction)", MudBlazor.Severity.Info, config =>
+        {
+            config.Icon = Icons.Material.Filled.Info;
+            config.IconColor = Color.Info;
+            config.IconSize = Size.Medium;
+        });
+    }
+
+    public List<AnnouncementItem> Announcements = new()
+    {
+        new() { Badge = "Important", Title = "Enrollment Window Closes Soon", Description = "Second semester enrollment ends this Friday. Review pending applications.", Date = "October 24, 2026" },
+        new() { Badge = "New Feature", Title = "Bulk Grade Import", Description = "You can now import grades for an entire course via CSV upload.", Date = "October 18, 2026" },
+        new() { Badge = "Reminder", Title = "Faculty Evaluation Period", Description = "Performance evaluations for teaching staff are due by end of month.", Date = "October 10, 2026" }
+    };
+
+    public List<QuickAction> QuickActions => new()
+    {
+        new() { Title = "Enroll Student", Description = "Add a new student", Icon = Icons.Material.Filled.PersonAdd, Color = Color.Primary, OnClick = () => { ShowPrototypeMessage("Opening enrollment form"); return Task.CompletedTask; } },
+        new() { Title = "New Course", Description = "Create a course", Icon = Icons.Material.Filled.LibraryAdd, Color = Color.Secondary, OnClick = () => { ShowPrototypeMessage("Opening course builder"); return Task.CompletedTask; } },
+        new() { Title = "Manage Staff", Description = "Employee records", Icon = Icons.Material.Filled.Groups, Color = Color.Info, Href = "/admin/employee" },
+        new() { Title = "View Reports", Description = "Analytics & exports", Icon = Icons.Material.Filled.Assessment, Color = Color.Success, OnClick = () => { ShowPrototypeMessage("Generating reports"); return Task.CompletedTask; } },
+        new() { Title = "Attendance", Description = "Review records", Icon = Icons.Material.Filled.FactCheck, Color = Color.Warning, OnClick = () => { ShowPrototypeMessage("Opening attendance"); return Task.CompletedTask; } },
+        new() { Title = "Settings", Description = "System configuration", Icon = Icons.Material.Filled.Settings, Color = Color.Error, OnClick = () => { ShowPrototypeMessage("Opening settings"); return Task.CompletedTask; } }
+    };
+
     public List<ChartSeries<double>> Series = new List<ChartSeries<double>>()
     {
         new ChartSeries<double>() { Name = "Science", Data = new double[] { 85, 82, 88, 87, 89, 90, 88, 92 } },

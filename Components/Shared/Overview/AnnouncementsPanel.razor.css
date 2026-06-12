@@ -1,0 +1,22 @@
+.announcements-panel {
+    border: 1px solid var(--mud-palette-divider);
+    background: var(--mud-palette-surface);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+}
+
+.announcement-item {
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.announcement-item:hover {
+    background: #f8fafc;
+    border-color: var(--mud-palette-divider);
+    transform: translateX(2px);
+}
+
+/* Allow long titles/descriptions to truncate cleanly instead of overflowing */
+.min-width-0 {
+    min-width: 0;
+}

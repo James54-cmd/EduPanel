@@ -1,0 +1,76 @@
+@namespace EduPanel.Components.Shared.Overview
+@using EduPanel.Components.Shared.Overview.Models
+
+<MudPaper Elevation="0" Class="announcements-panel pa-6 rounded-xl h-100 d-flex flex-column">
+    <div class="d-flex align-center justify-space-between mb-4">
+        <div class="d-flex align-center gap-2">
+            <MudIcon Icon="@Icons.Material.Filled.Campaign" Color="Color.Primary" />
+            <MudText Typo="Typo.h6" Class="font-weight-bold">Announcements</MudText>
+        </div>
+        <MudButton Variant="Variant.Text" Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowForward"
+                   OnClick="OnViewAll" Class="text-none">View all</MudButton>
+    </div>
+
+    @if (Announcements.Count == 0)
+    {
+        <div class="d-flex flex-column align-center justify-center flex-grow-1 py-8 text-center">
+            <MudIcon Icon="@Icons.Material.Outlined.NotificationsNone" Size="Size.Large" Class="text-muted mb-2" />
+            <MudText Typo="Typo.body2" Class="text-muted">No announcements right now.</MudText>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column gap-3">
+            @foreach (var item in Announcements)
+            {
+                <div class="announcement-item d-flex gap-3 pa-3 rounded-lg" @onclick="() => OnAnnouncementClick.InvokeAsync(item)">
+                    <MudAvatar Size="Size.Medium" Class="@($"avatar-gradient-{GetGradient(item.Badge)} flex-shrink-0")">
+                        <MudIcon Icon="@GetIcon(item.Badge)" />
+                    </MudAvatar>
+                    <div class="flex-grow-1 min-width-0">
+                        <div class="d-flex align-center justify-space-between gap-2 mb-1">
+                            <MudText Typo="Typo.subtitle2" Class="font-weight-bold">@item.Title</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="@GetBadgeColor(item.Badge)" Variant="Variant.Text"
+                                     Class="font-weight-bold text-uppercase flex-shrink-0">@item.Badge</MudChip>
+                        </div>
+                        <MudText Typo="Typo.body2" Class="text-muted mb-1">@item.Description</MudText>
+                        <div class="d-flex align-center text-muted gap-1">
+                            <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" />
+                            <MudText Typo="Typo.caption" Class="font-weight-bold">@item.Date</MudText>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public List<AnnouncementItem> Announcements { get; set; } = new();
+    [Parameter] public EventCallback OnViewAll { get; set; }
+    [Parameter] public EventCallback<AnnouncementItem> OnAnnouncementClick { get; set; }
+
+    private static string GetGradient(string badge) => badge switch
+    {
+        "Important" => "error",
+        "New Feature" => "success",
+        "Reminder" => "warning",
+        _ => "info"
+    };
+
+    private static Color GetBadgeColor(string badge) => badge switch
+    {
+        "Important" => Color.Error,
+        "New Feature" => Color.Success,
+        "Reminder" => Color.Warning,
+        _ => Color.Info
+    };
+
+    private static string GetIcon(string badge) => badge switch
+    {
+        "Important" => Icons.Material.Filled.PriorityHigh,
+        "New Feature" => Icons.Material.Filled.AutoAwesome,
+        "Reminder" => Icons.Material.Filled.NotificationsActive,
+        _ => Icons.Material.Filled.Info
+    };
+}

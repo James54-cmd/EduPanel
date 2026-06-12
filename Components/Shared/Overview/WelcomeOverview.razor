@@ -1,0 +1,48 @@
+@namespace EduPanel.Components.Shared.Overview
+@using EduPanel.Components.Shared.Overview.Models
+
+@*
+    Shared post-login landing view. Both the Admin and Employee dashboards
+    render this at the top, injecting their own announcements and quick actions.
+    Left column = announcements feed, right column = quick actions hub.
+*@
+
+<div class="welcome-overview mb-8">
+    <div class="d-flex flex-column flex-md-row justify-space-between align-md-center gap-2 mb-6">
+        <div class="text-center text-md-left">
+            <MudText Typo="Typo.h4" Class="font-weight-bold">@Greeting, @Name</MudText>
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <MudText Typo="Typo.body1" Class="text-muted mt-1">@Subtitle</MudText>
+            }
+        </div>
+        <MudText Typo="Typo.body2" Class="text-muted font-weight-medium">@DateTime.Now.ToString("dddd, MMMM d")</MudText>
+    </div>
+
+    <MudGrid Spacing="6">
+        <MudItem xs="12" md="7">
+            <AnnouncementsPanel Announcements="Announcements"
+                                OnViewAll="OnViewAllAnnouncements"
+                                OnAnnouncementClick="OnAnnouncementClick" />
+        </MudItem>
+        <MudItem xs="12" md="5">
+            <QuickActionsPanel Actions="Actions" />
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    [Parameter] public string Name { get; set; } = "there";
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public List<AnnouncementItem> Announcements { get; set; } = new();
+    [Parameter] public List<QuickAction> Actions { get; set; } = new();
+    [Parameter] public EventCallback OnViewAllAnnouncements { get; set; }
+    [Parameter] public EventCallback<AnnouncementItem> OnAnnouncementClick { get; set; }
+
+    private string Greeting => DateTime.Now.Hour switch
+    {
+        < 12 => "Good morning",
+        < 18 => "Good afternoon",
+        _ => "Good evening"
+    };
+}

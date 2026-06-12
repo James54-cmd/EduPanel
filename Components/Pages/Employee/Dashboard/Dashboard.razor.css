@@ -5,55 +5,8 @@
     font-family: 'Figtree', sans-serif;
 }
 
-::deep .text-muted {
-    color: #64748b !important;
-}
-
-::deep .cursor-pointer {
-    cursor: pointer;
-}
-
-/* Gradients for Stat Cards */
-::deep .card-gradient-primary { background: linear-gradient(135deg, #1B4F8A 0%, #2E7D9E 100%) !important; color: white !important; }
-::deep .card-gradient-secondary { background: linear-gradient(135deg, #2E7D9E 0%, #63a4c4 100%) !important; color: white !important; }
-::deep .card-gradient-success { background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important; color: white !important; }
-
-::deep .stat-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-::deep .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
-}
-
-/* Quick Access */
-::deep .quick-access-btn {
-    border-radius: 12px !important;
-    padding: 12px 24px !important;
-    text-transform: none !important;
-    font-weight: 600 !important;
-    box-shadow: 0 4px 12px rgba(27, 79, 138, 0.15) !important;
-    transition: all 0.2s ease-in-out;
-}
-
-::deep .quick-access-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(27, 79, 138, 0.25) !important;
-}
-
-::deep .outlined-btn {
-    box-shadow: none !important;
-    border: 1px solid #e2e8f0 !important;
-    background-color: white !important;
-    color: #334155 !important;
-}
-
-::deep .outlined-btn:hover {
-    border-color: #cbd5e1 !important;
-    background-color: #f8fafc !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-}
+/* Gradient stat cards, decorative circles, positioning helpers, .text-muted and
+   .cursor-pointer are now defined globally in wwwroot/app.css. */
 
 /* Modules Grid */
 ::deep .module-card {
@@ -87,15 +40,10 @@
     justify-content: center;
 }
 
-/* Onboarding & Release Notes */
-::deep .onboarding-card, ::deep .release-notes-card {
+/* Onboarding Card */
+::deep .onboarding-card {
     border: 1px solid #f1f5f9;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.03) !important;
-}
-
-::deep .release-note-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.03) !important;
 }
 
 ::deep .checklist-item {
@@ -125,30 +73,4 @@
 ::deep .checklist-item.completed .task-text {
     text-decoration: line-through;
     color: #94a3b8 !important;
-}
-
-/* Circles for gradient cards */
-::deep .relative { position: relative !important; }
-::deep .absolute { position: absolute !important; }
-::deep .top-4 { top: 1.5rem !important; }
-::deep .right-4 { right: 1.5rem !important; }
-::deep .overflow-hidden { overflow: hidden !important; }
-::deep .h-100 { height: 100% !important; }
-
-::deep .card-circle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-}
-::deep .circle-1 {
-    width: 150px;
-    height: 150px;
-    bottom: -50px;
-    right: -50px;
-}
-::deep .circle-2 {
-    width: 100px;
-    height: 100px;
-    bottom: -20px;
-    right: 60px;
 }
